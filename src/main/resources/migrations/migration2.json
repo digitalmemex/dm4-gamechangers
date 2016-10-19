@@ -1,11 +1,13 @@
 [
     {
         "assoc_types": [
+# From Date
             {
                 "value": "From",
                 "uri": "fi.aalto.gamechangers.date_from",
                 "data_type_uri": "dm4.core.text"
             },
+# To Date
             {
                 "value": "To",
                 "uri": "fi.aalto.gamechangers.date_to",
@@ -15,77 +17,16 @@
     },
     {
         "topic_types": [
-            {
-                "value":            "Work Label",
-                "uri":              "fi.aalto.gamechangers.work.label",
-                "data_type_uri":    "dm4.core.text",
-                "index_mode_uris": ["dm4.core.fulltext"]
-            },
+# Type of work typedefinition
             {
                 "value":            "Type of work",
                 "uri":              "fi.aalto.gamechangers.work.type",
                 "data_type_uri":    "dm4.core.text",
                 "index_mode_uris": ["dm4.core.fulltext"]
-            },
-            {
-                "value":            "Text",
-                "uri":              "fi.aalto.gamechangers.work.text",
-                "data_type_uri":    "dm4.core.text",
-                "index_mode_uris": ["dm4.core.fulltext"]
-            },
-
-            # Work
-            {
-                "value":            "Work",
-                "uri":              "fi.aalto.gamechangers.work",
-                "data_type_uri":    "dm4.core.composite",
-                "assoc_defs": [
-                    {
-                        "child_type_uri":         "fi.aalto.gamechangers.work.label",
-                        "child_cardinality_uri":  "dm4.core.one",
-                        "assoc_type_uri":         "dm4.core.composition_def"
-                    },
-                    {
-                        "child_type_uri":         "fi.aalto.gamechangers.work.type",
-                        "child_cardinality_uri":  "dm4.core.one",
-                        "parent_cardinality_uri": "dm4.core.many",
-                        "assoc_type_uri":         "dm4.core.aggregation_def"
-                    },
-                    {
-                        "child_type_uri":         "fi.aalto.gamechangers.work.text",
-                        "child_cardinality_uri":  "dm4.core.one",
-                        "assoc_type_uri":         "dm4.core.composition_def"
-                    },
-                    {
-                        "child_type_uri":         "dm4.datetime.date",
-                        "child_cardinality_uri":  "dm4.core.one",
-                        "parent_cardinality_uri": "dm4.core.many",
-                        "assoc_type_uri":         "dm4.core.aggregation_def",
-                        "custom_assoc_type_uri":  "fi.aalto.gamechangers.date_from"
-                    },
-                    {
-                        "child_type_uri":         "dm4.datetime.date",
-                        "child_cardinality_uri":  "dm4.core.one",
-                        "parent_cardinality_uri": "dm4.core.many",
-                        "assoc_type_uri":         "dm4.core.aggregation_def",
-                        "custom_assoc_type_uri":  "fi.aalto.gamechangers.date_to"
-                    }
-                ],
-                "view_config_topics": [
-                    {
-                        "type_uri": "dm4.webclient.view_config",
-                        "childs": {
-# TODO: Provide icon
-#                            "dm4.webclient.icon": "/fi.aalto.gamechangers/images/work.png",
-                            "dm4.webclient.show_in_create_menu": true
-                        }
-                    }
-                ]
-
             }
         ],
         "topics": [
-	# Type of work
+# Type of work instances
             {
                 "value": "Discovery",
                 "type_uri": "fi.aalto.gamechangers.work.type"
@@ -115,5 +56,129 @@
                 "type_uri": "fi.aalto.gamechangers.work.type"
             }
        ]
-    }
+    },
+    {
+        "topic_types": [
+# Type of event typedefinition
+            {
+                "value":            "Type of event",
+                "uri":              "fi.aalto.gamechangers.event.type",
+                "data_type_uri":    "dm4.core.text",
+                "index_mode_uris": ["dm4.core.fulltext"]
+            }
+        ],
+        "topics": [
+# Type of event instances
+            {
+                "value": "establishing",
+                "type_uri": "fi.aalto.gamechangers.event.type"
+            },
+            {
+                "value": "relocation",
+                "type_uri": "fi.aalto.gamechangers.event.type"
+            },
+            {
+                "value": "signing",
+                "type_uri": "fi.aalto.gamechangers.event.type"
+            },
+            {
+                "value": "appointment",
+                "type_uri": "fi.aalto.gamechangers.event.type"
+            },
+            {
+                "value": "name change",
+                "type_uri": "fi.aalto.gamechangers.event.type"
+            },
+            {
+                "value": "global event",
+                "type_uri": "fi.aalto.gamechangers.event.type"
+            }
+       ]
+    },
+    {
+        "topic_types": [
+# Type of action typedefinition
+            {
+                "value":            "Type of action",
+                "uri":              "fi.aalto.gamechangers.action.type",
+                "data_type_uri":    "dm4.core.text",
+                "index_mode_uris": ["dm4.core.fulltext"]
+            }
+        ],
+        "topics": [
+# Type of action instances
+            {
+                "value": "Publish",
+                "type_uri": "fi.aalto.gamechangers.action.type"
+            },
+            {
+                "value": "Implement",
+                "type_uri": "fi.aalto.gamechangers.action.type"
+            },
+            {
+                "value": "Design",
+                "type_uri": "fi.aalto.gamechangers.action.type"
+            }            
+       ]
+    },
+    {
+        "topic_types": [
+# Type of instituion typedefinition
+            {
+                "value":            "Type of institution",
+                "uri":              "fi.aalto.gamechangers.institution.type",
+                "data_type_uri":    "dm4.core.text",
+                "index_mode_uris": ["dm4.core.fulltext"]
+            }
+        ],
+        "topics": [
+# Type of institution instances
+            {
+                "value": "Company",
+                "type_uri": "fi.aalto.gamechangers.institution.type"
+            },
+            {
+                "value": "School",
+                "type_uri": "fi.aalto.gamechangers.institution.type"
+            },
+            {
+                "value": "Association",
+                "type_uri": "fi.aalto.gamechangers.institution.type"
+            },
+            
+       ]
+    },
+# Simple types for various composite types
+    {
+        "topic_types": [
+            {
+                "value":            "Brand name",
+                "uri":              "fi.aalto.gamechangers.brand.name",
+                "data_type_uri":    "dm4.core.text",
+                "index_mode_uris": ["dm4.core.fulltext"]
+            },
+            {
+                "value":            "Group name",
+                "uri":              "fi.aalto.gamechangers.group.name",
+                "data_type_uri":    "dm4.core.text",
+                "index_mode_uris": ["dm4.core.fulltext"]
+            },
+            {
+                "value":            "Public",
+                "uri":              "fi.aalto.gamechangers.comment.public",
+                "data_type_uri":    "dm4.core.boolean",
+                "index_mode_uris": ["dm4.core.fulltext"]
+            },
+        ]
+    },
+    {
+         "assoc_types": [
+# Action (custom association)
+            {
+                "value": "Action",
+                "uri": "fi.aalto.gamechangers.action",
+                "data_type_uri": "dm4.core.text"
+            }
+        ]
+   }
 ]
