@@ -1,0 +1,119 @@
+[
+    {
+        "assoc_types": [
+            {
+                "value": "From",
+                "uri": "fi.aalto.gamechangers.date_from",
+                "data_type_uri": "dm4.core.text"
+            },
+            {
+                "value": "To",
+                "uri": "fi.aalto.gamechangers.date_to",
+                "data_type_uri": "dm4.core.text"
+            }
+        ]
+    },
+    {
+        "topic_types": [
+            {
+                "value":            "Work Label",
+                "uri":              "fi.aalto.gamechangers.work.label",
+                "data_type_uri":    "dm4.core.text",
+                "index_mode_uris": ["dm4.core.fulltext"]
+            },
+            {
+                "value":            "Type of work",
+                "uri":              "fi.aalto.gamechangers.work.type",
+                "data_type_uri":    "dm4.core.text",
+                "index_mode_uris": ["dm4.core.fulltext"]
+            },
+            {
+                "value":            "Text",
+                "uri":              "fi.aalto.gamechangers.work.text",
+                "data_type_uri":    "dm4.core.text",
+                "index_mode_uris": ["dm4.core.fulltext"]
+            },
+
+            # Work
+            {
+                "value":            "Work",
+                "uri":              "fi.aalto.gamechangers.work",
+                "data_type_uri":    "dm4.core.composite",
+                "assoc_defs": [
+                    {
+                        "child_type_uri":         "fi.aalto.gamechangers.work.label",
+                        "child_cardinality_uri":  "dm4.core.one",
+                        "assoc_type_uri":         "dm4.core.composition_def"
+                    },
+                    {
+                        "child_type_uri":         "fi.aalto.gamechangers.work.type",
+                        "child_cardinality_uri":  "dm4.core.one",
+                        "parent_cardinality_uri": "dm4.core.many",
+                        "assoc_type_uri":         "dm4.core.aggregation_def"
+                    },
+                    {
+                        "child_type_uri":         "fi.aalto.gamechangers.work.text",
+                        "child_cardinality_uri":  "dm4.core.one",
+                        "assoc_type_uri":         "dm4.core.composition_def"
+                    },
+                    {
+                        "child_type_uri":         "dm4.datetime.date",
+                        "child_cardinality_uri":  "dm4.core.one",
+                        "parent_cardinality_uri": "dm4.core.many",
+                        "assoc_type_uri":         "dm4.core.aggregation_def",
+                        "custom_assoc_type_uri":  "fi.aalto.gamechangers.date_from"
+                    },
+                    {
+                        "child_type_uri":         "dm4.datetime.date",
+                        "child_cardinality_uri":  "dm4.core.one",
+                        "parent_cardinality_uri": "dm4.core.many",
+                        "assoc_type_uri":         "dm4.core.aggregation_def",
+                        "custom_assoc_type_uri":  "fi.aalto.gamechangers.date_to"
+                    }
+                ],
+                "view_config_topics": [
+                    {
+                        "type_uri": "dm4.webclient.view_config",
+                        "childs": {
+# TODO: Provide icon
+#                            "dm4.webclient.icon": "/fi.aalto.gamechangers/images/work.png",
+                            "dm4.webclient.show_in_create_menu": true
+                        }
+                    }
+                ]
+
+            }
+        ],
+        "topics": [
+	# Type of work
+            {
+                "value": "Discovery",
+                "type_uri": "fi.aalto.gamechangers.work.type"
+            },
+            {
+                "value": "Invention",
+                "type_uri": "fi.aalto.gamechangers.work.type"
+            },
+            {
+                "value": "Research",
+                "type_uri": "fi.aalto.gamechangers.work.type"
+            },
+            {
+                "value": "Process",
+                "type_uri": "fi.aalto.gamechangers.work.type"
+            },
+            {
+                "value": "Manifesto",
+                "type_uri": "fi.aalto.gamechangers.work.type"
+            },
+            {
+                "value": "Product",
+                "type_uri": "fi.aalto.gamechangers.work.type"
+            },
+            {
+                "value": "Architecture",
+                "type_uri": "fi.aalto.gamechangers.work.type"
+            }
+       ]
+    }
+]
