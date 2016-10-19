@@ -26,7 +26,7 @@ public class Migration4 extends Migration {
 					"dm4.core.many", "dm4.core.one"),
 				"dm4.contacts.phone_number#dm4.contacts.phone_entry");
 		
-		// Adds "from" and "to" date
+		// Adds "type of event"
 		dm4.getTopicType("dm4.events.event")
 			.addAssocDefBefore(
 				mf.newAssociationDefinitionModel("dm4.core.aggregation_def",
@@ -34,7 +34,7 @@ public class Migration4 extends Migration {
 					"dm4.core.many", "dm4.core.one"),
 				"dm4.datetime#dm4.events.from");
         
-		// Adds date of birth and date of death
+		// Adds date of death
 		String personTypeUri = "dm4.contacts.person";
 		dm4.getTopicType(personTypeUri)
 		.addAssocDefBefore(
