@@ -60,11 +60,23 @@ public class Migration4 extends Migration {
 				"fi.aalto.gamechangers.group",
 				"fi.aalto.gamechangers.comment",
 				"fi.aalto.gamechangers.proposal");
+
+		// Assigns all the values for the 'type' topics
+		groupAssignToWorkspace(dataWsId, dm4.getTopicsByType("fi.aalto.gamechangers.work.type"));
+		groupAssignToWorkspace(dataWsId, dm4.getTopicsByType("fi.aalto.gamechangers.event.type"));
+		groupAssignToWorkspace(dataWsId, dm4.getTopicsByType("fi.aalto.gamechangers.action.type"));
+		groupAssignToWorkspace(dataWsId, dm4.getTopicsByType("fi.aalto.gamechangers.institution.type"));
 	}
 	
 	private void groupAssignToWorkspace(long wsId, String... topicTypeUris) {
 		for (String uri : topicTypeUris) {
 			Topic topic = dm4.getTopicByUri(uri);
+			wsService.assignToWorkspace(topic, wsId);
+		}
+	}
+
+	private void groupAssignToWorkspace(long wsId, Iterable<Topic> topics) {
+		for (Topic topic : topics) {
 			wsService.assignToWorkspace(topic, wsId);
 		}
 	}
