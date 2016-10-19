@@ -169,16 +169,12 @@
                 "data_type_uri":    "dm4.core.boolean",
                 "index_mode_uris": ["dm4.core.fulltext"]
             },
-        ]
-    },
-    {
-         "assoc_types": [
-# Action (custom association)
             {
-                "value": "Action",
-                "uri": "fi.aalto.gamechangers.action",
-                "data_type_uri": "dm4.core.text"
+                "value":            "Work Label",
+                "uri":              "fi.aalto.gamechangers.work.label",
+                "data_type_uri":    "dm4.core.text",
+                "index_mode_uris": ["dm4.core.fulltext"]
             }
         ]
-   }
+    }
 ]

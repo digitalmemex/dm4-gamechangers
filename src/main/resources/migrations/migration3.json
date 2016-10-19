@@ -1,0 +1,252 @@
+[
+    {
+         "assoc_types": [
+# Action (custom composite association)
+            {
+                "value": "Action",
+                "uri": "fi.aalto.gamechangers.action",
+                "data_type_uri":    "dm4.core.composite",
+                "assoc_defs": [
+                    {
+                        "child_type_uri":         "fi.aalto.gamechangers.action.type",
+                        "child_cardinality_uri":  "dm4.core.one",
+                        "parent_cardinality_uri": "dm4.core.many",
+                        "assoc_type_uri":         "dm4.core.aggregation_def"
+                    },
+                    {
+                        "child_type_uri":         "dm4.notes.text",
+                        "child_cardinality_uri":  "dm4.core.one",
+                        "assoc_type_uri":         "dm4.core.composition_def"
+                    },
+                    {
+                        "child_type_uri":         "dm4.datetime.date",
+                        "child_cardinality_uri":  "dm4.core.one",
+                        "parent_cardinality_uri": "dm4.core.many",
+                        "assoc_type_uri":         "dm4.core.aggregation_def"
+                    }
+                ]
+            }
+        ]
+   },
+    {
+        "topic_types": [
+            # Work
+            {
+                "value":            "Work",
+                "uri":              "fi.aalto.gamechangers.work",
+                "data_type_uri":    "dm4.core.composite",
+                "assoc_defs": [
+                    {
+                        "child_type_uri":         "fi.aalto.gamechangers.work.label",
+                        "child_cardinality_uri":  "dm4.core.one",
+                        "assoc_type_uri":         "dm4.core.composition_def"
+                    },
+                    {
+                        "child_type_uri":         "fi.aalto.gamechangers.work.type",
+                        "child_cardinality_uri":  "dm4.core.one",
+                        "parent_cardinality_uri": "dm4.core.many",
+                        "assoc_type_uri":         "dm4.core.aggregation_def"
+                    },
+                    {
+                        "child_type_uri":         "dm4.notes.text",
+                        "child_cardinality_uri":  "dm4.core.one",
+                        "assoc_type_uri":         "dm4.core.composition_def"
+                    },
+                    {
+                        "child_type_uri":         "dm4.datetime.date",
+                        "child_cardinality_uri":  "dm4.core.one",
+                        "parent_cardinality_uri": "dm4.core.many",
+                        "assoc_type_uri":         "dm4.core.aggregation_def",
+                        "custom_assoc_type_uri":  "fi.aalto.gamechangers.date_from"
+                    },
+                    {
+                        "child_type_uri":         "dm4.datetime.date",
+                        "child_cardinality_uri":  "dm4.core.one",
+                        "parent_cardinality_uri": "dm4.core.many",
+                        "assoc_type_uri":         "dm4.core.aggregation_def",
+                        "custom_assoc_type_uri":  "fi.aalto.gamechangers.date_to"
+                    }
+                ],
+                "view_config_topics": [
+                    {
+                        "type_uri": "dm4.webclient.view_config",
+                        "childs": {
+# TODO: Provide icon
+#                            "dm4.webclient.icon": "/fi.aalto.gamechangers/images/work.png",
+                            "dm4.webclient.show_in_create_menu": true
+                        }
+                    }
+                ]
+            },
+# Brand
+            {
+                "value":            "Brand",
+                "uri":              "fi.aalto.gamechangers.brand",
+                "data_type_uri":    "dm4.core.composite",
+                "assoc_defs": [
+                    {
+                        "child_type_uri":         "fi.aalto.gamechangers.brand.name",
+                        "child_cardinality_uri":  "dm4.core.one",
+                        "assoc_type_uri":         "dm4.core.composition_def"
+                    },
+                    {
+                        "child_type_uri":         "dm4.notes.text",
+                        "child_cardinality_uri":  "dm4.core.one",
+                        "assoc_type_uri":         "dm4.core.composition_def"
+                    },
+                    {
+                        "child_type_uri":         "dm4.datetime.date",
+                        "child_cardinality_uri":  "dm4.core.one",
+                        "parent_cardinality_uri": "dm4.core.many",
+                        "assoc_type_uri":         "dm4.core.aggregation_def",
+                        "custom_assoc_type_uri":  "fi.aalto.gamechangers.date_from"
+                    },
+                    {
+                        "child_type_uri":         "dm4.datetime.date",
+                        "child_cardinality_uri":  "dm4.core.one",
+                        "parent_cardinality_uri": "dm4.core.many",
+                        "assoc_type_uri":         "dm4.core.aggregation_def",
+                        "custom_assoc_type_uri":  "fi.aalto.gamechangers.date_to"
+                    }
+                ],
+                "view_config_topics": [
+                    {
+                        "type_uri": "dm4.webclient.view_config",
+                        "childs": {
+# TODO: Provide icon
+#                            "dm4.webclient.icon": "/fi.aalto.gamechangers/images/brand.png",
+                            "dm4.webclient.show_in_create_menu": true
+                        }
+                    }
+                ]
+            },
+# Group
+            {
+                "value":            "Group",
+                "uri":              "fi.aalto.gamechangers.group",
+                "data_type_uri":    "dm4.core.composite",
+                "assoc_defs": [
+                    {
+                        "child_type_uri":         "fi.aalto.gamechangers.group.name",
+                        "child_cardinality_uri":  "dm4.core.one",
+                        "assoc_type_uri":         "dm4.core.composition_def"
+                    },
+                    {
+                        "child_type_uri":         "dm4.notes.text",
+                        "child_cardinality_uri":  "dm4.core.one",
+                        "assoc_type_uri":         "dm4.core.composition_def"
+                    },
+                    {
+                        "child_type_uri":         "dm4.datetime.date",
+                        "child_cardinality_uri":  "dm4.core.one",
+                        "parent_cardinality_uri": "dm4.core.many",
+                        "assoc_type_uri":         "dm4.core.aggregation_def",
+                        "custom_assoc_type_uri":  "fi.aalto.gamechangers.date_from"
+                    },
+                    {
+                        "child_type_uri":         "dm4.datetime.date",
+                        "child_cardinality_uri":  "dm4.core.one",
+                        "parent_cardinality_uri": "dm4.core.many",
+                        "assoc_type_uri":         "dm4.core.aggregation_def",
+                        "custom_assoc_type_uri":  "fi.aalto.gamechangers.date_to"
+                    }
+                ],
+                "view_config_topics": [
+                    {
+                        "type_uri": "dm4.webclient.view_config",
+                        "childs": {
+# TODO: Provide icon
+#                            "dm4.webclient.icon": "/fi.aalto.gamechangers/images/work.png",
+                            "dm4.webclient.show_in_create_menu": true
+                        }
+                    }
+                ]
+            },
+# Comment
+            {
+                "value":            "Comment",
+                "uri":              "fi.aalto.gamechangers.comment",
+                "data_type_uri":    "dm4.core.composite",
+                "assoc_defs": [
+                    {
+                        "child_type_uri":         "dm4.contacts.person_name",
+                        "child_cardinality_uri":  "dm4.core.one",
+                        "assoc_type_uri":         "dm4.core.composition_def"
+                    },
+                    {
+                        "child_type_uri":         "dm4.contacts.email_address",
+                        "child_cardinality_uri":  "dm4.core.one",
+                        "assoc_type_uri":         "dm4.core.composition_def"
+                    },
+                    {
+                        "child_type_uri":         "dm4.notes.text",
+                        "child_cardinality_uri":  "dm4.core.one",
+                        "assoc_type_uri":         "dm4.core.composition_def"
+                    },
+                    {
+                        "child_type_uri":         "fi.aalto.gamechangers.comment.public",
+                        "child_cardinality_uri":  "dm4.core.one",
+                        "assoc_type_uri":         "dm4.core.composition_def",
+                    }
+                ],
+                "view_config_topics": [
+                    {
+                        "type_uri": "dm4.webclient.view_config",
+                        "childs": {
+# TODO: Provide icon
+#                            "dm4.webclient.icon": "/fi.aalto.gamechangers/images/comment.png",
+                            "dm4.webclient.show_in_create_menu": true
+                        }
+                    }
+                ]
+            },
+# Proposal
+            {
+                "value":            "Proposal",
+                "uri":              "fi.aalto.gamechangers.proposal",
+                "data_type_uri":    "dm4.core.composite",
+                "assoc_defs": [
+                    {
+                        "child_type_uri":         "dm4.contacts.person_name",
+                        "child_cardinality_uri":  "dm4.core.one",
+                        "assoc_type_uri":         "dm4.core.composition_def"
+                    },
+                    {
+                        "child_type_uri":         "dm4.contacts.email_address",
+                        "child_cardinality_uri":  "dm4.core.one",
+                        "assoc_type_uri":         "dm4.core.composition_def"
+                    },
+                    {
+                        "child_type_uri":         "dm4.notes.text",
+                        "child_cardinality_uri":  "dm4.core.one",
+                        "assoc_type_uri":         "dm4.core.composition_def"
+                    },
+                    {
+                        "child_type_uri":         "dm4.datetime.date",
+                        "child_cardinality_uri":  "dm4.core.one",
+                        "parent_cardinality_uri": "dm4.core.many",
+                        "assoc_type_uri":         "dm4.core.aggregation_def",
+                        "custom_assoc_type_uri":  "fi.aalto.gamechangers.date_from"
+                    },
+                    {
+                        "child_type_uri":         "dm4.datetime.date",
+                        "child_cardinality_uri":  "dm4.core.one",
+                        "parent_cardinality_uri": "dm4.core.many",
+                        "assoc_type_uri":         "dm4.core.aggregation_def",
+                        "custom_assoc_type_uri":  "fi.aalto.gamechangers.date_to"
+                    }
+               ],
+                "view_config_topics": [
+                    {
+                        "type_uri": "dm4.webclient.view_config",
+                        "childs": {
+# TODO: Provide icon
+#                            "dm4.webclient.icon": "/fi.aalto.gamechangers/images/proposal.png",
+                            "dm4.webclient.show_in_create_menu": true
+                        }
+                    }
+                ]
+            },
+         ],
+    }
+]
