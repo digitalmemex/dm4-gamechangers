@@ -56,15 +56,15 @@
                         "child_type_uri":         "dm4.datetime.date",
                         "child_cardinality_uri":  "dm4.core.one",
                         "parent_cardinality_uri": "dm4.core.many",
-                        "assoc_type_uri":         "dm4.core.aggregation_def",
-                        "custom_assoc_type_uri":  "fi.aalto.gamechangers.date_from"
+                        "assoc_type_uri":         "dm4.core.composition_def",
+                        "custom_assoc_type_uri":  "dm4.events.from"
                     },
                     {
                         "child_type_uri":         "dm4.datetime.date",
                         "child_cardinality_uri":  "dm4.core.one",
                         "parent_cardinality_uri": "dm4.core.many",
-                        "assoc_type_uri":         "dm4.core.aggregation_def",
-                        "custom_assoc_type_uri":  "fi.aalto.gamechangers.date_to"
+                        "assoc_type_uri":         "dm4.core.composition_def",
+                        "custom_assoc_type_uri":  "dm4.events.to"
                     }
                 ],
                 "view_config_topics": [
@@ -98,15 +98,15 @@
                         "child_type_uri":         "dm4.datetime.date",
                         "child_cardinality_uri":  "dm4.core.one",
                         "parent_cardinality_uri": "dm4.core.many",
-                        "assoc_type_uri":         "dm4.core.aggregation_def",
-                        "custom_assoc_type_uri":  "fi.aalto.gamechangers.date_from"
+                        "assoc_type_uri":         "dm4.core.composition_def",
+                        "custom_assoc_type_uri":  "dm4.events.from"
                     },
                     {
                         "child_type_uri":         "dm4.datetime.date",
                         "child_cardinality_uri":  "dm4.core.one",
                         "parent_cardinality_uri": "dm4.core.many",
-                        "assoc_type_uri":         "dm4.core.aggregation_def",
-                        "custom_assoc_type_uri":  "fi.aalto.gamechangers.date_to"
+                        "assoc_type_uri":         "dm4.core.composition_def",
+                        "custom_assoc_type_uri":  "dm4.events.to"
                     }
                 ],
                 "view_config_topics": [
@@ -140,15 +140,15 @@
                         "child_type_uri":         "dm4.datetime.date",
                         "child_cardinality_uri":  "dm4.core.one",
                         "parent_cardinality_uri": "dm4.core.many",
-                        "assoc_type_uri":         "dm4.core.aggregation_def",
-                        "custom_assoc_type_uri":  "fi.aalto.gamechangers.date_from"
+                        "assoc_type_uri":         "dm4.core.composition_def",
+                        "custom_assoc_type_uri":  "dm4.events.from"
                     },
                     {
                         "child_type_uri":         "dm4.datetime.date",
                         "child_cardinality_uri":  "dm4.core.one",
                         "parent_cardinality_uri": "dm4.core.many",
-                        "assoc_type_uri":         "dm4.core.aggregation_def",
-                        "custom_assoc_type_uri":  "fi.aalto.gamechangers.date_to"
+                        "assoc_type_uri":         "dm4.core.composition_def",
+                        "custom_assoc_type_uri":  "dm4.events.to"
                     }
                 ],
                 "view_config_topics": [
@@ -225,15 +225,15 @@
                         "child_type_uri":         "dm4.datetime.date",
                         "child_cardinality_uri":  "dm4.core.one",
                         "parent_cardinality_uri": "dm4.core.many",
-                        "assoc_type_uri":         "dm4.core.aggregation_def",
-                        "custom_assoc_type_uri":  "fi.aalto.gamechangers.date_from"
+                        "assoc_type_uri":         "dm4.core.composition_def",
+                        "custom_assoc_type_uri":  "dm4.events.from"
                     },
                     {
                         "child_type_uri":         "dm4.datetime.date",
                         "child_cardinality_uri":  "dm4.core.one",
                         "parent_cardinality_uri": "dm4.core.many",
-                        "assoc_type_uri":         "dm4.core.aggregation_def",
-                        "custom_assoc_type_uri":  "fi.aalto.gamechangers.date_to"
+                        "assoc_type_uri":         "dm4.core.composition_def",
+                        "custom_assoc_type_uri":  "dm4.events.to"
                     }
                ],
                 "view_config_topics": [

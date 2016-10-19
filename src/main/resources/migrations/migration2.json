@@ -1,16 +1,10 @@
 [
     {
         "assoc_types": [
-# From Date
+# Date of Death
             {
-                "value": "From",
-                "uri": "fi.aalto.gamechangers.date_from",
-                "data_type_uri": "dm4.core.text"
-            },
-# To Date
-            {
-                "value": "To",
-                "uri": "fi.aalto.gamechangers.date_to",
+                "value": "Date of Death",
+                "uri": "fi.aalto.gamechangers.date_of_death",
                 "data_type_uri": "dm4.core.text"
             }
         ]
@@ -144,8 +138,7 @@
             {
                 "value": "Association",
                 "type_uri": "fi.aalto.gamechangers.institution.type"
-            },
-            
+            }            
        ]
     },
 # Simple types for various composite types
