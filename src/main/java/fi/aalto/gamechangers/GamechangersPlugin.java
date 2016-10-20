@@ -3,23 +3,25 @@ package fi.aalto.gamechangers;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import org.codehaus.jettison.json.JSONException;
+
 import de.deepamehta.accesscontrol.AccessControlService;
 import de.deepamehta.contacts.ContactsService;
-import de.deepamehta.core.model.AssociationModel;
+import de.deepamehta.core.Topic;
 import de.deepamehta.core.osgi.PluginActivator;
 import de.deepamehta.core.service.Inject;
-import de.deepamehta.core.service.event.PreCreateAssociationListener;
 import de.deepamehta.events.EventsService;
 import de.deepamehta.workspaces.WorkspacesService;
 
 @Path("/gamechangers")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class GamechangersPlugin extends PluginActivator implements GamechangersService, PreCreateAssociationListener {
+public class GamechangersPlugin extends PluginActivator implements GamechangersService {
 
 	public static String NS(String suffix) {
 		return "fi.aalto.gamechangers." + suffix;
@@ -41,14 +43,36 @@ public class GamechangersPlugin extends PluginActivator implements GamechangersS
 	private AccessControlService acService; // needed by migration 1
 
 	@Override
-	public void preCreateAssociation(AssociationModel model) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public List<Event> getEvents() {
 		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@GET
+	@Path("/v1/event/{topicId}")
+	@Override
+	public Event getEvent(long topicId) {
+		Topic topic = dm4.getTopic(topicId);
+		
+		try {
+		
+			if (topic != null) {
+				// Fix
+				Event event = new Event();
+				event.put("_type", "event");
+				event.put("id", topicId);
+				event.put("typeOfEvent", "");
+				event.put("name", "");
+				event.put("from", "dm4.datetime#dm4.events.from");
+				event.put("to", "dm4.datetime#dm4.events.to");
+				
+				return event;
+			}
+			
+		} catch (JSONException jsone) {
+			throw new RuntimeException(jsone);
+		}
+
 		return null;
 	}
 
@@ -90,5 +114,4 @@ public class GamechangersPlugin extends PluginActivator implements GamechangersS
 
 	// --------------------------------------------------------------------------------------------------
 	// Public Methods
-
 }

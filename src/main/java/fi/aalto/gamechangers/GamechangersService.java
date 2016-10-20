@@ -4,6 +4,8 @@ import java.util.List;
 
 public interface GamechangersService {
 
+	Event getEvent(long topicId);	
+
 	List<Event> getEvents();
 	
 	List<Work> getWorks();
@@ -18,12 +20,19 @@ public interface GamechangersService {
 	
 	List<Proposal> getProposals();
 	
-	interface Event {}	
-	interface Work {}	
-	interface Brand {}
-	interface Group {}
-	interface Person {}
-	interface Comment {}
-	interface Proposal {}
+	class Event extends JSONEnabledImpl {}
+	
+	class Work extends JSONEnabledImpl {}
+	
+	class Brand extends JSONEnabledImpl {}
+	
+	class Group extends JSONEnabledImpl {}
+	
+	class Person extends JSONEnabledImpl {}
+	
+	class Comment extends JSONEnabledImpl {}
+	
+	class Proposal extends JSONEnabledImpl {}
+
 	
 }
