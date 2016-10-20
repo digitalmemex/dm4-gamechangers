@@ -51,20 +51,6 @@
                         "child_type_uri":         "dm4.notes.text",
                         "child_cardinality_uri":  "dm4.core.one",
                         "assoc_type_uri":         "dm4.core.composition_def"
-                    },
-                    {
-                        "child_type_uri":         "dm4.datetime.date",
-                        "child_cardinality_uri":  "dm4.core.one",
-                        "parent_cardinality_uri": "dm4.core.many",
-                        "assoc_type_uri":         "dm4.core.composition_def",
-                        "custom_assoc_type_uri":  "dm4.events.from"
-                    },
-                    {
-                        "child_type_uri":         "dm4.datetime.date",
-                        "child_cardinality_uri":  "dm4.core.one",
-                        "parent_cardinality_uri": "dm4.core.many",
-                        "assoc_type_uri":         "dm4.core.composition_def",
-                        "custom_assoc_type_uri":  "dm4.events.to"
                     }
                 ],
                 "view_config_topics": [
@@ -93,20 +79,6 @@
                         "child_type_uri":         "dm4.notes.text",
                         "child_cardinality_uri":  "dm4.core.one",
                         "assoc_type_uri":         "dm4.core.composition_def"
-                    },
-                    {
-                        "child_type_uri":         "dm4.datetime.date",
-                        "child_cardinality_uri":  "dm4.core.one",
-                        "parent_cardinality_uri": "dm4.core.many",
-                        "assoc_type_uri":         "dm4.core.composition_def",
-                        "custom_assoc_type_uri":  "dm4.events.from"
-                    },
-                    {
-                        "child_type_uri":         "dm4.datetime.date",
-                        "child_cardinality_uri":  "dm4.core.one",
-                        "parent_cardinality_uri": "dm4.core.many",
-                        "assoc_type_uri":         "dm4.core.composition_def",
-                        "custom_assoc_type_uri":  "dm4.events.to"
                     }
                 ],
                 "view_config_topics": [
@@ -135,20 +107,6 @@
                         "child_type_uri":         "dm4.notes.text",
                         "child_cardinality_uri":  "dm4.core.one",
                         "assoc_type_uri":         "dm4.core.composition_def"
-                    },
-                    {
-                        "child_type_uri":         "dm4.datetime.date",
-                        "child_cardinality_uri":  "dm4.core.one",
-                        "parent_cardinality_uri": "dm4.core.many",
-                        "assoc_type_uri":         "dm4.core.composition_def",
-                        "custom_assoc_type_uri":  "dm4.events.from"
-                    },
-                    {
-                        "child_type_uri":         "dm4.datetime.date",
-                        "child_cardinality_uri":  "dm4.core.one",
-                        "parent_cardinality_uri": "dm4.core.many",
-                        "assoc_type_uri":         "dm4.core.composition_def",
-                        "custom_assoc_type_uri":  "dm4.events.to"
                     }
                 ],
                 "view_config_topics": [
@@ -220,20 +178,6 @@
                         "child_type_uri":         "dm4.notes.text",
                         "child_cardinality_uri":  "dm4.core.one",
                         "assoc_type_uri":         "dm4.core.composition_def"
-                    },
-                    {
-                        "child_type_uri":         "dm4.datetime.date",
-                        "child_cardinality_uri":  "dm4.core.one",
-                        "parent_cardinality_uri": "dm4.core.many",
-                        "assoc_type_uri":         "dm4.core.composition_def",
-                        "custom_assoc_type_uri":  "dm4.events.from"
-                    },
-                    {
-                        "child_type_uri":         "dm4.datetime.date",
-                        "child_cardinality_uri":  "dm4.core.one",
-                        "parent_cardinality_uri": "dm4.core.many",
-                        "assoc_type_uri":         "dm4.core.composition_def",
-                        "custom_assoc_type_uri":  "dm4.events.to"
                     }
                ],
                 "view_config_topics": [
