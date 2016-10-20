@@ -3,8 +3,6 @@ package fi.aalto.gamechangers;
 import java.util.List;
 
 public interface GamechangersService {
-	
-	public static final String NS_PREFIX = "fi.aalto.gamechangers";
 
 	List<Event> getEvents();
 	

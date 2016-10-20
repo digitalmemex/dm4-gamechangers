@@ -21,6 +21,10 @@ import de.deepamehta.workspaces.WorkspacesService;
 @Consumes(MediaType.APPLICATION_JSON)
 public class GamechangersPlugin extends PluginActivator implements GamechangersService, PreCreateAssociationListener {
 
+	public static String NS(String suffix) {
+		return "fi.aalto.gamechangers." + suffix;
+	}
+
 	// ----------------------------------------------------------------------------------------------
 	// Instance Variables
 

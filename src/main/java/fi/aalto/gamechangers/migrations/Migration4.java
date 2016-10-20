@@ -1,6 +1,7 @@
 package fi.aalto.gamechangers.migrations;
 
-import de.deepamehta.core.DeepaMehtaType;
+import static fi.aalto.gamechangers.GamechangersPlugin.NS;import de.deepamehta.core.DeepaMehtaType;
+
 import de.deepamehta.core.Topic;
 import de.deepamehta.core.TopicType;
 import de.deepamehta.core.service.Inject;
@@ -23,7 +24,7 @@ public class Migration4 extends Migration {
 		addFromAndToDate("dm4.contacts.institution")
 			.addAssocDefBefore(
 				mf.newAssociationDefinitionModel("dm4.core.aggregation_def",
-					"dm4.contacts.institution", "fi.aalto.gamechangers.institution.type",
+					"dm4.contacts.institution", NS("institution.type"),
 					"dm4.core.many", "dm4.core.one"),
 				"dm4.contacts.phone_number#dm4.contacts.phone_entry");
 		
@@ -31,7 +32,7 @@ public class Migration4 extends Migration {
 		TopicType eventType = dm4.getTopicType("dm4.events.event");
 		eventType.addAssocDefBefore(
 			mf.newAssociationDefinitionModel("dm4.core.aggregation_def",
-				"dm4.events.event", "fi.aalto.gamechangers.event.type",
+				"dm4.events.event", NS("event.type"),
 				"dm4.core.many", "dm4.core.one"),
 			"dm4.datetime#dm4.events.from");
 		eventType.getAssocDef("dm4.datetime#dm4.events.from").setTypeUri("dm4.core.aggregation_def");
@@ -41,41 +42,41 @@ public class Migration4 extends Migration {
 		String personTypeUri = "dm4.contacts.person";
 		dm4.getTopicType(personTypeUri)
 		.addAssocDefBefore(
-			mf.newAssociationDefinitionModel("dm4.core.composition_def", "fi.aalto.gamechangers.date_of_death",
+			mf.newAssociationDefinitionModel("dm4.core.composition_def", NS("date_of_death"),
 				personTypeUri, "dm4.datetime.date", "dm4.core.many", "dm4.core.one"),
 			"dm4.contacts.phone_number#dm4.contacts.phone_entry");
 
 		// Adds "from" and "to" date for new types
-		addFromAndToDate("fi.aalto.gamechangers.work");
-		addFromAndToDate("fi.aalto.gamechangers.brand");
-		addFromAndToDate("fi.aalto.gamechangers.group");
-		addFromAndToDate("fi.aalto.gamechangers.proposal");
+		addFromAndToDate(NS("work"));
+		addFromAndToDate(NS("brand"));
+		addFromAndToDate(NS("group"));
+		addFromAndToDate(NS("proposal"));
 		
 		// Workspace associations
-		long dataWsId = wsService.getWorkspace("fi.aalto.gamechangers.types").getId();
+		long dataWsId = wsService.getWorkspace(NS("types")).getId();
 		
 		groupAssignToWorkspace(dataWsId,
-				"fi.aalto.gamechangers.date_of_death",
-				"fi.aalto.gamechangers.work.type",
-				"fi.aalto.gamechangers.event.type",
-				"fi.aalto.gamechangers.action.type",
-				"fi.aalto.gamechangers.institution.type",
-				"fi.aalto.gamechangers.brand.name",
-				"fi.aalto.gamechangers.group.name",
-				"fi.aalto.gamechangers.comment.public",
-				"fi.aalto.gamechangers.work.label",
-				"fi.aalto.gamechangers.action",
-				"fi.aalto.gamechangers.work",
-				"fi.aalto.gamechangers.brand",
-				"fi.aalto.gamechangers.group",
-				"fi.aalto.gamechangers.comment",
-				"fi.aalto.gamechangers.proposal");
+				NS("date_of_death"),
+				NS("work.type"),
+				NS("event.type"),
+				NS("action.type"),
+				NS("institution.type"),
+				NS("brand.name"),
+				NS("group.name"),
+				NS("comment.public"),
+				NS("work.label"),
+				NS("action"),
+				NS("work"),
+				NS("brand"),
+				NS("group"),
+				NS("comment"),
+				NS("proposal"));
 
 		// Assigns all the values for the 'type' topics
-		groupAssignToWorkspace(dataWsId, dm4.getTopicsByType("fi.aalto.gamechangers.work.type"));
-		groupAssignToWorkspace(dataWsId, dm4.getTopicsByType("fi.aalto.gamechangers.event.type"));
-		groupAssignToWorkspace(dataWsId, dm4.getTopicsByType("fi.aalto.gamechangers.action.type"));
-		groupAssignToWorkspace(dataWsId, dm4.getTopicsByType("fi.aalto.gamechangers.institution.type"));
+		groupAssignToWorkspace(dataWsId, dm4.getTopicsByType(NS("work.type")));
+		groupAssignToWorkspace(dataWsId, dm4.getTopicsByType(NS("event.type")));
+		groupAssignToWorkspace(dataWsId, dm4.getTopicsByType(NS("action.type")));
+		groupAssignToWorkspace(dataWsId, dm4.getTopicsByType(NS("institution.type")));
 	}
 	
 	private void groupAssignToWorkspace(long wsId, String... topicTypeUris) {
