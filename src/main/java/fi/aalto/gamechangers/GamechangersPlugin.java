@@ -5,6 +5,7 @@ import java.util.List;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
@@ -12,6 +13,7 @@ import org.codehaus.jettison.json.JSONException;
 
 import de.deepamehta.accesscontrol.AccessControlService;
 import de.deepamehta.contacts.ContactsService;
+import de.deepamehta.core.ChildTopics;
 import de.deepamehta.core.Topic;
 import de.deepamehta.core.osgi.PluginActivator;
 import de.deepamehta.core.service.Inject;
@@ -49,19 +51,20 @@ public class GamechangersPlugin extends PluginActivator implements GamechangersS
 	}
 	
 	@GET
-	@Path("/v1/event/{topicId}")
+	@Path("/v1/event/{id}")
 	@Override
-	public Event getEvent(long topicId) {
+	public Event getEvent(@PathParam("id") long topicId) {
 		Topic topic = dm4.getTopic(topicId);
-		
 		try {
 		
 			if (topic != null) {
+				ChildTopics childs = topic.getChildTopics();
+				
 				// Fix
 				Event event = new Event();
 				event.put("_type", "event");
 				event.put("id", topicId);
-				event.put("typeOfEvent", "");
+				event.put("typeOfEvent", childs.getStringOrNull(NS("event.type")));
 				event.put("name", "");
 				event.put("from", "dm4.datetime#dm4.events.from");
 				event.put("to", "dm4.datetime#dm4.events.to");
