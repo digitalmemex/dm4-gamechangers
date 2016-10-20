@@ -64,11 +64,10 @@ public class GamechangersPlugin extends PluginActivator implements GamechangersS
 				Event event = new Event();
 				event.put("_type", "event");
 				event.put("id", topicId);
+				event.put("name", childs.getStringOrNull("dm4.events.title"));
 				event.put("typeOfEvent", childs.getStringOrNull(NS("event.type")));
-				event.put("name", "");
 				event.put("from", "dm4.datetime#dm4.events.from");
 				event.put("to", "dm4.datetime#dm4.events.to");
-				
 				return event;
 			}
 			
