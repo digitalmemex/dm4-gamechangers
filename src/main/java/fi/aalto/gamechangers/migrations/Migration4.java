@@ -34,8 +34,8 @@ public class Migration4 extends Migration {
 				"dm4.events.event", "fi.aalto.gamechangers.event.type",
 				"dm4.core.many", "dm4.core.one"),
 			"dm4.datetime#dm4.events.from");
-		eventType.getAssocDef("dm4.datetime#dm4.event.from").setTypeUri("dm4.core.aggregation_def");
-		eventType.getAssocDef("dm4.datetime#dm4.event.to").setTypeUri("dm4.core.aggregation_def");
+		eventType.getAssocDef("dm4.datetime#dm4.events.from").setTypeUri("dm4.core.aggregation_def");
+		eventType.getAssocDef("dm4.datetime#dm4.events.to").setTypeUri("dm4.core.aggregation_def");
         
 		// Adds date of death
 		String personTypeUri = "dm4.contacts.person";
