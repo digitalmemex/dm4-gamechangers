@@ -11,9 +11,11 @@ import org.codehaus.jettison.json.JSONObject;
 import de.deepamehta.core.ChildTopics;
 import de.deepamehta.core.RelatedTopic;
 import de.deepamehta.core.Topic;
+import fi.aalto.gamechangers.GamechangersService.Brand;
 import fi.aalto.gamechangers.GamechangersService.Event;
 import fi.aalto.gamechangers.GamechangersService.Group;
 import fi.aalto.gamechangers.GamechangersService.Institution;
+import fi.aalto.gamechangers.GamechangersService.Work;
 
 public class DTOHelper {
 
@@ -59,6 +61,35 @@ public class DTOHelper {
 		dto.put("_type", "group");
 		dto.put("id", groupTopic.getId());
 		dto.put("title", childs.getStringOrNull(NS("group.name")));
+		dto.put("notes", childs.getStringOrNull("dm4.notes.text"));
+		dto.put("from", toJSONDateStringOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.events.from")));
+		dto.put("to", toJSONDateStringOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.events.to")));
+
+		return dto;
+	}
+	
+	public static Brand toBrand(Topic brandTopic) throws JSONException {
+		ChildTopics childs = brandTopic.getChildTopics();
+		
+		Brand dto = new Brand();
+		dto.put("_type", "brand");
+		dto.put("id", brandTopic.getId());
+		dto.put("type", childs.getStringOrNull(NS("brand.type")));
+		dto.put("title", childs.getStringOrNull(NS("brand.name")));
+		dto.put("notes", childs.getStringOrNull("dm4.notes.text"));
+		dto.put("from", toJSONDateStringOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.events.from")));
+		dto.put("to", toJSONDateStringOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.events.to")));
+
+		return dto;
+	}
+	
+	public static Work toWork(Topic workTopic) throws JSONException {
+		ChildTopics childs = workTopic.getChildTopics();
+		
+		Work dto = new Work();
+		dto.put("_type", "work");
+		dto.put("id", workTopic.getId());
+		dto.put("title", childs.getStringOrNull(NS("work.label")));
 		dto.put("notes", childs.getStringOrNull("dm4.notes.text"));
 		dto.put("from", toJSONDateStringOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.events.from")));
 		dto.put("to", toJSONDateStringOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.events.to")));

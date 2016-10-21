@@ -4,6 +4,10 @@ import java.util.List;
 
 public interface GamechangersService {
 
+	Brand getBrand(long id);
+
+	List<Brand> getBrands();
+
 	Event getEvent(long id);	
 
 	List<Event> getEvents();
@@ -16,10 +20,9 @@ public interface GamechangersService {
 	
 	List<Institution> getInstitutions();
 
+	Work getWork(long id);
+	
 	List<Work> getWorks();
-	
-	List<Brand> getBrands();
-	
 	
 	List<Person> getPersons();
 	

@@ -1,8 +1,10 @@
 package fi.aalto.gamechangers;
 
+import static fi.aalto.gamechangers.DTOHelper.toBrand;
 import static fi.aalto.gamechangers.DTOHelper.toEvent;
 import static fi.aalto.gamechangers.DTOHelper.toGroup;
 import static fi.aalto.gamechangers.DTOHelper.toInstitution;
+import static fi.aalto.gamechangers.DTOHelper.toWork;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +49,41 @@ public class GamechangersPlugin extends PluginActivator implements GamechangersS
 
 	@Inject
 	private AccessControlService acService; // needed by migration 1
+
+	@GET
+	@Path("/v1/brands")
+	@Override
+	public List<Brand> getBrands() {
+		List<Brand> results = new ArrayList<Brand>();
+		
+		for (Topic topic : dm4.getTopicsByType(NS("brand"))) {
+			try {
+				results.add(toBrand(topic));
+			} catch (JSONException jsone) {
+				// TODO: Log what object was dropped
+			}
+		}
+		
+		return results;
+	}
+	
+	@GET
+	@Path("/v1/brand/{id}")
+	@Override
+	public Brand getBrand(@PathParam("id") long topicId) {
+		Topic topic = dm4.getTopic(topicId);
+		try {
+		
+			if (topic != null) {
+				return toBrand(topic);
+			}
+			
+		} catch (JSONException jsone) {
+			throw new RuntimeException(jsone);
+		}
+
+		return null;
+	}
 
 	@GET
 	@Path("/v1/events")
@@ -153,15 +190,38 @@ public class GamechangersPlugin extends PluginActivator implements GamechangersS
 		return null;
 	}
 
+	@GET
+	@Path("/v1/works")
 	@Override
 	public List<Work> getWorks() {
-		// TODO Auto-generated method stub
-		return null;
+		List<Work> results = new ArrayList<Work>();
+		
+		for (Topic topic : dm4.getTopicsByType(NS("work"))) {
+			try {
+				results.add(toWork(topic));
+			} catch (JSONException jsone) {
+				// TODO: Log what object was dropped
+			}
+		}
+		
+		return results;
 	}
-
+	
+	@GET
+	@Path("/v1/work/{id}")
 	@Override
-	public List<Brand> getBrands() {
-		// TODO Auto-generated method stub
+	public Work getWork(@PathParam("id") long topicId) {
+		Topic topic = dm4.getTopic(topicId);
+		try {
+		
+			if (topic != null) {
+				return toWork(topic);
+			}
+			
+		} catch (JSONException jsone) {
+			throw new RuntimeException(jsone);
+		}
+
 		return null;
 	}
 
