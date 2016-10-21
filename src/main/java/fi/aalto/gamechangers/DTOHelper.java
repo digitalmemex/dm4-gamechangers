@@ -74,7 +74,6 @@ public class DTOHelper {
 		Brand dto = new Brand();
 		dto.put("_type", "brand");
 		dto.put("id", brandTopic.getId());
-		dto.put("type", childs.getStringOrNull(NS("brand.type")));
 		dto.put("title", childs.getStringOrNull(NS("brand.name")));
 		dto.put("notes", childs.getStringOrNull("dm4.notes.text"));
 		dto.put("from", toJSONDateStringOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.events.from")));
@@ -89,6 +88,7 @@ public class DTOHelper {
 		Work dto = new Work();
 		dto.put("_type", "work");
 		dto.put("id", workTopic.getId());
+		dto.put("type", childs.getStringOrNull(NS("work.type")));
 		dto.put("title", childs.getStringOrNull(NS("work.label")));
 		dto.put("notes", childs.getStringOrNull("dm4.notes.text"));
 		dto.put("from", toJSONDateStringOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.events.from")));
