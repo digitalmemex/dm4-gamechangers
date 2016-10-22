@@ -2,7 +2,10 @@ package fi.aalto.gamechangers;
 
 import static fi.aalto.gamechangers.GamechangersPlugin.NS;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import org.codehaus.jettison.json.JSONException;
@@ -21,7 +24,9 @@ import fi.aalto.gamechangers.GamechangersService.Proposal;
 import fi.aalto.gamechangers.GamechangersService.Work;
 
 public class DTOHelper {
-
+	
+	static final DateFormat JSON_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm a z");
+	
 	public static Event toEvent(Topic eventTopic) throws JSONException {
 		ChildTopics childs = eventTopic.getChildTopics();
 		
@@ -165,10 +170,56 @@ public class DTOHelper {
 		if (datetimeTopic == null) {
 			return null;
 		}
-		
 		ChildTopics childs = datetimeTopic.getChildTopics();
-				
-		return "NOT YET HANDLED: " + datetimeTopic.getTypeUri();
+
+		Topic dateTopic;
+		Topic timeTopic;
+		
+		int year = -1, month = 1, day = 1;
+		int hour = 0, minute = 0;
+
+		if ("dm4.datetime".equals(datetimeTopic.getTypeUri())) {
+			dateTopic = childs.getTopicOrNull("dm4.datetime.date");
+			timeTopic = childs.getTopicOrNull("dm4.datetime.time");
+		} else {
+			dateTopic = datetimeTopic;
+			timeTopic = null;
+		}
+		
+		if (dateTopic != null && (childs = dateTopic.getChildTopics()) != null) {
+			year = getInt(childs, "dm4.datetime.year", -1);
+			month = getInt(childs, "dm4.datetime.month", 1);
+			day = getInt(childs, "dm4.datetime.day", 1);
+		}
+
+		if (timeTopic != null && (childs = timeTopic.getChildTopics()) != null) {
+			hour = getInt(childs, "dm4.datetime.hour", 0);
+			minute = getInt(childs, "dm4.datetime.minute", 0);
+		}
+		
+		// At least the year needs to have been specified
+		if (year != -1) {
+			Calendar cal = Calendar.getInstance();
+
+			cal.set(Calendar.YEAR, year);
+			cal.set(Calendar.MONTH, month);
+			cal.set(Calendar.DAY_OF_MONTH, day);
+			
+			cal.set(Calendar.HOUR, hour);
+			cal.set(Calendar.MINUTE, minute);
+			cal.set(Calendar.SECOND, 0);
+			cal.set(Calendar.MILLISECOND, 0);
+					
+			return JSON_DATE_FORMAT.format(cal.getTime());
+		} else {
+			return null;
+		}
+	}
+	
+	private static int getInt(ChildTopics childs, String assocDefUri, int defaultValue) {
+		Integer value = childs.getIntOrNull(assocDefUri);
+		
+		return (value != null) ? value.intValue() : defaultValue;
 	}
 	
 	private static JSONObject toAddressOrNull(Topic addressTopic) throws JSONException {
