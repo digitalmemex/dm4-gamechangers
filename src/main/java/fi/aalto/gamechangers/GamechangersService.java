@@ -36,21 +36,21 @@ public interface GamechangersService {
 	
 	List<Proposal> getProposals();
 	
-	class Event extends JSONEnabledImpl {}
+	interface Event {}
 	
-	class Institution extends JSONEnabledImpl {}
+	interface Institution {}
 
-	class Work extends JSONEnabledImpl {}
+	interface Work {}
 	
-	class Brand extends JSONEnabledImpl {}
+	interface Brand {}
 	
-	class Group extends JSONEnabledImpl {}
+	interface Group {}
 	
-	class Person extends JSONEnabledImpl {}
+	interface Person {}
 	
-	class Comment extends JSONEnabledImpl {}
+	interface Comment {}
 	
-	class Proposal extends JSONEnabledImpl {}
+	interface Proposal {}
 
 	
 }

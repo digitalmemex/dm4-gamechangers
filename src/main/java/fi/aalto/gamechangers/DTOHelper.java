@@ -25,7 +25,7 @@ public class DTOHelper {
 	public static Event toEvent(Topic eventTopic) throws JSONException {
 		ChildTopics childs = eventTopic.getChildTopics();
 		
-		Event dto = new Event();
+		EventImpl dto = new EventImpl();
 		dto.put("_type", "event");
 		dto.put("id", eventTopic.getId());
 		dto.put("name", childs.getStringOrNull("dm4.events.title"));
@@ -42,7 +42,7 @@ public class DTOHelper {
 	public static Institution toInstitution(Topic instTopic) throws JSONException {
 		ChildTopics childs = instTopic.getChildTopics();
 		
-		Institution dto = new Institution();
+		InstitutionImpl dto = new InstitutionImpl();
 		dto.put("_type", "institution");
 		dto.put("id", instTopic.getId());
 		dto.put("name", childs.getStringOrNull("dm4.contacts.institution_name"));
@@ -60,7 +60,7 @@ public class DTOHelper {
 	public static Group toGroup(Topic groupTopic) throws JSONException {
 		ChildTopics childs = groupTopic.getChildTopics();
 		
-		Group dto = new Group();
+		GroupImpl dto = new GroupImpl();
 		dto.put("_type", "group");
 		dto.put("id", groupTopic.getId());
 		dto.put("name", childs.getStringOrNull(NS("group.name")));
@@ -74,7 +74,7 @@ public class DTOHelper {
 	public static Brand toBrand(Topic brandTopic) throws JSONException {
 		ChildTopics childs = brandTopic.getChildTopics();
 		
-		Brand dto = new Brand();
+		BrandImpl dto = new BrandImpl();
 		dto.put("_type", "brand");
 		dto.put("id", brandTopic.getId());
 		dto.put("name", childs.getStringOrNull(NS("brand.name")));
@@ -88,7 +88,7 @@ public class DTOHelper {
 	public static Comment toComment(Topic commentTopic) throws JSONException {
 		ChildTopics childs = commentTopic.getChildTopics();
 		
-		Comment dto = new Comment();
+		CommentImpl dto = new CommentImpl();
 		dto.put("_type", "comment");
 		dto.put("id", commentTopic.getId());
 		dto.put("name", childs.getStringOrNull("dm4.contacts.person_name"));
@@ -102,7 +102,7 @@ public class DTOHelper {
 	public static Person toPerson(Topic personTopic) throws JSONException {
 		ChildTopics childs = personTopic.getChildTopics();
 		
-		Person dto = new Person();
+		PersonImpl dto = new PersonImpl();
 		dto.put("_type", "person");
 		dto.put("id", personTopic.getId());
 		dto.put("name", childs.getStringOrNull("dm4.contacts.person_name"));
@@ -118,7 +118,7 @@ public class DTOHelper {
 	public static Proposal toProposal(Topic proposalTopic) throws JSONException {
 		ChildTopics childs = proposalTopic.getChildTopics();
 		
-		Proposal dto = new Proposal();
+		ProposalImpl dto = new ProposalImpl();
 		dto.put("_type", "proposal");
 		dto.put("id", proposalTopic.getId());
 		dto.put("name", childs.getStringOrNull("dm4.contacts.person_name"));
@@ -133,7 +133,7 @@ public class DTOHelper {
 	public static Work toWork(Topic workTopic) throws JSONException {
 		ChildTopics childs = workTopic.getChildTopics();
 		
-		Work dto = new Work();
+		WorkImpl dto = new WorkImpl();
 		dto.put("_type", "work");
 		dto.put("id", workTopic.getId());
 		dto.put("type", childs.getStringOrNull(NS("work.type")));
@@ -183,4 +183,29 @@ public class DTOHelper {
 		
 		return addr;
 	}
+	
+	private static class EventImpl extends JSONEnabledImpl implements Event {
+	}
+
+	private static class InstitutionImpl extends JSONEnabledImpl implements Institution {
+	}
+
+	private static class WorkImpl extends JSONEnabledImpl implements Work {
+	}
+
+	private static class BrandImpl extends JSONEnabledImpl implements Brand {
+	}
+
+	private static class GroupImpl extends JSONEnabledImpl implements Group {
+	}
+
+	private static class PersonImpl extends JSONEnabledImpl implements Person {
+	}
+
+	private static class CommentImpl extends JSONEnabledImpl implements Comment {
+	}
+
+	private static class ProposalImpl extends JSONEnabledImpl implements Proposal {
+	}
+
 }
