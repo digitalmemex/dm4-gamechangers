@@ -1,9 +1,12 @@
 package fi.aalto.gamechangers;
 
 import static fi.aalto.gamechangers.DTOHelper.toBrand;
+import static fi.aalto.gamechangers.DTOHelper.toComment;
 import static fi.aalto.gamechangers.DTOHelper.toEvent;
 import static fi.aalto.gamechangers.DTOHelper.toGroup;
 import static fi.aalto.gamechangers.DTOHelper.toInstitution;
+import static fi.aalto.gamechangers.DTOHelper.toPerson;
+import static fi.aalto.gamechangers.DTOHelper.toProposal;
 import static fi.aalto.gamechangers.DTOHelper.toWork;
 
 import java.util.ArrayList;
@@ -34,9 +37,6 @@ public class GamechangersPlugin extends PluginActivator implements GamechangersS
 	public static String NS(String suffix) {
 		return "fi.aalto.gamechangers." + suffix;
 	}
-
-	// ----------------------------------------------------------------------------------------------
-	// Instance Variables
 
 	@Inject
 	private ContactsService contactsService;
@@ -76,6 +76,41 @@ public class GamechangersPlugin extends PluginActivator implements GamechangersS
 		
 			if (topic != null) {
 				return toBrand(topic);
+			}
+			
+		} catch (JSONException jsone) {
+			throw new RuntimeException(jsone);
+		}
+
+		return null;
+	}
+
+	@GET
+	@Path("/v1/comments")
+	@Override
+	public List<Comment> getComments() {
+		List<Comment> results = new ArrayList<Comment>();
+		
+		for (Topic topic : dm4.getTopicsByType(NS("comment"))) {
+			try {
+				results.add(toComment(topic));
+			} catch (JSONException jsone) {
+				// TODO: Log what object was dropped
+			}
+		}
+		
+		return results;
+	}
+	
+	@GET
+	@Path("/v1/comment/{id}")
+	@Override
+	public Comment getComment(@PathParam("id") long topicId) {
+		Topic topic = dm4.getTopic(topicId);
+		try {
+		
+			if (topic != null) {
+				return toComment(topic);
 			}
 			
 		} catch (JSONException jsone) {
@@ -156,6 +191,76 @@ public class GamechangersPlugin extends PluginActivator implements GamechangersS
 	}
 
 	@GET
+	@Path("/v1/persons")
+	@Override
+	public List<Person> getPersons() {
+		List<Person> results = new ArrayList<Person>();
+		
+		for (Topic topic : dm4.getTopicsByType("dm4.contacts.person")) {
+			try {
+				results.add(toPerson(topic));
+			} catch (JSONException jsone) {
+				// TODO: Log what object was dropped
+			}
+		}
+		
+		return results;
+	}
+	
+	@GET
+	@Path("/v1/person/{id}")
+	@Override
+	public Person getPerson(@PathParam("id") long topicId) {
+		Topic topic = dm4.getTopic(topicId);
+		try {
+		
+			if (topic != null) {
+				return toPerson(topic);
+			}
+			
+		} catch (JSONException jsone) {
+			throw new RuntimeException(jsone);
+		}
+
+		return null;
+	}
+
+	@GET
+	@Path("/v1/proposals")
+	@Override
+	public List<Proposal> getProposals() {
+		List<Proposal> results = new ArrayList<Proposal>();
+		
+		for (Topic topic : dm4.getTopicsByType(NS("proposal"))) {
+			try {
+				results.add(toProposal(topic));
+			} catch (JSONException jsone) {
+				// TODO: Log what object was dropped
+			}
+		}
+		
+		return results;
+	}
+	
+	@GET
+	@Path("/v1/proposal/{id}")
+	@Override
+	public Proposal getProposal(@PathParam("id") long topicId) {
+		Topic topic = dm4.getTopic(topicId);
+		try {
+		
+			if (topic != null) {
+				return toProposal(topic);
+			}
+			
+		} catch (JSONException jsone) {
+			throw new RuntimeException(jsone);
+		}
+
+		return null;
+	}
+
+	@GET
 	@Path("/v1/institutions")
 	@Override
 	public List<Institution> getInstitutions() {
@@ -225,24 +330,4 @@ public class GamechangersPlugin extends PluginActivator implements GamechangersS
 		return null;
 	}
 
-	@Override
-	public List<Person> getPersons() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<Comment> getComments() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<Proposal> getProposals() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	// --------------------------------------------------------------------------------------------------
-	// Public Methods
 }

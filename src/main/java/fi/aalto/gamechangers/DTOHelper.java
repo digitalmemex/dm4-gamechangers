@@ -12,9 +12,12 @@ import de.deepamehta.core.ChildTopics;
 import de.deepamehta.core.RelatedTopic;
 import de.deepamehta.core.Topic;
 import fi.aalto.gamechangers.GamechangersService.Brand;
+import fi.aalto.gamechangers.GamechangersService.Comment;
 import fi.aalto.gamechangers.GamechangersService.Event;
 import fi.aalto.gamechangers.GamechangersService.Group;
 import fi.aalto.gamechangers.GamechangersService.Institution;
+import fi.aalto.gamechangers.GamechangersService.Person;
+import fi.aalto.gamechangers.GamechangersService.Proposal;
 import fi.aalto.gamechangers.GamechangersService.Work;
 
 public class DTOHelper {
@@ -25,7 +28,7 @@ public class DTOHelper {
 		Event dto = new Event();
 		dto.put("_type", "event");
 		dto.put("id", eventTopic.getId());
-		dto.put("title", childs.getStringOrNull("dm4.events.title"));
+		dto.put("name", childs.getStringOrNull("dm4.events.title"));
 		dto.put("type", childs.getStringOrNull(NS("event.type")));
 		dto.put("address", toAddressOrNull(childs.getTopicOrNull("dm4.contacts.address")));
 		dto.put("from", toJSONDateStringOrNull(childs.getTopicOrNull("dm4.datetime#dm4.events.from")));
@@ -42,10 +45,10 @@ public class DTOHelper {
 		Institution dto = new Institution();
 		dto.put("_type", "institution");
 		dto.put("id", instTopic.getId());
-		dto.put("title", childs.getStringOrNull("dm4.contacts.institution_name"));
+		dto.put("name", childs.getStringOrNull("dm4.contacts.institution_name"));
 		dto.put("type", childs.getStringOrNull(NS("institution.type")));
 //		dto.put("address", toAddressOrNull(childs.getTopicOrNull("dm4.contacts.address")));
-		dto.put("urls", toStringListOrNull(childs.getTopics("dm4.webbrowser.url")));
+		dto.put("urls", toStringListOrNull(childs.getTopicsOrNull("dm4.webbrowser.url")));
 		dto.put("notes", childs.getStringOrNull("dm4.contacts.notes"));
 		dto.put("from", toJSONDateStringOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.events.from")));
 		dto.put("to", toJSONDateStringOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.events.to")));
@@ -60,7 +63,7 @@ public class DTOHelper {
 		Group dto = new Group();
 		dto.put("_type", "group");
 		dto.put("id", groupTopic.getId());
-		dto.put("title", childs.getStringOrNull(NS("group.name")));
+		dto.put("name", childs.getStringOrNull(NS("group.name")));
 		dto.put("notes", childs.getStringOrNull("dm4.notes.text"));
 		dto.put("from", toJSONDateStringOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.events.from")));
 		dto.put("to", toJSONDateStringOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.events.to")));
@@ -74,7 +77,52 @@ public class DTOHelper {
 		Brand dto = new Brand();
 		dto.put("_type", "brand");
 		dto.put("id", brandTopic.getId());
-		dto.put("title", childs.getStringOrNull(NS("brand.name")));
+		dto.put("name", childs.getStringOrNull(NS("brand.name")));
+		dto.put("notes", childs.getStringOrNull("dm4.notes.text"));
+		dto.put("from", toJSONDateStringOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.events.from")));
+		dto.put("to", toJSONDateStringOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.events.to")));
+
+		return dto;
+	}
+
+	public static Comment toComment(Topic commentTopic) throws JSONException {
+		ChildTopics childs = commentTopic.getChildTopics();
+		
+		Comment dto = new Comment();
+		dto.put("_type", "comment");
+		dto.put("id", commentTopic.getId());
+		dto.put("name", childs.getStringOrNull("dm4.contacts.person_name"));
+		dto.put("email", childs.getStringOrNull("dm4.contacts.email_address"));
+		dto.put("notes", childs.getStringOrNull("dm4.notes.text"));
+		dto.put("public", childs.getBooleanOrNull(NS("comment.public")));
+
+		return dto;
+	}
+	
+	public static Person toPerson(Topic personTopic) throws JSONException {
+		ChildTopics childs = personTopic.getChildTopics();
+		
+		Person dto = new Person();
+		dto.put("_type", "person");
+		dto.put("id", personTopic.getId());
+		dto.put("name", childs.getStringOrNull("dm4.contacts.person_name"));
+		dto.put("notes", childs.getStringOrNull("dm4.contacts.notes"));
+		dto.put("emails", toStringListOrNull(childs.getTopicsOrNull("dm4.contacts.email_address")));
+		dto.put("urls", toStringListOrNull(childs.getTopicsOrNull("dm4.webbrowser.url")));
+		dto.put("from", toJSONDateStringOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.contacts.date_of_birth")));
+		dto.put("to", toJSONDateStringOrNull(childs.getTopicOrNull("dm4.datetime.date#" + NS("date_of_death"))));
+
+		return dto;
+	}
+	
+	public static Proposal toProposal(Topic proposalTopic) throws JSONException {
+		ChildTopics childs = proposalTopic.getChildTopics();
+		
+		Proposal dto = new Proposal();
+		dto.put("_type", "proposal");
+		dto.put("id", proposalTopic.getId());
+		dto.put("name", childs.getStringOrNull("dm4.contacts.person_name"));
+		dto.put("email", childs.getStringOrNull("dm4.contacts.email_address"));
 		dto.put("notes", childs.getStringOrNull("dm4.notes.text"));
 		dto.put("from", toJSONDateStringOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.events.from")));
 		dto.put("to", toJSONDateStringOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.events.to")));
@@ -89,7 +137,7 @@ public class DTOHelper {
 		dto.put("_type", "work");
 		dto.put("id", workTopic.getId());
 		dto.put("type", childs.getStringOrNull(NS("work.type")));
-		dto.put("title", childs.getStringOrNull(NS("work.label")));
+		dto.put("name", childs.getStringOrNull(NS("work.label")));
 		dto.put("notes", childs.getStringOrNull("dm4.notes.text"));
 		dto.put("from", toJSONDateStringOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.events.from")));
 		dto.put("to", toJSONDateStringOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.events.to")));
@@ -98,7 +146,7 @@ public class DTOHelper {
 	}
 	
 	private static List<String> toStringListOrNull(List<RelatedTopic> topics) {
-		if (topics.size() > 0) {
+		if (topics != null && topics.size() > 0) {
 			List<String> list = new ArrayList<String>();
 			for (Topic t : topics) {
 				list.add(t.getSimpleValue().toString());

@@ -24,9 +24,15 @@ public interface GamechangersService {
 	
 	List<Work> getWorks();
 	
+	Person getPerson(long id);
+	
 	List<Person> getPersons();
 	
+	Comment getComment(long id);
+	
 	List<Comment> getComments();
+	
+	Proposal getProposal(long id);
 	
 	List<Proposal> getProposals();
 	
