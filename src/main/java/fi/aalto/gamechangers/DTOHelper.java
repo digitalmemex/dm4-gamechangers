@@ -85,7 +85,7 @@ public class DTOHelper {
 		return dto;
 	}
 
-	public static Comment toComment(Topic commentTopic) throws JSONException {
+	public static Comment toCommentOrNull(Topic commentTopic) throws JSONException {
 		ChildTopics childs = commentTopic.getChildTopics();
 
 		if (childs.getBooleanOrNull(NS("comment.public"))) {

@@ -1,7 +1,7 @@
 package fi.aalto.gamechangers;
 
 import static fi.aalto.gamechangers.DTOHelper.toBrand;
-import static fi.aalto.gamechangers.DTOHelper.toComment;
+import static fi.aalto.gamechangers.DTOHelper.toCommentOrNull;
 import static fi.aalto.gamechangers.DTOHelper.toEvent;
 import static fi.aalto.gamechangers.DTOHelper.toGroup;
 import static fi.aalto.gamechangers.DTOHelper.toInstitution;
@@ -93,7 +93,9 @@ public class GamechangersPlugin extends PluginActivator implements GamechangersS
 		
 		for (Topic topic : dm4.getTopicsByType(NS("comment"))) {
 			try {
-				results.add(toComment(topic));
+				Comment comment = toCommentOrNull(topic);
+				if (comment != null)
+					results.add(comment);
 			} catch (JSONException jsone) {
 				// TODO: Log what object was dropped
 			}
@@ -110,7 +112,7 @@ public class GamechangersPlugin extends PluginActivator implements GamechangersS
 		try {
 		
 			if (topic != null) {
-				return toComment(topic);
+				return toCommentOrNull(topic);
 			}
 			
 		} catch (JSONException jsone) {
