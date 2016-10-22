@@ -87,16 +87,19 @@ public class DTOHelper {
 
 	public static Comment toComment(Topic commentTopic) throws JSONException {
 		ChildTopics childs = commentTopic.getChildTopics();
-		
-		CommentImpl dto = new CommentImpl();
-		dto.put("_type", "comment");
-		dto.put("id", commentTopic.getId());
-		dto.put("name", childs.getStringOrNull("dm4.contacts.person_name"));
-		dto.put("email", childs.getStringOrNull("dm4.contacts.email_address"));
-		dto.put("notes", childs.getStringOrNull("dm4.notes.text"));
-		dto.put("public", childs.getBooleanOrNull(NS("comment.public")));
 
-		return dto;
+		if (childs.getBooleanOrNull(NS("comment.public"))) {
+			CommentImpl dto = new CommentImpl();
+			dto.put("_type", "comment");
+			dto.put("id", commentTopic.getId());
+			dto.put("name", childs.getStringOrNull("dm4.contacts.person_name"));
+			dto.put("email", childs.getStringOrNull("dm4.contacts.email_address"));
+			dto.put("notes", childs.getStringOrNull("dm4.notes.text"));
+	
+			return dto;
+		} else {
+			return null;
+		}
 	}
 	
 	public static Person toPerson(Topic personTopic) throws JSONException {

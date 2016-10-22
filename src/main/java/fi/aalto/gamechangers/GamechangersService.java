@@ -2,6 +2,8 @@ package fi.aalto.gamechangers;
 
 import java.util.List;
 
+import de.deepamehta.core.JSONEnabled;
+
 public interface GamechangersService {
 
 	Brand getBrand(long id);
@@ -36,21 +38,21 @@ public interface GamechangersService {
 	
 	List<Proposal> getProposals();
 	
-	interface Event {}
+	interface Event extends JSONEnabled {}
 	
-	interface Institution {}
+	interface Institution extends JSONEnabled {}
 
-	interface Work {}
+	interface Work extends JSONEnabled {}
 	
-	interface Brand {}
+	interface Brand extends JSONEnabled {}
 	
-	interface Group {}
+	interface Group extends JSONEnabled {}
 	
-	interface Person {}
+	interface Person extends JSONEnabled {}
 	
-	interface Comment {}
+	interface Comment extends JSONEnabled {}
 	
-	interface Proposal {}
+	interface Proposal extends JSONEnabled {}
 
 	
 }
