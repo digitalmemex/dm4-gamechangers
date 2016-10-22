@@ -178,10 +178,13 @@ public class DTOHelper {
 		int year = -1, month = 1, day = 1;
 		int hour = 0, minute = 0;
 
+		// dateTimetopic is either dm4.datetime or dm4.datetime.date
 		if ("dm4.datetime".equals(datetimeTopic.getTypeUri())) {
+			// Retrieves the children
 			dateTopic = childs.getTopicOrNull("dm4.datetime.date");
 			timeTopic = childs.getTopicOrNull("dm4.datetime.time");
 		} else {
+			// Initializes dateTopic from datetimeTopic
 			dateTopic = datetimeTopic;
 			timeTopic = null;
 		}
