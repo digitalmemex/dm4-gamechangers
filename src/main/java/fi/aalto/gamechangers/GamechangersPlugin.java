@@ -1,7 +1,9 @@
 package fi.aalto.gamechangers;
 
 import static fi.aalto.gamechangers.DTOHelper.toBrand;
+import static fi.aalto.gamechangers.DTOHelper.toComment;
 import static fi.aalto.gamechangers.DTOHelper.toCommentOrNull;
+import static fi.aalto.gamechangers.DTOHelper.toCommentTopic;
 import static fi.aalto.gamechangers.DTOHelper.toEvent;
 import static fi.aalto.gamechangers.DTOHelper.toGroup;
 import static fi.aalto.gamechangers.DTOHelper.toInstitution;
@@ -14,6 +16,7 @@ import java.util.List;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -27,6 +30,7 @@ import de.deepamehta.core.RelatedTopic;
 import de.deepamehta.core.Topic;
 import de.deepamehta.core.osgi.PluginActivator;
 import de.deepamehta.core.service.Inject;
+import de.deepamehta.core.service.Transactional;
 import de.deepamehta.events.EventsService;
 import de.deepamehta.workspaces.WorkspacesService;
 
@@ -151,6 +155,27 @@ public class GamechangersPlugin extends PluginActivator implements GamechangersS
 		}
 
 		return null;
+	}
+	
+	@PUT
+	@Path("/v1/comment")
+	@Transactional
+	@Override
+	public Comment createComment(CommentBean comment) {
+		// TODO: Aggressive validation of the CommentBean instance!
+		// Required values, maximum lengths, ...
+		
+		try {
+			Topic topic = toCommentTopic(dm4, mf, comment);
+			
+			// Assigns the new value to the 'data' workspace
+			long wsId = wsService.getWorkspace(NS("data")).getId();
+			wsService.assignToWorkspace(topic, wsId);
+			
+			return toComment(topic);
+		} catch (JSONException jsone) {
+			throw new RuntimeException(jsone);
+		}
 	}
 
 	@GET

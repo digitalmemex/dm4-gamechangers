@@ -14,8 +14,11 @@ import org.codehaus.jettison.json.JSONObject;
 import de.deepamehta.core.ChildTopics;
 import de.deepamehta.core.RelatedTopic;
 import de.deepamehta.core.Topic;
+import de.deepamehta.core.service.CoreService;
+import de.deepamehta.core.service.ModelFactory;
 import fi.aalto.gamechangers.GamechangersService.Brand;
 import fi.aalto.gamechangers.GamechangersService.Comment;
+import fi.aalto.gamechangers.GamechangersService.CommentBean;
 import fi.aalto.gamechangers.GamechangersService.Event;
 import fi.aalto.gamechangers.GamechangersService.Group;
 import fi.aalto.gamechangers.GamechangersService.Institution;
@@ -91,9 +94,17 @@ public class DTOHelper {
 	}
 
 	public static Comment toCommentOrNull(Topic commentTopic) throws JSONException {
+		return toCommentImpl(commentTopic, false);
+	}
+
+	public static Comment toComment(Topic commentTopic) throws JSONException {
+		return toCommentImpl(commentTopic, true);
+	}
+	
+	private static Comment toCommentImpl(Topic commentTopic, boolean alwaysCreate) throws JSONException {
 		ChildTopics childs = commentTopic.getChildTopics();
 
-		if (childs.getBooleanOrNull(NS("comment.public"))) {
+		if (alwaysCreate || childs.getBooleanOrNull(NS("comment.public"))) {
 			CommentImpl dto = new CommentImpl();
 			dto.put("_type", "comment");
 			dto.put("id", commentTopic.getId());
@@ -105,6 +116,45 @@ public class DTOHelper {
 		} else {
 			return null;
 		}
+	}
+	
+	public static Topic toCommentTopic(CoreService dm4, ModelFactory mf, CommentBean comment) throws JSONException {
+		// TODO: Check input
+		
+		Topic topic = dm4.createTopic(mf.newTopicModel(NS("comment")));
+		ChildTopics childs = topic.getChildTopics();
+		childs.setRef("dm4.contacts.person_name", toPersonNameTopic(dm4, mf, comment.name).getId());
+		childs.set("dm4.contacts.email_address", comment.email);
+		childs.set("dm4.notes.text", comment.notes);
+		childs.set(NS("comment.public"), true);
+		
+		return topic;
+	}
+	
+	private static Topic toPersonNameTopic(CoreService dm4, ModelFactory mf, String nameString) {
+		nameString = nameString.trim();
+		
+		String firstName;
+		String lastName;
+		int spaceIndex = -1;
+		
+		// If a space is available, it'll be in the middle (because of trim())
+		if ((spaceIndex = nameString.indexOf(' ')) > -1) {
+			firstName = nameString.substring(0, spaceIndex);
+			lastName = nameString.substring(spaceIndex + 1);
+		} else {
+			// Just put everything in the first name
+			firstName = nameString;
+			lastName = "";
+		}
+
+		Topic topic = dm4.createTopic(mf.newTopicModel("dm4.contacts.person_name"));
+		ChildTopics childs = topic.getChildTopics();
+		
+		childs.set("dm4.contacts.first_name", firstName);
+		childs.set("dm4.contacts.last_name", lastName);
+		
+		return topic;
 	}
 	
 	public static Person toPerson(Topic personTopic) throws JSONException {
