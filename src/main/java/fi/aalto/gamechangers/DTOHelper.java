@@ -126,7 +126,6 @@ public class DTOHelper {
 		childs.setRef("dm4.contacts.person_name", toPersonNameTopic(dm4, mf, comment.name).getId());
 		childs.set("dm4.contacts.email_address", comment.email);
 		childs.set("dm4.notes.text", comment.notes);
-		childs.set(NS("comment.public"), true);
 		
 		return topic;
 	}
