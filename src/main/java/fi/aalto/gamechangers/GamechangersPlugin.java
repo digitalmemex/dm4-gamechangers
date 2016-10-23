@@ -23,6 +23,7 @@ import org.codehaus.jettison.json.JSONException;
 
 import de.deepamehta.accesscontrol.AccessControlService;
 import de.deepamehta.contacts.ContactsService;
+import de.deepamehta.core.RelatedTopic;
 import de.deepamehta.core.Topic;
 import de.deepamehta.core.osgi.PluginActivator;
 import de.deepamehta.core.service.Inject;
@@ -83,6 +84,36 @@ public class GamechangersPlugin extends PluginActivator implements GamechangersS
 		}
 
 		return null;
+	}
+
+	@GET
+	@Path("/v1/comments_of_item/{id}")
+	@Override
+	public List<Comment> getCommentsOfItem(@PathParam("id") long topicId) {
+		Topic topic = dm4.getTopic(topicId);
+
+		if (topic == null) {
+			return null;
+		}
+
+		List<Comment> results = new ArrayList<Comment>();
+		
+		List<RelatedTopic> comments = topic.getRelatedTopics("dm4.core.association", null, null, NS("comment"));
+		if (comments == null) {
+			return results;
+		}
+		
+		for (RelatedTopic commentTopic : comments) {
+			try {
+				Comment comment = toCommentOrNull(commentTopic);
+				if (comment != null)
+					results.add(comment);
+			} catch (JSONException jsone) {
+				// TODO: Log what object was dropped
+			}
+		}
+		
+		return results;
 	}
 
 	@GET

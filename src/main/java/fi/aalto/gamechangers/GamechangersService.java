@@ -33,6 +33,8 @@ public interface GamechangersService {
 	Comment getComment(long id);
 	
 	List<Comment> getComments();
+
+	List<Comment> getCommentsOfItem(long id);
 	
 	Proposal getProposal(long id);
 	
