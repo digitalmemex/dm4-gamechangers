@@ -162,11 +162,16 @@ public class GamechangersPlugin extends PluginActivator implements GamechangersS
 	@Transactional
 	@Override
 	public Comment createComment(CommentBean comment) {
+		Topic commentedOnTopic = dm4.getTopic(comment.commentedItemId);
+		if (commentedOnTopic == null)
+			throw new IllegalArgumentException("commentedItemId is invalid.");
+
 		// TODO: Aggressive validation of the CommentBean instance!
 		// Required values, maximum lengths, ...
 		
 		try {
-			Topic topic = toCommentTopic(dm4, mf, comment);
+			
+			Topic topic = toCommentTopic(dm4, mf, comment, commentedOnTopic);
 			
 			// Assigns the new value to the 'data' workspace
 			long wsId = wsService.getWorkspace(NS("data")).getId();

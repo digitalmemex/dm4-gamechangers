@@ -118,14 +118,19 @@ public class DTOHelper {
 		}
 	}
 	
-	public static Topic toCommentTopic(CoreService dm4, ModelFactory mf, CommentBean comment) throws JSONException {
+	public static Topic toCommentTopic(CoreService dm4, ModelFactory mf, CommentBean comment, Topic topicCommentOn) throws JSONException {
 		// TODO: Check input
 		
 		Topic topic = dm4.createTopic(mf.newTopicModel(NS("comment")));
+		
 		ChildTopics childs = topic.getChildTopics();
 		childs.setRef("dm4.contacts.person_name", toPersonNameTopic(dm4, mf, comment.name).getId());
 		childs.set("dm4.contacts.email_address", comment.email);
 		childs.set("dm4.notes.text", comment.notes);
+
+		// Sets the relation to the item that is being commented on
+		// TODO: Does not work as intented.
+		childs.addRef("dm4.core.association", topicCommentOn.getId());
 		
 		return topic;
 	}

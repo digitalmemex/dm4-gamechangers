@@ -61,11 +61,13 @@ public interface GamechangersService {
 		String name;
 		String email;
 		String notes;
+		long commentedItemId;
 		
 		public CommentBean(JSONObject o) throws JSONException {
 			name = o.getString("name");
 			email = o.getString("email");
 			notes = o.getString("notes");
+			commentedItemId = o.getLong("commentedItemId");
 		}
 	}
 	
