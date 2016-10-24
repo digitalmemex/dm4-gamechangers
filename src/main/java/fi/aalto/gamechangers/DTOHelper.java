@@ -129,9 +129,10 @@ public class DTOHelper {
 		childs.set("dm4.notes.text", comment.notes);
 
 		// Sets the relation to the item that is being commented on
-		// TODO: Does not work as intented.
-		childs.addRef("dm4.core.association", topicCommentOn.getId());
-		
+		dm4.createAssociation(mf.newAssociationModel("dm4.core.association",
+    			mf.newTopicRoleModel(topicCommentOn.getId(), "dm4.core.default"),
+			mf.newTopicRoleModel(topic.getId(), "dm4.core.default"))); 
+	
 		return topic;
 	}
 	
