@@ -3,6 +3,7 @@ package fi.aalto.gamechangers;
 import static fi.aalto.gamechangers.GamechangersPlugin.NS;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -24,6 +25,7 @@ import fi.aalto.gamechangers.GamechangersService.Group;
 import fi.aalto.gamechangers.GamechangersService.Institution;
 import fi.aalto.gamechangers.GamechangersService.Person;
 import fi.aalto.gamechangers.GamechangersService.Proposal;
+import fi.aalto.gamechangers.GamechangersService.ProposalBean;
 import fi.aalto.gamechangers.GamechangersService.Work;
 
 public class DTOHelper {
@@ -178,6 +180,28 @@ public class DTOHelper {
 		return dto;
 	}
 	
+	public static Topic toProposalTopic(CoreService dm4, ModelFactory mf, ProposalBean proposal) throws JSONException {
+		// TODO: Check input
+		
+		Topic topic = dm4.createTopic(mf.newTopicModel(NS("proposal")));
+		
+		ChildTopics childs = topic.getChildTopics();
+		childs.setRef("dm4.contacts.person_name", toPersonNameTopic(dm4, mf, proposal.name).getId());
+		childs.set("dm4.contacts.email_address", proposal.email);
+		childs.set("dm4.notes.text", proposal.notes);
+		childs.setRef("dm4.datetime.date#dm4.events.from", toDateTopic(dm4, mf, proposal.from).getId());
+		childs.setRef("dm4.datetime.date#dm4.events.to", toDateTopic(dm4, mf, proposal.from).getId());
+
+		// Sets the relation to the item that is being commented on
+		/*
+		dm4.createAssociation(mf.newAssociationModel("dm4.core.association",
+    			mf.newTopicRoleModel(topicCommentOn.getId(), "dm4.core.default"),
+			mf.newTopicRoleModel(topic.getId(), "dm4.core.default")));
+		*/ 
+	
+		return topic;
+	}
+	
 	public static Proposal toProposal(Topic proposalTopic) throws JSONException {
 		ChildTopics childs = proposalTopic.getChildTopics();
 		
@@ -219,6 +243,24 @@ public class DTOHelper {
 		} else {
 			return null;
 		}
+	}
+
+	public static Topic toDateTopic(CoreService dm4, ModelFactory mf, String jsonDateString) throws JSONException {
+		Calendar cal = Calendar.getInstance();
+		try {
+			cal.setTime(JSON_DATE_FORMAT.parse(jsonDateString));
+		} catch (ParseException e) {
+			throw new RuntimeException(e);
+		}
+		
+		Topic topic = dm4.createTopic(mf.newTopicModel("dm4.datetime.date"));
+		ChildTopics childs = topic.getChildTopics();
+
+		childs.set("dm4.datetime.year", cal.get(Calendar.YEAR));
+		childs.set("dm4.datetime.month", cal.get(Calendar.MONTH));
+		childs.set("dm4.datetime.day", cal.get(Calendar.DAY_OF_MONTH));
+		
+		return topic;
 	}
 	
 	private static String toJSONDateStringOrNull(Topic datetimeTopic) throws JSONException {

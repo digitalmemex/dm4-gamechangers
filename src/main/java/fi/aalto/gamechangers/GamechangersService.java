@@ -42,6 +42,8 @@ public interface GamechangersService {
 	List<Comment> getCommentsOfItem(long id);
 	
 	Proposal getProposal(long id);
+
+	Proposal createProposal(ProposalBean proposal);
 	
 	List<Proposal> getProposals();
 	
@@ -72,6 +74,22 @@ public interface GamechangersService {
 	}
 	
 	interface Comment extends JSONEnabled {}
+	
+	public static class ProposalBean {
+		String name;
+		String email;
+		String notes;
+		String from;
+		String to;
+		
+		public ProposalBean(JSONObject o) throws JSONException {
+			name = o.getString("name");
+			email = o.getString("email");
+			notes = o.getString("notes");
+			from = o.getString("from");
+			to = o.getString("to");
+		}
+	}
 	
 	interface Proposal extends JSONEnabled {}
 

@@ -9,6 +9,7 @@ import static fi.aalto.gamechangers.DTOHelper.toGroup;
 import static fi.aalto.gamechangers.DTOHelper.toInstitution;
 import static fi.aalto.gamechangers.DTOHelper.toPerson;
 import static fi.aalto.gamechangers.DTOHelper.toProposal;
+import static fi.aalto.gamechangers.DTOHelper.toProposalTopic;
 import static fi.aalto.gamechangers.DTOHelper.toWork;
 
 import java.util.ArrayList;
@@ -321,6 +322,27 @@ public class GamechangersPlugin extends PluginActivator implements GamechangersS
 		}
 
 		return null;
+	}
+
+	@PUT
+	@Path("/v1/proposal")
+	@Transactional
+	@Override
+	public Proposal createProposal(ProposalBean proposal) {
+		// Required values, maximum lengths, ...
+		
+		try {
+			
+			Topic topic = toProposalTopic(dm4, mf, proposal);
+			
+			// Assigns the new value to the 'data' workspace
+			long wsId = wsService.getWorkspace(NS("comments")).getId();
+			wsService.assignToWorkspace(topic, wsId);
+			
+			return toProposal(topic);
+		} catch (JSONException jsone) {
+			throw new RuntimeException(jsone);
+		}
 	}
 
 	@GET
