@@ -5,9 +5,14 @@ import static fi.aalto.gamechangers.GamechangersPlugin.NS;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+
+import javax.xml.bind.DatatypeConverter;
 
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -30,7 +35,7 @@ import fi.aalto.gamechangers.GamechangersService.Work;
 
 public class DTOHelper {
 	
-	static final DateFormat JSON_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm a z");
+	static final DateFormat JSON_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", new Locale("fi"));
 	
 	public static Event toEvent(Topic eventTopic) throws JSONException {
 		ChildTopics childs = eventTopic.getChildTopics();
@@ -190,7 +195,7 @@ public class DTOHelper {
 		childs.set("dm4.contacts.email_address", proposal.email);
 		childs.set("dm4.notes.text", proposal.notes);
 		childs.setRef("dm4.datetime.date#dm4.events.from", toDateTopic(dm4, mf, proposal.from).getId());
-		childs.setRef("dm4.datetime.date#dm4.events.to", toDateTopic(dm4, mf, proposal.from).getId());
+		childs.setRef("dm4.datetime.date#dm4.events.to", toDateTopic(dm4, mf, proposal.to).getId());
 
 		// Sets the relation to the item that is being commented on
 		/*
@@ -247,11 +252,8 @@ public class DTOHelper {
 
 	public static Topic toDateTopic(CoreService dm4, ModelFactory mf, String jsonDateString) throws JSONException {
 		Calendar cal = Calendar.getInstance();
-		try {
-			cal.setTime(JSON_DATE_FORMAT.parse(jsonDateString));
-		} catch (ParseException e) {
-			throw new RuntimeException(e);
-		}
+
+		cal.setTime(Date.from(Instant.parse(jsonDateString)));
 		
 		Topic topic = dm4.createTopic(mf.newTopicModel("dm4.datetime.date"));
 		ChildTopics childs = topic.getChildTopics();
