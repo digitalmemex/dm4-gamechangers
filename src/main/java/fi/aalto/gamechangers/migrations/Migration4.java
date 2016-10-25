@@ -35,6 +35,10 @@ public class Migration4 extends Migration {
 				"dm4.events.event", NS("event.type"),
 				"dm4.core.many", "dm4.core.one"),
 			"dm4.datetime#dm4.events.from");
+		eventType.addAssocDef(
+			mf.newAssociationDefinitionModel("dm4.core.aggregation_def",
+				"dm4.events.event", NS("event.hidden"),
+				"dm4.core.many", "dm4.core.one"));
 		eventType.getAssocDef("dm4.datetime#dm4.events.from").setTypeUri("dm4.core.aggregation_def");
 		eventType.getAssocDef("dm4.datetime#dm4.events.to").setTypeUri("dm4.core.aggregation_def");
         
@@ -53,7 +57,7 @@ public class Migration4 extends Migration {
 		addFromAndToDate(NS("proposal"));
 		
 		// Workspace associations
-		long dataWsId = wsService.getWorkspace(NS("types")).getId();
+		long dataWsId = wsService.getWorkspace(NS("workspace.types")).getId();
 		
 		groupAssignToWorkspace(dataWsId,
 				NS("date_of_death"),

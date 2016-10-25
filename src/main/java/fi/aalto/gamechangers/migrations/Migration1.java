@@ -26,16 +26,16 @@ public class Migration1 extends Migration {
 	 */
 	@Override
 	public void run() {
-		Topic typesWs = wsService.createWorkspace("Gamechangers Types", NS("types"),
+		Topic typesWs = wsService.createWorkspace("Gamechangers Types", NS("workspace.types"),
 				SharingMode.PUBLIC);
 		acService.setWorkspaceOwner(typesWs, AccessControlService.ADMIN_USERNAME);
 
-		Topic dataWs = wsService.createWorkspace("Gamechangers Data", NS("data"),
+		Topic dataWs = wsService.createWorkspace("Gamechangers Data", NS("workspace.data"),
 				SharingMode.PUBLIC);
 		acService.setWorkspaceOwner(dataWs, AccessControlService.ADMIN_USERNAME);
 
 		Topic commentsWs = wsService.createWorkspace("Gamechangers Comments",
-				NS("comments"), SharingMode.COMMON);
+				NS("workspace.comments"), SharingMode.COMMON);
 		acService.setWorkspaceOwner(commentsWs, AccessControlService.ADMIN_USERNAME);
 	}
 }

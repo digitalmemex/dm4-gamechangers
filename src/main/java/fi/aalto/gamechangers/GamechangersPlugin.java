@@ -175,7 +175,7 @@ public class GamechangersPlugin extends PluginActivator implements GamechangersS
 			Topic topic = toCommentTopic(dm4, mf, comment, commentedOnTopic);
 			
 			// Assigns the new value to the 'data' workspace
-			long wsId = wsService.getWorkspace(NS("comments")).getId();
+			long wsId = wsService.getWorkspace(NS("workspace.comments")).getId();
 			wsService.assignToWorkspace(topic, wsId);
 			
 			return toComment(topic);
@@ -336,7 +336,7 @@ public class GamechangersPlugin extends PluginActivator implements GamechangersS
 			Topic topic = toProposalTopic(dm4, mf, proposal);
 			
 			// Assigns the new value to the 'data' workspace
-			long wsId = wsService.getWorkspace(NS("comments")).getId();
+			long wsId = wsService.getWorkspace(NS("workspace.comments")).getId();
 			wsService.assignToWorkspace(topic, wsId);
 			
 			return toProposal(topic);

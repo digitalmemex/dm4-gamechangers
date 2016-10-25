@@ -163,6 +163,12 @@
                 "index_mode_uris": ["dm4.core.fulltext"]
             },
             {
+                "value":            "Hidden",
+                "uri":              "fi.aalto.gamechangers.event.hidden",
+                "data_type_uri":    "dm4.core.boolean",
+                "index_mode_uris": ["dm4.core.fulltext"]
+            },
+            {
                 "value":            "Work Label",
                 "uri":              "fi.aalto.gamechangers.work.label",
                 "data_type_uri":    "dm4.core.text",
