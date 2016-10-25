@@ -3,7 +3,6 @@ package fi.aalto.gamechangers;
 import static fi.aalto.gamechangers.GamechangersPlugin.NS;
 
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -11,8 +10,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-
-import javax.xml.bind.DatatypeConverter;
 
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -37,21 +34,25 @@ public class DTOHelper {
 	
 	static final DateFormat JSON_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", new Locale("fi"));
 	
-	public static Event toEvent(Topic eventTopic) throws JSONException {
+	public static Event toEventOrNull(Topic eventTopic) throws JSONException {
 		ChildTopics childs = eventTopic.getChildTopics();
 		
-		EventImpl dto = new EventImpl();
-		dto.put("_type", "event");
-		dto.put("id", eventTopic.getId());
-		dto.put("name", childs.getStringOrNull("dm4.events.title"));
-		dto.put("type", childs.getStringOrNull(NS("event.type")));
-		dto.put("address", toAddressOrNull(childs.getTopicOrNull("dm4.contacts.address")));
-		dto.put("from", toJSONDateStringOrNull(childs.getTopicOrNull("dm4.datetime#dm4.events.from")));
-		dto.put("to", toJSONDateStringOrNull(childs.getTopicOrNull("dm4.datetime#dm4.events.to")));
-		dto.put("notes", childs.getStringOrNull("dm4.events.notes"));
-		dto.put("url", childs.getStringOrNull("dm4.webbrowser.url"));
-
-		return dto;
+		if (!childs.getBoolean(NS("event.hidden"))) {
+			EventImpl dto = new EventImpl();
+			dto.put("_type", "event");
+			dto.put("id", eventTopic.getId());
+			dto.put("name", childs.getStringOrNull("dm4.events.title"));
+			dto.put("type", childs.getStringOrNull(NS("event.type")));
+			dto.put("address", toAddressOrNull(childs.getTopicOrNull("dm4.contacts.address")));
+			dto.put("from", toJSONDateStringOrNull(childs.getTopicOrNull("dm4.datetime#dm4.events.from")));
+			dto.put("to", toJSONDateStringOrNull(childs.getTopicOrNull("dm4.datetime#dm4.events.to")));
+			dto.put("notes", childs.getStringOrNull("dm4.events.notes"));
+			dto.put("url", childs.getStringOrNull("dm4.webbrowser.url"));
+	
+			return dto;
+		} else {
+			return null;
+		}
 	}
 	
 	public static Institution toInstitution(Topic instTopic) throws JSONException {
