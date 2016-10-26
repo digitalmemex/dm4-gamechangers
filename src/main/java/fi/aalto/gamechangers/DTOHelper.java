@@ -2,14 +2,9 @@ package fi.aalto.gamechangers;
 
 import static fi.aalto.gamechangers.GamechangersPlugin.NS;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -32,8 +27,6 @@ import fi.aalto.gamechangers.GamechangersService.Work;
 
 public class DTOHelper {
 	
-	static final DateFormat JSON_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", new Locale("fi"));
-	
 	public static Event toEventOrNull(Topic eventTopic) throws JSONException {
 		ChildTopics childs = eventTopic.getChildTopics();
 		
@@ -44,8 +37,8 @@ public class DTOHelper {
 			dto.put("name", childs.getStringOrNull("dm4.events.title"));
 			dto.put("type", childs.getStringOrNull(NS("event.type")));
 			dto.put("address", toAddressOrNull(childs.getTopicOrNull("dm4.contacts.address")));
-			dto.put("from", toJSONDateStringOrNull(childs.getTopicOrNull("dm4.datetime#dm4.events.from")));
-			dto.put("to", toJSONDateStringOrNull(childs.getTopicOrNull("dm4.datetime#dm4.events.to")));
+			dto.put("from", toMillisSinceEpochOrNull(childs.getTopicOrNull("dm4.datetime#dm4.events.from")));
+			dto.put("to", toMillisSinceEpochOrNull(childs.getTopicOrNull("dm4.datetime#dm4.events.to")));
 			dto.put("notes", childs.getStringOrNull("dm4.events.notes"));
 			dto.put("url", childs.getStringOrNull("dm4.webbrowser.url"));
 	
@@ -66,8 +59,8 @@ public class DTOHelper {
 //		dto.put("address", toAddressOrNull(childs.getTopicOrNull("dm4.contacts.address")));
 		dto.put("urls", toStringListOrNull(childs.getTopicsOrNull("dm4.webbrowser.url")));
 		dto.put("notes", childs.getStringOrNull("dm4.contacts.notes"));
-		dto.put("from", toJSONDateStringOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.events.from")));
-		dto.put("to", toJSONDateStringOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.events.to")));
+		dto.put("from", toMillisSinceEpochOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.events.from")));
+		dto.put("to", toMillisSinceEpochOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.events.to")));
 		
 		return dto;
 	}
@@ -81,8 +74,8 @@ public class DTOHelper {
 		dto.put("id", groupTopic.getId());
 		dto.put("name", childs.getStringOrNull(NS("group.name")));
 		dto.put("notes", childs.getStringOrNull("dm4.notes.text"));
-		dto.put("from", toJSONDateStringOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.events.from")));
-		dto.put("to", toJSONDateStringOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.events.to")));
+		dto.put("from", toMillisSinceEpochOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.events.from")));
+		dto.put("to", toMillisSinceEpochOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.events.to")));
 
 		return dto;
 	}
@@ -95,8 +88,8 @@ public class DTOHelper {
 		dto.put("id", brandTopic.getId());
 		dto.put("name", childs.getStringOrNull(NS("brand.name")));
 		dto.put("notes", childs.getStringOrNull("dm4.notes.text"));
-		dto.put("from", toJSONDateStringOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.events.from")));
-		dto.put("to", toJSONDateStringOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.events.to")));
+		dto.put("from", toMillisSinceEpochOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.events.from")));
+		dto.put("to", toMillisSinceEpochOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.events.to")));
 
 		return dto;
 	}
@@ -180,8 +173,8 @@ public class DTOHelper {
 		dto.put("notes", childs.getStringOrNull("dm4.contacts.notes"));
 		dto.put("emails", toStringListOrNull(childs.getTopicsOrNull("dm4.contacts.email_address")));
 		dto.put("urls", toStringListOrNull(childs.getTopicsOrNull("dm4.webbrowser.url")));
-		dto.put("from", toJSONDateStringOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.contacts.date_of_birth")));
-		dto.put("to", toJSONDateStringOrNull(childs.getTopicOrNull("dm4.datetime.date#" + NS("date_of_death"))));
+		dto.put("from", toMillisSinceEpochOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.contacts.date_of_birth")));
+		dto.put("to", toMillisSinceEpochOrNull(childs.getTopicOrNull("dm4.datetime.date#" + NS("date_of_death"))));
 
 		return dto;
 	}
@@ -217,8 +210,8 @@ public class DTOHelper {
 		dto.put("name", childs.getStringOrNull("dm4.contacts.person_name"));
 		dto.put("email", childs.getStringOrNull("dm4.contacts.email_address"));
 		dto.put("notes", childs.getStringOrNull("dm4.notes.text"));
-		dto.put("from", toJSONDateStringOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.events.from")));
-		dto.put("to", toJSONDateStringOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.events.to")));
+		dto.put("from", toMillisSinceEpochOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.events.from")));
+		dto.put("to", toMillisSinceEpochOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.events.to")));
 
 		return dto;
 	}
@@ -232,8 +225,8 @@ public class DTOHelper {
 		dto.put("type", childs.getStringOrNull(NS("work.type")));
 		dto.put("name", childs.getStringOrNull(NS("work.label")));
 		dto.put("notes", childs.getStringOrNull("dm4.notes.text"));
-		dto.put("from", toJSONDateStringOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.events.from")));
-		dto.put("to", toJSONDateStringOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.events.to")));
+		dto.put("from", toMillisSinceEpochOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.events.from")));
+		dto.put("to", toMillisSinceEpochOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.events.to")));
 
 		return dto;
 	}
@@ -251,10 +244,12 @@ public class DTOHelper {
 		}
 	}
 
-	public static Topic toDateTopic(CoreService dm4, ModelFactory mf, String jsonDateString) throws JSONException {
+	public static Topic toDateTopic(CoreService dm4, ModelFactory mf, long millis) throws JSONException {
 		Calendar cal = Calendar.getInstance();
+		
+		cal.setTimeInMillis(millis);
 
-		cal.setTime(Date.from(Instant.parse(jsonDateString)));
+		//cal.setTime(Date.from(Instant.parse(jsonDateString)));
 		
 		Topic topic = dm4.createTopic(mf.newTopicModel("dm4.datetime.date"));
 		ChildTopics childs = topic.getChildTopics();
@@ -266,7 +261,7 @@ public class DTOHelper {
 		return topic;
 	}
 	
-	private static String toJSONDateStringOrNull(Topic datetimeTopic) throws JSONException {
+	private static Long toMillisSinceEpochOrNull(Topic datetimeTopic) throws JSONException {
 		if (datetimeTopic == null) {
 			return null;
 		}
@@ -313,7 +308,7 @@ public class DTOHelper {
 			cal.set(Calendar.SECOND, 0);
 			cal.set(Calendar.MILLISECOND, 0);
 					
-			return JSON_DATE_FORMAT.format(cal.getTime());
+			return cal.getTimeInMillis();
 		} else {
 			return null;
 		}

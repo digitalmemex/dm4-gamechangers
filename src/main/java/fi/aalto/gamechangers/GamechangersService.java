@@ -79,15 +79,15 @@ public interface GamechangersService {
 		String name;
 		String email;
 		String notes;
-		String from;
-		String to;
+		long from;
+		long to;
 		
 		public ProposalBean(JSONObject o) throws JSONException {
 			name = o.getString("name");
 			email = o.getString("email");
 			notes = o.getString("notes");
-			from = o.getString("from");
-			to = o.getString("to");
+			from = o.getLong("from");
+			to = o.getLong("to");
 		}
 	}
 	
