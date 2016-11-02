@@ -27,10 +27,14 @@ import fi.aalto.gamechangers.GamechangersService.Work;
 
 public class DTOHelper {
 	
+	private static <T> T selfOrDefault(T instance, T defaultValue) {
+		return (instance != null) ? instance : defaultValue;
+	}
+	
 	public static Event toEventOrNull(Topic eventTopic) throws JSONException {
 		ChildTopics childs = eventTopic.getChildTopics();
 		
-		if (!childs.getBoolean(NS("event.hidden"))) {
+		if (!selfOrDefault(childs.getBooleanOrNull(NS("event.hidden")), false)) {
 			EventImpl dto = new EventImpl();
 			dto.put("_type", "event");
 			dto.put("id", eventTopic.getId());
@@ -105,7 +109,7 @@ public class DTOHelper {
 	private static Comment toCommentImpl(Topic commentTopic, boolean alwaysCreate) throws JSONException {
 		ChildTopics childs = commentTopic.getChildTopics();
 
-		if (alwaysCreate || childs.getBooleanOrNull(NS("comment.public"))) {
+		if (alwaysCreate || selfOrDefault(childs.getBooleanOrNull(NS("comment.public")), false)) {
 			CommentImpl dto = new CommentImpl();
 			dto.put("_type", "comment");
 			dto.put("id", commentTopic.getId());
@@ -246,8 +250,6 @@ public class DTOHelper {
 		
 		cal.setTimeInMillis(millis);
 
-		//cal.setTime(Date.from(Instant.parse(jsonDateString)));
-		
 		Topic topic = dm4.createTopic(mf.newTopicModel("dm4.datetime.date"));
 		ChildTopics childs = topic.getChildTopics();
 
