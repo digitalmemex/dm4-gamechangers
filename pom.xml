@@ -22,6 +22,14 @@
       </developerConnection>
     </scm>
 
+    <distributionManagement>
+      <repository>
+        <id>dm48-repo</id>
+        <name>DM4.8 Internal Repository</name>
+        <url>file:///var/lib/jenkins/.m2/repository</url>
+      </repository>
+    </distributionManagement>
+
     <properties>
 	<dm4.deploy.dir>../aalto-deepamehta/bundle-deploy</dm4.deploy.dir>
     </properties>
