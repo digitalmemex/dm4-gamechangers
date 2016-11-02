@@ -16,6 +16,12 @@
         <version>4.8.3</version>
     </parent>
 
+    <scm>
+      <developerConnection>
+        scm:git:https://github.com/digitalmemex/dm4-gamechangers.git
+      </developerConnection>
+    </scm>
+
     <properties>
 	<dm4.deploy.dir>../aalto-deepamehta/bundle-deploy</dm4.deploy.dir>
     </properties>
