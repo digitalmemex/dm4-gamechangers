@@ -110,7 +110,6 @@ public class DTOHelper {
 			dto.put("_type", "comment");
 			dto.put("id", commentTopic.getId());
 			dto.put("name", childs.getStringOrNull("dm4.contacts.person_name"));
-			dto.put("email", childs.getStringOrNull("dm4.contacts.email_address"));
 			dto.put("notes", childs.getStringOrNull("dm4.notes.text"));
 	
 			return dto;
@@ -171,7 +170,6 @@ public class DTOHelper {
 		dto.put("id", personTopic.getId());
 		dto.put("name", childs.getStringOrNull("dm4.contacts.person_name"));
 		dto.put("notes", childs.getStringOrNull("dm4.contacts.notes"));
-		dto.put("emails", toStringListOrNull(childs.getTopicsOrNull("dm4.contacts.email_address")));
 		dto.put("urls", toStringListOrNull(childs.getTopicsOrNull("dm4.webbrowser.url")));
 		dto.put("from", toMillisSinceEpochOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.contacts.date_of_birth")));
 		dto.put("to", toMillisSinceEpochOrNull(childs.getTopicOrNull("dm4.datetime.date#" + NS("date_of_death"))));
@@ -208,7 +206,6 @@ public class DTOHelper {
 		dto.put("_type", "proposal");
 		dto.put("id", proposalTopic.getId());
 		dto.put("name", childs.getStringOrNull("dm4.contacts.person_name"));
-		dto.put("email", childs.getStringOrNull("dm4.contacts.email_address"));
 		dto.put("notes", childs.getStringOrNull("dm4.notes.text"));
 		dto.put("from", toMillisSinceEpochOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.events.from")));
 		dto.put("to", toMillisSinceEpochOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.events.to")));
