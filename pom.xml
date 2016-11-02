@@ -6,7 +6,7 @@
     <name>DeepaMehta 4 Gamechangers Plugin</name>
     <groupId>fi.aalto.gamechangers</groupId>
     <artifactId>dm48-aalto-gamechangers</artifactId>
-    <version>0.1.0</version>
+    <version>0.1.1-SNAPSHOT</version>
     <packaging>bundle</packaging>
 
     <parent>
