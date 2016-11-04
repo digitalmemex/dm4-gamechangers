@@ -12,6 +12,8 @@ import org.codehaus.jettison.json.JSONObject;
 import de.deepamehta.core.ChildTopics;
 import de.deepamehta.core.RelatedTopic;
 import de.deepamehta.core.Topic;
+import de.deepamehta.core.model.ChildTopicsModel;
+import de.deepamehta.core.model.TopicModel;
 import de.deepamehta.core.service.CoreService;
 import de.deepamehta.core.service.ModelFactory;
 import fi.aalto.gamechangers.GamechangersService.Brand;
@@ -125,12 +127,12 @@ public class DTOHelper {
 	public static Topic toCommentTopic(CoreService dm4, ModelFactory mf, CommentBean comment, Topic topicCommentOn) throws JSONException {
 		// TODO: Check input
 		
-		Topic topic = dm4.createTopic(mf.newTopicModel(NS("comment")));
+		ChildTopicsModel childs = mf.newChildTopicsModel();
+		childs.put("dm4.contacts.person_name", toPersonNameTopicModel(dm4, mf, comment.name));
+		childs.put("dm4.contacts.email_address", comment.email);
+		childs.put("dm4.notes.text", comment.notes);
 		
-		ChildTopics childs = topic.getChildTopics();
-		childs.setRef("dm4.contacts.person_name", toPersonNameTopic(dm4, mf, comment.name).getId());
-		childs.set("dm4.contacts.email_address", comment.email);
-		childs.set("dm4.notes.text", comment.notes);
+		Topic topic = dm4.createTopic(mf.newTopicModel(NS("comment"), childs));
 
 		// Sets the relation to the item that is being commented on
 		dm4.createAssociation(mf.newAssociationModel("dm4.core.association",
@@ -140,7 +142,7 @@ public class DTOHelper {
 		return topic;
 	}
 	
-	private static Topic toPersonNameTopic(CoreService dm4, ModelFactory mf, String nameString) {
+	private static TopicModel toPersonNameTopicModel(CoreService dm4, ModelFactory mf, String nameString) {
 		nameString = nameString.trim();
 		
 		String firstName;
@@ -157,13 +159,12 @@ public class DTOHelper {
 			lastName = "";
 		}
 
-		Topic topic = dm4.createTopic(mf.newTopicModel("dm4.contacts.person_name"));
-		ChildTopics childs = topic.getChildTopics();
-		
-		childs.set("dm4.contacts.first_name", firstName);
-		childs.set("dm4.contacts.last_name", lastName);
-		
-		return topic;
+		ChildTopicsModel childs = mf.newChildTopicsModel();
+				
+		childs.put("dm4.contacts.first_name", firstName);
+		childs.put("dm4.contacts.last_name", lastName);
+				
+		return mf.newTopicModel("dm4.contacts.person_name", childs);
 	}
 	
 	public static Person toPerson(Topic personTopic) throws JSONException {
@@ -184,23 +185,14 @@ public class DTOHelper {
 	public static Topic toProposalTopic(CoreService dm4, ModelFactory mf, ProposalBean proposal) throws JSONException {
 		// TODO: Check input
 		
-		Topic topic = dm4.createTopic(mf.newTopicModel(NS("proposal")));
+		ChildTopicsModel childs = mf.newChildTopicsModel();
+		childs.put("dm4.contacts.person_name", toPersonNameTopicModel(dm4, mf, proposal.name));
+		childs.put("dm4.contacts.email_address", proposal.email);
+		childs.put("dm4.notes.text", proposal.notes);
+		childs.putRef("dm4.datetime.date#dm4.events.from", toDateTopic(dm4, mf, proposal.from).getId());
+		childs.putRef("dm4.datetime.date#dm4.events.to", toDateTopic(dm4, mf, proposal.to).getId());
 		
-		ChildTopics childs = topic.getChildTopics();
-		childs.setRef("dm4.contacts.person_name", toPersonNameTopic(dm4, mf, proposal.name).getId());
-		childs.set("dm4.contacts.email_address", proposal.email);
-		childs.set("dm4.notes.text", proposal.notes);
-		childs.setRef("dm4.datetime.date#dm4.events.from", toDateTopic(dm4, mf, proposal.from).getId());
-		childs.setRef("dm4.datetime.date#dm4.events.to", toDateTopic(dm4, mf, proposal.to).getId());
-
-		// Sets the relation to the item that is being commented on
-		/*
-		dm4.createAssociation(mf.newAssociationModel("dm4.core.association",
-    			mf.newTopicRoleModel(topicCommentOn.getId(), "dm4.core.default"),
-			mf.newTopicRoleModel(topic.getId(), "dm4.core.default")));
-		*/ 
-	
-		return topic;
+		return dm4.createTopic(mf.newTopicModel(NS("proposal"), childs));
 	}
 	
 	public static Proposal toProposal(Topic proposalTopic) throws JSONException {
