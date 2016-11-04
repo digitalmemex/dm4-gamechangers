@@ -1,0 +1,16 @@
+# creates a comment for item 4797
+curl -H 'Content-Type: application/json' -X PUT -d \
+	'{"name":"James Jameson", \
+	"email":"test@gmail.com",\
+	"notes":"Big deal", \
+	"commentedItemId":4797}' \
+	http://localhost:8080/gamechangers/v1/comment
+
+# creates a proposal
+curl -H 'Content-Type: application/json' -X PUT -d \
+	'{"name":"Teodor Tester", \
+	"email":"ted.test@xgmail.com",\
+	"notes":"Slashes at the end of the URL should not decide whether it works or not.",\
+	 "from":972408544247,\
+	 "to":1477330144247}'\
+	 http://localhost:8080/gamechangers/v1/proposal
