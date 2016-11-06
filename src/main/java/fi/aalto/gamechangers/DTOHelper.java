@@ -247,12 +247,6 @@ public class DTOHelper {
 		cal.setTimeInMillis(millis);
 
 		ChildTopicsModel childs = mf.newChildTopicsModel();
-
-		/*
-		childs.put("dm4.datetime.year", findTopicModelOrCreate(dm4, mf, "dm4.datetime.year", cal.get(Calendar.YEAR)));
-		childs.put("dm4.datetime.month", findTopicModelOrCreate(dm4, mf, "dm4.datetime.month", cal.get(Calendar.MONTH)));
-		childs.put("dm4.datetime.day", findTopicModelOrCreate(dm4, mf, "dm4.datetime.day", cal.get(Calendar.DAY_OF_MONTH)));
-		*/
 		
 		putRefOrCreate(dm4, mf, childs, "dm4.datetime.year", cal.get(Calendar.YEAR));
 		putRefOrCreate(dm4, mf, childs, "dm4.datetime.month", cal.get(Calendar.MONTH));
@@ -277,20 +271,6 @@ public class DTOHelper {
 		}
 		
 		childs.put(typeUri, value);
-	}
-	
-	private static TopicModel findTopicModelOrCreate(CoreService dm4, ModelFactory mf, String typeUri, Object value) {
-		SimpleValue sv = new SimpleValue(value);
-		List<Topic> results = dm4.getTopicsByType(typeUri);
-		for (Topic t : results) {
-			if (t.getSimpleValue().equals(sv)) {
-				return t.getModel();
-			}
-		}
-		
-		TopicModel tm = mf.newTopicModel(typeUri);
-		tm.setSimpleValue(sv);
-		return tm;
 	}
 	
 	private static void assignToCommentsWorkspace(Topic topic) {
