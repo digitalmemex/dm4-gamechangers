@@ -13,9 +13,11 @@ import de.deepamehta.core.ChildTopics;
 import de.deepamehta.core.RelatedTopic;
 import de.deepamehta.core.Topic;
 import de.deepamehta.core.model.ChildTopicsModel;
+import de.deepamehta.core.model.SimpleValue;
 import de.deepamehta.core.model.TopicModel;
 import de.deepamehta.core.service.CoreService;
 import de.deepamehta.core.service.ModelFactory;
+import de.deepamehta.workspaces.WorkspacesService;
 import fi.aalto.gamechangers.GamechangersService.Brand;
 import fi.aalto.gamechangers.GamechangersService.Comment;
 import fi.aalto.gamechangers.GamechangersService.CommentBean;
@@ -28,6 +30,8 @@ import fi.aalto.gamechangers.GamechangersService.ProposalBean;
 import fi.aalto.gamechangers.GamechangersService.Work;
 
 public class DTOHelper {
+	
+	static WorkspacesService wsService;
 	
 	private static <T> T selfOrDefault(T instance, T defaultValue) {
 		return (instance != null) ? instance : defaultValue;
@@ -189,8 +193,8 @@ public class DTOHelper {
 		childs.put("dm4.contacts.person_name", toPersonNameTopicModel(dm4, mf, proposal.name));
 		childs.put("dm4.contacts.email_address", proposal.email);
 		childs.put("dm4.notes.text", proposal.notes);
-		childs.putRef("dm4.datetime.date#dm4.events.from", toDateTopic(dm4, mf, proposal.from).getId());
-		childs.putRef("dm4.datetime.date#dm4.events.to", toDateTopic(dm4, mf, proposal.to).getId());
+		childs.putRef("dm4.datetime.date#dm4.events.from", toDateTopicModel(dm4, mf, proposal.from).getId());
+		childs.putRef("dm4.datetime.date#dm4.events.to", toDateTopicModel(dm4, mf, proposal.to).getId());
 		
 		return dm4.createTopic(mf.newTopicModel(NS("proposal"), childs));
 	}
@@ -237,19 +241,62 @@ public class DTOHelper {
 		}
 	}
 
-	public static Topic toDateTopic(CoreService dm4, ModelFactory mf, long millis) throws JSONException {
+	public static TopicModel toDateTopicModel(CoreService dm4, ModelFactory mf, long millis) throws JSONException {
 		Calendar cal = Calendar.getInstance();
 		
 		cal.setTimeInMillis(millis);
 
-		Topic topic = dm4.createTopic(mf.newTopicModel("dm4.datetime.date"));
-		ChildTopics childs = topic.getChildTopics();
+		ChildTopicsModel childs = mf.newChildTopicsModel();
 
-		childs.set("dm4.datetime.year", cal.get(Calendar.YEAR));
-		childs.set("dm4.datetime.month", cal.get(Calendar.MONTH));
-		childs.set("dm4.datetime.day", cal.get(Calendar.DAY_OF_MONTH));
+		/*
+		childs.put("dm4.datetime.year", findTopicModelOrCreate(dm4, mf, "dm4.datetime.year", cal.get(Calendar.YEAR)));
+		childs.put("dm4.datetime.month", findTopicModelOrCreate(dm4, mf, "dm4.datetime.month", cal.get(Calendar.MONTH)));
+		childs.put("dm4.datetime.day", findTopicModelOrCreate(dm4, mf, "dm4.datetime.day", cal.get(Calendar.DAY_OF_MONTH)));
+		*/
 		
-		return topic;
+		putRefOrCreate(dm4, mf, childs, "dm4.datetime.year", cal.get(Calendar.YEAR));
+		putRefOrCreate(dm4, mf, childs, "dm4.datetime.month", cal.get(Calendar.MONTH));
+		putRefOrCreate(dm4, mf, childs, "dm4.datetime.day", cal.get(Calendar.DAY_OF_MONTH));
+		
+		Topic t = dm4.createTopic(mf.newTopicModel("dm4.datetime.date", childs));
+
+		assignToCommentsWorkspace(t);
+		
+		return t.getModel();
+	}
+
+	private static void putRefOrCreate(CoreService dm4, ModelFactory mf, ChildTopicsModel childs, String typeUri, Object value) {
+		SimpleValue sv = new SimpleValue(value);
+		List<Topic> results = dm4.getTopicsByType(typeUri);
+		for (Topic t : results) {
+			if (t.getSimpleValue().equals(sv)) {
+				childs.putRef(typeUri, t.getId());
+				
+				return;
+			}
+		}
+		
+		childs.put(typeUri, value);
+	}
+	
+	private static TopicModel findTopicModelOrCreate(CoreService dm4, ModelFactory mf, String typeUri, Object value) {
+		SimpleValue sv = new SimpleValue(value);
+		List<Topic> results = dm4.getTopicsByType(typeUri);
+		for (Topic t : results) {
+			if (t.getSimpleValue().equals(sv)) {
+				return t.getModel();
+			}
+		}
+		
+		TopicModel tm = mf.newTopicModel(typeUri);
+		tm.setSimpleValue(sv);
+		return tm;
+	}
+	
+	private static void assignToCommentsWorkspace(Topic topic) {
+		// Assigns the new value to the 'data' workspace
+		long wsId = wsService.getWorkspace(NS("workspace.comments")).getId();
+		wsService.assignToWorkspace(topic, wsId);
 	}
 	
 	private static Long toMillisSinceEpochOrNull(Topic datetimeTopic) throws JSONException {

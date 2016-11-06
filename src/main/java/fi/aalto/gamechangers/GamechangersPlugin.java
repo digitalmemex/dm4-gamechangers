@@ -55,7 +55,7 @@ public class GamechangersPlugin extends PluginActivator implements GamechangersS
 
 	@Inject
 	private AccessControlService acService; // needed by migration 1
-
+	
 	@GET
 	@Path("/v1/brands")
 	@Override
@@ -332,6 +332,7 @@ public class GamechangersPlugin extends PluginActivator implements GamechangersS
 	@Transactional
 	@Override
 	public Proposal createProposal(ProposalBean proposal) {
+		DTOHelper.wsService = wsService;
 		// Required values, maximum lengths, ...
 		
 		try {
