@@ -9,6 +9,7 @@ import java.util.List;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
+import de.deepamehta.core.Association;
 import de.deepamehta.core.ChildTopics;
 import de.deepamehta.core.RelatedTopic;
 import de.deepamehta.core.Topic;
@@ -141,8 +142,8 @@ public class DTOHelper {
 		// Sets the relation to the item that is being commented on
 		dm4.createAssociation(mf.newAssociationModel("dm4.core.association",
     			mf.newTopicRoleModel(topicCommentOn.getId(), "dm4.core.default"),
-			mf.newTopicRoleModel(topic.getId(), "dm4.core.default"))); 
-	
+			mf.newTopicRoleModel(topic.getId(), "dm4.core.default")));
+		
 		return topic;
 	}
 	
@@ -270,7 +271,13 @@ public class DTOHelper {
 			}
 		}
 		
-		childs.put(typeUri, value);
+		TopicModel tm = mf.newTopicModel(typeUri);
+		tm.setSimpleValue(sv);
+		Topic t = dm4.createTopic(tm);
+		
+		assignToCommentsWorkspace(t);
+		
+		childs.putRef(typeUri, t.getId());
 	}
 	
 	private static void assignToCommentsWorkspace(Topic topic) {
