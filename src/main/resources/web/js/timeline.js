@@ -1,6 +1,5 @@
 // Comment out as appropriate
-var domain = "https://gamechangers.aalto.fi";
-//var domain = "http://localhost:8080";
+var domain = "";
 
 var leftMargin = 80;
 var width = 1280;
@@ -144,13 +143,13 @@ function(err, data) {
 */
 
 // Nasty hardcoded layout of images and text
-var ctaTexture = PIXI.Texture.fromImage("../img/cta.png");
+var ctaTexture = PIXI.Texture.fromImage("img/cta.png");
 var cta = new PIXI.Sprite(ctaTexture);
 cta.position.x = 800;
 cta.position.y = 200;
 stage.addChild(cta);
 
-var logoTexture = PIXI.Texture.fromImage("../img/logo.png");
+var logoTexture = PIXI.Texture.fromImage("img/logo.png");
 var logo = new PIXI.Sprite(logoTexture);
 logo.position.x = leftMargin;
 logo.position.y = 100;
@@ -357,7 +356,7 @@ function addEvent(x, y, title, id, text, depth, year, layer) {
 
   // add commment button
   // Nasty hardcoded layout of images and text
-  var commentButtonTexture = PIXI.Texture.fromImage("../img/comment.png");
+  var commentButtonTexture = PIXI.Texture.fromImage("img/comment.png");
   var commentButton = new PIXI.Sprite(commentButtonTexture);
   commentButton.position.x = xpos + 170;
   commentButton.position.y = ypos + eventHeight - 20;
