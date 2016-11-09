@@ -163,25 +163,26 @@ public class GamechangersPlugin extends PluginActivator implements GamechangersS
 	@Transactional
 	@Override
 	public Comment createComment(CommentBean comment) {
-		Topic commentedOnTopic = dm4.getTopic(comment.commentedItemId);
-		if (commentedOnTopic == null)
-			throw new IllegalArgumentException("commentedItemId is invalid.");
 
-		// TODO: Aggressive validation of the CommentBean instance!
-		// Required values, maximum lengths, ...
-		
-		try {
+		Topic commentedOnTopic = dm4.getTopic(comment.commentedItemId);
+		if (ValidationHelper.isValid(comment)
+				&& ValidationHelper.isValidCommentedOnTopic(commentedOnTopic = dm4.getTopic(comment.commentedItemId))) {
 			
-			Topic topic = toCommentTopic(dm4, mf, comment, commentedOnTopic);
-			
-			// Assigns the new value to the 'data' workspace
-			long wsId = wsService.getWorkspace(NS("workspace.comments")).getId();
-			wsService.assignToWorkspace(topic, wsId);
-			
-			return toComment(topic);
-		} catch (JSONException jsone) {
-			throw new RuntimeException(jsone);
+			try {
+				
+				Topic topic = toCommentTopic(dm4, mf, comment, commentedOnTopic);
+				
+				// Assigns the new value to the 'data' workspace
+				long wsId = wsService.getWorkspace(NS("workspace.comments")).getId();
+				wsService.assignToWorkspace(topic, wsId);
+				
+				return toComment(topic);
+			} catch (JSONException jsone) {
+				throw new RuntimeException(jsone);
+			}
 		}
+		
+		throw new RuntimeException("Validation failed.");
 	}
 
 	@GET
@@ -333,20 +334,25 @@ public class GamechangersPlugin extends PluginActivator implements GamechangersS
 	@Override
 	public Proposal createProposal(ProposalBean proposal) {
 		DTOHelper.wsService = wsService;
-		// Required values, maximum lengths, ...
 		
-		try {
+		if (ValidationHelper.isValid(proposal)) {
 			
-			Topic topic = toProposalTopic(dm4, mf, proposal);
+			try {
+				
+				Topic topic = toProposalTopic(dm4, mf, proposal);
+				
+				// Assigns the new value to the 'data' workspace
+				long wsId = wsService.getWorkspace(NS("workspace.comments")).getId();
+				wsService.assignToWorkspace(topic, wsId);
+				
+				return toProposal(topic);
+			} catch (JSONException jsone) {
+				throw new RuntimeException(jsone);
+			}
 			
-			// Assigns the new value to the 'data' workspace
-			long wsId = wsService.getWorkspace(NS("workspace.comments")).getId();
-			wsService.assignToWorkspace(topic, wsId);
-			
-			return toProposal(topic);
-		} catch (JSONException jsone) {
-			throw new RuntimeException(jsone);
 		}
+		
+		throw new RuntimeException("Validation failed.");
 	}
 
 	@GET
