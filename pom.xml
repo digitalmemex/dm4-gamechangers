@@ -70,6 +70,7 @@
                     <instructions>
                         <Bundle-SymbolicName>fi.aalto.gamechangers</Bundle-SymbolicName>
                         <Bundle-Activator>fi.aalto.gamechangers.GamechangersPlugin</Bundle-Activator>
+                        <Export-Package>org.apache.commons.validator.routines*</Export-Package>
                     </instructions>
                 </configuration>
             </plugin>
