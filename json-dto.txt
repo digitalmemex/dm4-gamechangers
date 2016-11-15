@@ -100,7 +100,8 @@ Example:
   _type: "comment",
   name: "John Doe",
   notes: "<p>Tjewrewjrlkr</p>",
-  commentedItemId: 6656
+  commentedItemId: 6656,
+  created: 1479206062062
 }
 
 Note: Comments have a boolean property called "public" in DM. Only when this value is true the instance is returned by the REST interface.
