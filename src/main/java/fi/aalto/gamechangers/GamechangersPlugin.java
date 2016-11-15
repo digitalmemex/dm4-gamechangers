@@ -7,7 +7,7 @@ import static fi.aalto.gamechangers.DTOHelper.toCommentTopic;
 import static fi.aalto.gamechangers.DTOHelper.toEventOrNull;
 import static fi.aalto.gamechangers.DTOHelper.toGroup;
 import static fi.aalto.gamechangers.DTOHelper.toInstitution;
-import static fi.aalto.gamechangers.DTOHelper.toPerson;
+import static fi.aalto.gamechangers.DTOHelper.toPersonOrNull;
 import static fi.aalto.gamechangers.DTOHelper.toProposal;
 import static fi.aalto.gamechangers.DTOHelper.toProposalTopic;
 import static fi.aalto.gamechangers.DTOHelper.toWork;
@@ -266,7 +266,10 @@ public class GamechangersPlugin extends PluginActivator implements GamechangersS
 		
 		for (Topic topic : dm4.getTopicsByType("dm4.contacts.person")) {
 			try {
-				results.add(toPerson(topic));
+				Person person = toPersonOrNull(topic);
+				if(person != null) {
+					results.add(person);
+				}
 			} catch (JSONException jsone) {
 				// TODO: Log what object was dropped
 			}
@@ -283,7 +286,7 @@ public class GamechangersPlugin extends PluginActivator implements GamechangersS
 		try {
 		
 			if (topic != null) {
-				return toPerson(topic);
+				return toPersonOrNull(topic);
 			}
 			
 		} catch (JSONException jsone) {

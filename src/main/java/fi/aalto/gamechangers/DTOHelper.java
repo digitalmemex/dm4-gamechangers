@@ -40,11 +40,13 @@ public class DTOHelper {
 	public static Event toEventOrNull(Topic eventTopic) throws JSONException {
 		ChildTopics childs = eventTopic.getChildTopics();
 		
-		if (!selfOrDefault(childs.getBooleanOrNull(NS("event.hidden")), false)) {
+		String name = childs.getStringOrNull("dm4.events.title");
+		if (!selfOrDefault(childs.getBooleanOrNull(NS("event.hidden")), false)
+				&& name != null) {
 			EventImpl dto = new EventImpl();
 			dto.put("_type", "event");
 			dto.put("id", eventTopic.getId());
-			dto.put("name", childs.getStringOrNull("dm4.events.title"));
+			dto.put("name", name);
 			dto.put("type", childs.getStringOrNull(NS("event.type")));
 			dto.put("address", toAddressOrNull(childs.getTopicOrNull("dm4.contacts.address")));
 			dto.put("from", toMillisSinceEpochOrNull(childs.getTopicOrNull("dm4.datetime#dm4.events.from")));
@@ -122,6 +124,8 @@ public class DTOHelper {
 			dto.put("name", childs.getStringOrNull("dm4.contacts.person_name"));
 			dto.put("notes", childs.getStringOrNull("dm4.notes.text"));
 	
+			// TODO: Properly return commentFor!
+			
 			return dto;
 		} else {
 			return null;
@@ -171,17 +175,23 @@ public class DTOHelper {
 		return mf.newTopicModel("dm4.contacts.person_name", childs);
 	}
 	
-	public static Person toPerson(Topic personTopic) throws JSONException {
+	public static Person toPersonOrNull(Topic personTopic) throws JSONException {
 		ChildTopics childs = personTopic.getChildTopics();
 		
-		PersonImpl dto = new PersonImpl();
-		dto.put("_type", "person");
-		dto.put("id", personTopic.getId());
-		dto.put("name", childs.getStringOrNull("dm4.contacts.person_name"));
-		dto.put("notes", childs.getStringOrNull("dm4.contacts.notes"));
-		dto.put("urls", toStringListOrNull(childs.getTopicsOrNull("dm4.webbrowser.url")));
-		dto.put("from", toMillisSinceEpochOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.contacts.date_of_birth")));
-		dto.put("to", toMillisSinceEpochOrNull(childs.getTopicOrNull("dm4.datetime.date#" + NS("date_of_death"))));
+		String name = childs.getStringOrNull("dm4.contacts.person_name");
+		String notes = childs.getStringOrNull("dm4.contacts.notes");
+		PersonImpl dto = null;
+		
+		if (name != null || notes != null) {
+			dto = new PersonImpl();
+			dto.put("_type", "person");
+			dto.put("id", personTopic.getId());
+			dto.put("name", name);
+			dto.put("notes", notes);
+	//		dto.put("urls", toStringListOrNull(childs.getTopicsOrNull("dm4.webbrowser.url")));
+			dto.put("birth", toMillisSinceEpochOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.contacts.date_of_birth")));
+			dto.put("death", toMillisSinceEpochOrNull(childs.getTopicOrNull("dm4.datetime.date#" + NS("date_of_death"))));
+		}
 
 		return dto;
 	}
