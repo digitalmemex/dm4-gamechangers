@@ -2,6 +2,7 @@ package fi.aalto.gamechangers;
 
 import static fi.aalto.gamechangers.GamechangersPlugin.NS;
 
+import java.util.Collection;
 import java.util.HashSet;
 
 import org.apache.commons.validator.routines.EmailValidator;
@@ -63,6 +64,10 @@ public class ValidationHelper {
 			return false;
 		
 		return allowedTypeUris.contains(topic.getTypeUri());
+	}
+	
+	public static Collection<String> getCommentedTopicTypeUris() {
+		return allowedTypeUris;
 	}
 	
 }

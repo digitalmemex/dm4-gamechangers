@@ -163,6 +163,7 @@ public class GamechangersPlugin extends PluginActivator implements GamechangersS
 	@Transactional
 	@Override
 	public Comment createComment(CommentBean comment) {
+		DTOHelper.wsService = wsService;
 
 		Topic commentedOnTopic = dm4.getTopic(comment.commentedItemId);
 		if (ValidationHelper.isValid(comment)

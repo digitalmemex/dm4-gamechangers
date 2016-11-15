@@ -9,7 +9,9 @@ import java.util.List;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
+import de.deepamehta.core.Association;
 import de.deepamehta.core.ChildTopics;
+import de.deepamehta.core.DeepaMehtaObject;
 import de.deepamehta.core.RelatedTopic;
 import de.deepamehta.core.Topic;
 import de.deepamehta.core.model.ChildTopicsModel;
@@ -116,20 +118,42 @@ public class DTOHelper {
 	
 	private static Comment toCommentImpl(Topic commentTopic, boolean alwaysCreate) throws JSONException {
 		ChildTopics childs = commentTopic.getChildTopics();
+		
+		Topic commentedTopic = getCommentedTopicOrNull(commentTopic);
 
-		if (alwaysCreate || selfOrDefault(childs.getBooleanOrNull(NS("comment.public")), false)) {
+		if (commentedTopic != null && (alwaysCreate || selfOrDefault(childs.getBooleanOrNull(NS("comment.public")), false))) {
 			CommentImpl dto = new CommentImpl();
 			dto.put("_type", "comment");
 			dto.put("id", commentTopic.getId());
 			dto.put("name", childs.getStringOrNull("dm4.contacts.person_name"));
 			dto.put("notes", childs.getStringOrNull("dm4.notes.text"));
-	
-			// TODO: Properly return commentFor!
+			dto.put("commentedItemId", commentedTopic.getId());
 			
 			return dto;
 		} else {
 			return null;
 		}
+	}
+	
+	/**
+	 * Finds the first topic that is associated with the given comment topic out of the list of commentable types and returns it.
+	 * 
+	 * <p>If no such object can be found the result is null.</p>
+	 * 
+	 * @param commentTopic
+	 * @return
+	 */
+	private static Topic getCommentedTopicOrNull(Topic commentTopic) {
+		// TODO: Properly return commentFor!
+		for (String typeUri : ValidationHelper.getCommentedTopicTypeUris()) {
+			List<RelatedTopic> topics = commentTopic.getRelatedTopics("dm4.core.association", "dm4.core.default", "dm4.core.default", typeUri);
+			if (!topics.isEmpty()) {
+				return topics.get(0);
+			}
+		}
+		
+		return null;
+
 	}
 	
 	public static Topic toCommentTopic(CoreService dm4, ModelFactory mf, CommentBean comment, Topic topicCommentOn) throws JSONException {
@@ -143,9 +167,11 @@ public class DTOHelper {
 		Topic topic = dm4.createTopic(mf.newTopicModel(NS("comment"), childs));
 
 		// Sets the relation to the item that is being commented on
-		dm4.createAssociation(mf.newAssociationModel("dm4.core.association",
+		Association assoc = dm4.createAssociation(mf.newAssociationModel("dm4.core.association",
     			mf.newTopicRoleModel(topicCommentOn.getId(), "dm4.core.default"),
 			mf.newTopicRoleModel(topic.getId(), "dm4.core.default")));
+		
+		assignToCommentsWorkspace(assoc);
 		
 		return topic;
 	}
@@ -289,10 +315,10 @@ public class DTOHelper {
 		childs.putRef(typeUri, t.getId());
 	}
 	
-	private static void assignToCommentsWorkspace(Topic topic) {
+	private static void assignToCommentsWorkspace(DeepaMehtaObject obj) {
 		// Assigns the new value to the 'data' workspace
 		long wsId = wsService.getWorkspace(NS("workspace.comments")).getId();
-		wsService.assignToWorkspace(topic, wsId);
+		wsService.assignToWorkspace(obj, wsId);
 	}
 	
 	private static Long toMillisSinceEpochOrNull(Topic datetimeTopic) throws JSONException {
