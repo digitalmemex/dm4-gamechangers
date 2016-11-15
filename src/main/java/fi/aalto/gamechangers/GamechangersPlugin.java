@@ -33,6 +33,7 @@ import de.deepamehta.core.osgi.PluginActivator;
 import de.deepamehta.core.service.Inject;
 import de.deepamehta.core.service.Transactional;
 import de.deepamehta.events.EventsService;
+import de.deepamehta.time.TimeService;
 import de.deepamehta.workspaces.WorkspacesService;
 
 @Path("/gamechangers")
@@ -55,6 +56,15 @@ public class GamechangersPlugin extends PluginActivator implements GamechangersS
 
 	@Inject
 	private AccessControlService acService; // needed by migration 1
+	
+	@Inject
+	private TimeService timeService;
+	
+	@Override
+	public void init() {
+		DTOHelper.wsService = wsService;
+		DTOHelper.timeService = timeService;
+	}
 	
 	@GET
 	@Path("/v1/brands")
@@ -163,8 +173,6 @@ public class GamechangersPlugin extends PluginActivator implements GamechangersS
 	@Transactional
 	@Override
 	public Comment createComment(CommentBean comment) {
-		DTOHelper.wsService = wsService;
-
 		Topic commentedOnTopic = dm4.getTopic(comment.commentedItemId);
 		if (ValidationHelper.isValid(comment)
 				&& ValidationHelper.isValidCommentedOnTopic(commentedOnTopic = dm4.getTopic(comment.commentedItemId))) {
@@ -337,8 +345,6 @@ public class GamechangersPlugin extends PluginActivator implements GamechangersS
 	@Transactional
 	@Override
 	public Proposal createProposal(ProposalBean proposal) {
-		DTOHelper.wsService = wsService;
-		
 		if (ValidationHelper.isValid(proposal)) {
 			
 			try {

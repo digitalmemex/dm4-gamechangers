@@ -19,6 +19,7 @@ import de.deepamehta.core.model.SimpleValue;
 import de.deepamehta.core.model.TopicModel;
 import de.deepamehta.core.service.CoreService;
 import de.deepamehta.core.service.ModelFactory;
+import de.deepamehta.time.TimeService;
 import de.deepamehta.workspaces.WorkspacesService;
 import fi.aalto.gamechangers.GamechangersService.Brand;
 import fi.aalto.gamechangers.GamechangersService.Comment;
@@ -34,6 +35,8 @@ import fi.aalto.gamechangers.GamechangersService.Work;
 public class DTOHelper {
 	
 	static WorkspacesService wsService;
+	
+	static TimeService timeService;
 	
 	private static <T> T selfOrDefault(T instance, T defaultValue) {
 		return (instance != null) ? instance : defaultValue;
@@ -128,11 +131,33 @@ public class DTOHelper {
 			dto.put("name", childs.getStringOrNull("dm4.contacts.person_name"));
 			dto.put("notes", childs.getStringOrNull("dm4.notes.text"));
 			dto.put("commentedItemId", commentedTopic.getId());
+			addCreationTimestamp(dto, commentTopic);
 			
 			return dto;
 		} else {
 			return null;
 		}
+	}
+
+	/** Returns a list of comment Ids for a given topic. 
+	 * 
+	 * <p>The list can be empty.</p>
+	 * 
+	 * @param commentedTopic
+	 * @return
+	 */
+	private static List<Long> getCommentIdsForTopic(Topic commentedTopic) {
+		List<Long> commentIds = new ArrayList<Long>();
+		
+		for (String typeUri : ValidationHelper.getCommentedTopicTypeUris()) {
+			List<RelatedTopic> topics = commentedTopic.getRelatedTopics(
+					"dm4.core.association", "dm4.core.default", "dm4.core.default", NS("comment"));
+			for (RelatedTopic topic : topics) {
+				commentIds.add(topic.getId());
+			}
+		}
+		
+		return commentIds;
 	}
 	
 	/**
@@ -394,6 +419,10 @@ public class DTOHelper {
 		addr.put("country", childs.getStringOrNull("dm4.contacts.country"));
 		
 		return addr;
+	}
+	
+	private static void addCreationTimestamp(JSONEnabledImpl dto, Topic topic) throws JSONException {
+		dto.put("created", timeService.getCreationTime(topic.getId()));
 	}
 	
 	private static class EventImpl extends JSONEnabledImpl implements Event {
