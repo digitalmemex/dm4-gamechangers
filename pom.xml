@@ -64,6 +64,11 @@
 		    <artifactId>commons-validator</artifactId>
 		    <version>1.5.1</version>
 		</dependency>
+		<dependency>
+		    <groupId>org.jsoup</groupId>
+		    <artifactId>jsoup</artifactId>
+		    <version>1.10.1</version>
+		</dependency>
     </dependencies>
 
     <build>
@@ -75,7 +80,7 @@
                     <instructions>
                         <Bundle-SymbolicName>fi.aalto.gamechangers</Bundle-SymbolicName>
                         <Bundle-Activator>fi.aalto.gamechangers.GamechangersPlugin</Bundle-Activator>
-                        <Export-Package>org.apache.commons.validator.routines*</Export-Package>
+                        <Export-Package>org.apache.commons.validator.routines*; org.jsoup*</Export-Package>
                     </instructions>
                 </configuration>
             </plugin>
