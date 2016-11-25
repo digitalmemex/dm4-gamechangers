@@ -441,11 +441,13 @@ public class DTOHelper {
 
 	private static List<String> toListOfUrls(String html) {
 		ArrayList<String> result = new ArrayList<String>();
-        Document doc = Jsoup.parse(html);
-        
-        for(Element img : doc.select("img[src]")) {
-        	result.add(img.attr("abs:src"));
-        }
+		if (html != null) {
+	        Document doc = Jsoup.parse(html);
+	        
+	        for(Element img : doc.select("img[src]")) {
+	        	result.add(img.attr("abs:src"));
+	        }
+		}
         return result;
     }
 	
