@@ -4,6 +4,8 @@ import static fi.aalto.gamechangers.GamechangersPlugin.NS;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.codehaus.jettison.json.JSONException;
@@ -65,6 +67,7 @@ public class DTOHelper {
 			dto.put("url", childs.getStringOrNull("dm4.webbrowser.url"));
 			dto.put("imageUrls", toListOfUrls(html));
 			
+			dto.put("latestPublicComments", toLatestPublicComments(eventTopic));
 			dto.put("associatedItems", toAssociatedItems(eventTopic, excludedTopic));
 	
 			return dto;
@@ -133,7 +136,7 @@ public class DTOHelper {
 		return toCommentImpl(commentTopic, true);
 	}
 	
-	private static Comment toCommentImpl(Topic commentTopic, boolean alwaysCreate) throws JSONException {
+	private static CommentImpl toCommentImpl(Topic commentTopic, boolean alwaysCreate) throws JSONException {
 		ChildTopics childs = commentTopic.getChildTopics();
 		
 		Topic commentedTopic = getCommentedTopicOrNull(commentTopic);
@@ -153,6 +156,50 @@ public class DTOHelper {
 		} else {
 			return null;
 		}
+	}
+	
+	private static List<CommentImpl> toLatestPublicComments(Topic eventTopic) throws JSONException {
+		ArrayList<CommentImpl> result = new ArrayList<CommentImpl>();
+		
+		for (RelatedTopic topic : getDefaultRelatedTopics(eventTopic, NS("comment"))) {
+			CommentImpl dto = toCommentImpl(topic, false);
+			if (dto != null) {
+				result.add(dto);
+			}
+		}
+
+		// Sorts in a way that the most recently modified comments shows up first
+		result.sort(new Comparator<CommentImpl>() {
+
+			@Override
+			public int compare(CommentImpl _this, CommentImpl _that) {
+				try {
+					long thisModTime = timeService.getModificationTime(_this.getLong("id"));
+					long thatModTime = timeService.getModificationTime(_that.getLong("id")); 
+					
+					if (thisModTime < thatModTime) {
+						return 1;
+					} else if (thisModTime > thatModTime) {
+						return -1;
+					} else {
+						return 0;
+					}
+				} catch (JSONException e) {
+					// Will not happen as all objects have the 'id' set.
+					throw new RuntimeException("Hell frozen.");
+				}
+
+			}
+			
+		});
+		
+		// Allow only 10 comments to be left.
+		int size;
+		while ( (size = result.size()) > 10) {
+			result.remove(size - 1);
+		}
+		
+		return result;
 	}
 	
 	private static List<JSONEnabled> toAssociatedItems(Topic origin, Topic excludedTopic) throws JSONException {
