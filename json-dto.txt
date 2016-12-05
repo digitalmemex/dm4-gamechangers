@@ -20,6 +20,9 @@ Example:
  notes: "<p>text text text</p>",
  url: "http://some/url",
  imageUrls":["http:\/\/www.zephram.de\/blog\/wp-content\/uploads\/2010\/04\/rosa-elefant.jpg"],
+ associatedItems: [
+ 	{ either a brand, group, institution, person, work or event }
+ ]
 }
 
 Possible values for type are:
