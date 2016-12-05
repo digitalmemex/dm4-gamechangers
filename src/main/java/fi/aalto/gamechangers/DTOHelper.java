@@ -15,6 +15,7 @@ import org.jsoup.nodes.Element;
 import de.deepamehta.core.Association;
 import de.deepamehta.core.ChildTopics;
 import de.deepamehta.core.DeepaMehtaObject;
+import de.deepamehta.core.JSONEnabled;
 import de.deepamehta.core.RelatedTopic;
 import de.deepamehta.core.Topic;
 import de.deepamehta.core.model.ChildTopicsModel;
@@ -45,7 +46,7 @@ public class DTOHelper {
 		return (instance != null) ? instance : defaultValue;
 	}
 	
-	public static Event toEventOrNull(Topic eventTopic) throws JSONException {
+	public static Event toEventOrNull(Topic eventTopic, Topic excludedTopic) throws JSONException {
 		ChildTopics childs = eventTopic.getChildTopics();
 		
 		String name = childs.getStringOrNull("dm4.events.title");
@@ -63,6 +64,8 @@ public class DTOHelper {
 			dto.put("notes", html = childs.getStringOrNull("dm4.events.notes"));
 			dto.put("url", childs.getStringOrNull("dm4.webbrowser.url"));
 			dto.put("imageUrls", toListOfUrls(html));
+			
+			dto.put("associatedItems", toAssociatedItems(eventTopic, excludedTopic));
 	
 			return dto;
 		} else {
@@ -151,7 +154,119 @@ public class DTOHelper {
 			return null;
 		}
 	}
+	
+	private static List<JSONEnabled> toAssociatedItems(Topic origin, Topic excludedTopic) throws JSONException {
+		ArrayList<JSONEnabled> result = new ArrayList<JSONEnabled>();
+		
+		result.addAll(toGroups(getDefaultRelatedTopics(origin, NS("group"))));
+		result.addAll(toBrands(getDefaultRelatedTopics(origin, NS("brand"))));
+		result.addAll(toWorks(getDefaultRelatedTopics(origin, NS("work"))));
+		result.addAll(toInstitutions(getDefaultRelatedTopics(origin, "dm4.contacts.institution")));
+		result.addAll(toPersons(getDefaultRelatedTopics(origin, "dm4.contacts.person")));
+		result.addAll(toEvents(getDefaultRelatedTopics(origin, "dm4.events.event", excludedTopic), origin));
+		
+		return result;
+	}
+	
+	private static List<Group> toGroups(List<RelatedTopic> topics) throws JSONException {
+		ArrayList<Group> result = new ArrayList<Group>();
+		
+		for (RelatedTopic topic : topics) {
+			Group dto = toGroup(topic);
+			if (dto != null) {
+				result.add(dto);
+			}
+		}
+		
+		return result;
+	}
 
+	private static List<Brand> toBrands(List<RelatedTopic> topics) throws JSONException {
+		ArrayList<Brand> result = new ArrayList<Brand>();
+		
+		for (RelatedTopic topic : topics) {
+			Brand dto = toBrand(topic);
+			if (dto != null) {
+				result.add(dto);
+			}
+		}
+		
+		return result;
+	}
+
+	private static List<Institution> toInstitutions(List<RelatedTopic> topics) throws JSONException {
+		ArrayList<Institution> result = new ArrayList<Institution>();
+		
+		for (RelatedTopic topic : topics) {
+			Institution dto = toInstitution(topic);
+			if (dto != null) {
+				result.add(dto);
+			}
+		}
+		
+		return result;
+	}
+	
+	private static List<Person> toPersons(List<RelatedTopic> topics) throws JSONException {
+		ArrayList<Person> result = new ArrayList<Person>();
+		
+		for (RelatedTopic topic : topics) {
+			Person dto = toPersonOrNull(topic);
+			if (dto != null) {
+				result.add(dto);
+			}
+		}
+		
+		return result;
+	}
+	
+	private static List<Work> toWorks(List<RelatedTopic> topics) throws JSONException {
+		ArrayList<Work> result = new ArrayList<Work>();
+		
+		for (RelatedTopic topic : topics) {
+			Work dto = toWork(topic);
+			if (dto != null) {
+				result.add(dto);
+			}
+		}
+		
+		return result;
+	}
+	
+	private static List<Event> toEvents(List<RelatedTopic> topics, Topic excludedTopic) throws JSONException {
+		ArrayList<Event> result = new ArrayList<Event>();
+		
+		for (RelatedTopic topic : topics) {
+			Event dto = toEventOrNull(topic, excludedTopic);
+			if (dto != null) {
+				result.add(dto);
+			}
+		}
+		
+		return result;
+	}
+
+	private static List<RelatedTopic> getDefaultRelatedTopics(Topic origin, String typeUri) {
+		return getDefaultRelatedTopics(origin, typeUri, null);
+	}
+
+	private static List<RelatedTopic> getDefaultRelatedTopics(Topic origin, String typeUri, Topic excludedTopic) {
+		List<RelatedTopic> result = origin.getRelatedTopics(
+				"dm4.core.association", "dm4.core.default", "dm4.core.default", typeUri);
+		
+		if (excludedTopic != null) {
+			for (int i = 0; i < result.size(); i++) {
+				if (excludedTopic.getId() == result.get(i).getId()) {
+					result.remove(i);
+					
+					break;
+				}
+			}
+		}
+		
+		return result;
+	}
+	
 	/** Returns a list of comment Ids for a given topic. 
 	 * 
 	 * <p>The list can be empty.</p>

@@ -202,7 +202,7 @@ public class GamechangersPlugin extends PluginActivator implements GamechangersS
 		
 		for (Topic topic : dm4.getTopicsByType("dm4.events.event")) {
 			try {
-				Event event = toEventOrNull(topic);
+				Event event = toEventOrNull(topic, null);
 				if(event != null) {
 					results.add(event);
 				}
@@ -222,7 +222,7 @@ public class GamechangersPlugin extends PluginActivator implements GamechangersS
 		try {
 		
 			if (topic != null) {
-				return toEventOrNull(topic);
+				return toEventOrNull(topic, null);
 			}
 			
 		} catch (JSONException jsone) {
