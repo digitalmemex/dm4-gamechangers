@@ -2,6 +2,8 @@ package fi.aalto.gamechangers;
 
 import static fi.aalto.gamechangers.GamechangersPlugin.NS;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -69,6 +71,8 @@ public class DTOHelper {
 			
 			dto.put("latestPublicComments", toLatestPublicComments(eventTopic));
 			dto.put("associatedItems", toAssociatedItems(eventTopic, excludedTopic));
+			
+			dto.put("vimeoVideoId", toVimeoVideoId(eventTopic));
 	
 			return dto;
 		} else {
@@ -175,13 +179,51 @@ public class DTOHelper {
         	if (elem.hasText()) {
         		// If there is a text already, prepend a whitespace.
         		if (sb.length() > 0) {
-        			sb.append(" ");
+        			sb.append("<br/>");
         		}
     			sb.append(elem.text());
         	}
         }
 
 		return sb.toString();
+	}
+	
+	/**
+	 * Finds a web_resource topic associated with the given event, parses the web resource's URL and
+	 * return the id part of a vimeo URL, e.g. "https://vimeo.com/90647039" is turned into 90647039.
+	 *  
+	 * @param eventTopic
+	 * @return
+	 * @throws JSONException
+	 */
+	private static Long toVimeoVideoId(Topic eventTopic) throws JSONException {
+		Long result = null;
+		
+		RelatedTopic webResourceTopic = eventTopic.getRelatedTopic(
+				"dm4.core.association", "dm4.core.default", "dm4.core.default", "dm4.webbrowser.web_resource");
+		
+		if (webResourceTopic == null) {
+			return null;
+		}
+		
+		String url = webResourceTopic.getChildTopics().getStringOrNull("dm4.webbrowser.url");
+		if (url == null) {
+			return null;
+		}
+		
+		URL videoUrl;
+		try {
+			videoUrl = new URL(url);
+			result = Long.parseLong(videoUrl.getPath().substring(1));
+		} catch (MalformedURLException e) {
+			return null;
+		} catch (NumberFormatException e) {
+			return null;
+		} catch (StringIndexOutOfBoundsException e) {
+			return null;
+		}
+
+		return result;
 	}
 	
 	private static List<CommentImpl> toLatestPublicComments(Topic eventTopic) throws JSONException {
