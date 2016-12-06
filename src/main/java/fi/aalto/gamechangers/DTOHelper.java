@@ -54,7 +54,7 @@ public class DTOHelper {
 		String name = childs.getStringOrNull("dm4.events.title");
 		if (!selfOrDefault(childs.getBooleanOrNull(NS("event.hidden")), false)
 				&& name != null) {
-			String html;
+			String html = childs.getStringOrNull("dm4.events.notes");
 			EventImpl dto = new EventImpl();
 			dto.put("_type", "event");
 			dto.put("id", eventTopic.getId());
@@ -63,7 +63,7 @@ public class DTOHelper {
 			dto.put("address", toAddressOrNull(childs.getTopicOrNull("dm4.contacts.address")));
 			dto.put("from", toMillisSinceEpochOrNull(childs.getTopicOrNull("dm4.datetime#dm4.events.from")));
 			dto.put("to", toMillisSinceEpochOrNull(childs.getTopicOrNull("dm4.datetime#dm4.events.to")));
-			dto.put("notes", html = childs.getStringOrNull("dm4.events.notes"));
+			dto.put("notes", stripHtml(html));
 			dto.put("url", childs.getStringOrNull("dm4.webbrowser.url"));
 			dto.put("imageUrls", toListOfUrls(html));
 			
@@ -79,7 +79,7 @@ public class DTOHelper {
 	public static Institution toInstitution(Topic instTopic) throws JSONException {
 		ChildTopics childs = instTopic.getChildTopics();
 		
-		String html;
+		String html = childs.getStringOrNull("dm4.contacts.notes");
 		InstitutionImpl dto = new InstitutionImpl();
 		dto.put("_type", "institution");
 		dto.put("id", instTopic.getId());
@@ -87,7 +87,7 @@ public class DTOHelper {
 		dto.put("type", childs.getStringOrNull(NS("institution.type")));
 //		dto.put("address", toAddressOrNull(childs.getTopicOrNull("dm4.contacts.address")));
 		dto.put("urls", toStringListOrNull(childs.getTopicsOrNull("dm4.webbrowser.url")));
-		dto.put("notes", html = childs.getStringOrNull("dm4.contacts.notes"));
+		dto.put("notes", stripHtml(html));
 		dto.put("from", toMillisSinceEpochOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.events.from")));
 		dto.put("to", toMillisSinceEpochOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.events.to")));
 		dto.put("imageUrls", toListOfUrls(html));
@@ -99,12 +99,12 @@ public class DTOHelper {
 	public static Group toGroup(Topic groupTopic) throws JSONException {
 		ChildTopics childs = groupTopic.getChildTopics();
 		
-		String html;
+		String html = childs.getStringOrNull("dm4.notes.text");
 		GroupImpl dto = new GroupImpl();
 		dto.put("_type", "group");
 		dto.put("id", groupTopic.getId());
 		dto.put("name", childs.getStringOrNull(NS("group.name")));
-		dto.put("notes", html = childs.getStringOrNull("dm4.notes.text"));
+		dto.put("notes", stripHtml(html));
 		dto.put("from", toMillisSinceEpochOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.events.from")));
 		dto.put("to", toMillisSinceEpochOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.events.to")));
 		dto.put("imageUrls", toListOfUrls(html));
@@ -115,12 +115,12 @@ public class DTOHelper {
 	public static Brand toBrand(Topic brandTopic) throws JSONException {
 		ChildTopics childs = brandTopic.getChildTopics();
 		
-		String html;
+		String html = childs.getStringOrNull("dm4.notes.text");
 		BrandImpl dto = new BrandImpl();
 		dto.put("_type", "brand");
 		dto.put("id", brandTopic.getId());
 		dto.put("name", childs.getStringOrNull(NS("brand.name")));
-		dto.put("notes", html = childs.getStringOrNull("dm4.notes.text"));
+		dto.put("notes", stripHtml(html));
 		dto.put("from", toMillisSinceEpochOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.events.from")));
 		dto.put("to", toMillisSinceEpochOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.events.to")));
 		dto.put("imageUrls", toListOfUrls(html));
@@ -142,12 +142,12 @@ public class DTOHelper {
 		Topic commentedTopic = getCommentedTopicOrNull(commentTopic);
 
 		if (commentedTopic != null && (alwaysCreate || selfOrDefault(childs.getBooleanOrNull(NS("comment.public")), false))) {
-			String html;
+			String html = childs.getStringOrNull("dm4.notes.text");
 			CommentImpl dto = new CommentImpl();
 			dto.put("_type", "comment");
 			dto.put("id", commentTopic.getId());
 			dto.put("name", childs.getStringOrNull("dm4.contacts.person_name"));
-			dto.put("notes", html = childs.getStringOrNull("dm4.notes.text"));
+			dto.put("notes", stripHtml(html));
 			dto.put("commentedItemId", commentedTopic.getId());
 			addCreationTimestamp(dto, commentTopic);
 			dto.put("imageUrls", toListOfUrls(html));
@@ -156,6 +156,32 @@ public class DTOHelper {
 		} else {
 			return null;
 		}
+	}
+	
+	/**
+	 * Strips the text out of h1, h2, h3 and p text and concatenates that as a text.
+	 * 
+	 * @param html
+	 * @return
+	 */
+	private static String stripHtml(String html) {
+		if (html == null)
+			return null;
+
+		StringBuilder sb = new StringBuilder();
+        Document doc = Jsoup.parse(html);
+        
+        for(Element elem : doc.select("h1, h2, h3, p")) {
+        	if (elem.hasText()) {
+        		// If there is a text already, prepend a whitespace.
+        		if (sb.length() > 0) {
+        			sb.append(" ");
+        		}
+    			sb.append(elem.text());
+        	}
+        }
+
+		return sb.toString();
 	}
 	
 	private static List<CommentImpl> toLatestPublicComments(Topic eventTopic) throws JSONException {
