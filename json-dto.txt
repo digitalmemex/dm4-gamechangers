@@ -23,7 +23,8 @@ Example:
  latestPublicComments: [ /* comments (most recently modified first) */ ],
  associatedItems: [
  	{ /* either a brand, group, institution, person, work or event */ }
- ]
+ ],
+ vimeoVideoId: 342340999
 }
 
 Possible values for type are:
