@@ -1,0 +1,24 @@
+<html><head><link rel="import" href="../polymer/polymer.html">
+
+
+</head><body><dom-module id="parallax-group">
+
+  <style>
+    :host {
+      display: block;
+      position: relative;
+      height: 100vh;
+      -webkit-transform-style: preserve-3d;
+      transform-style: preserve-3d;
+      z-index: 0;
+    }
+  </style>
+
+  <template>
+    <content></content>
+  </template>
+
+</dom-module>
+
+<script>Polymer({is:"parallax-group",properties:{z:{type:Number,notify:!0,value:0}},listeners:{"z-changed":"_zChanged"},ready:function(){this._zChanged()},_zChanged:function(){this.style.zIndex=this.z+1}});</script>
+</body></html>

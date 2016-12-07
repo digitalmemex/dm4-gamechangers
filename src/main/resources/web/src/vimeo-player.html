@@ -1,0 +1,53 @@
+<html><head><link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+
+
+
+</head><body><dom-module id="vimeo-player">
+
+
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+
+      .embed-container{
+        display: block;
+        position: relative;
+        padding-bottom: 56.25%;
+        overflow: hidden;
+        max-width: 100%;
+        height: auto !important;
+      }
+
+      .embed-container iframe,
+      .embed-container object,
+      .embed-container embed{
+        border: none;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+      }
+
+      p{
+        text-align: center;
+      }
+
+    </style>
+
+    <div id="wrapper">
+      <iframe src="[[_vimeoUrl]]" width="[[width]]" height="[[height]]" frameborder="[[frameborder]]" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen="">
+      </iframe>
+      <p>[[_caption]]</p>
+    </div>
+
+    <iron-ajax id="vimeoAPI" auto="" url="[[_vimeoAPIUrl]]" handle-as="json" on-response="handleResponse">
+    </iron-ajax>
+  </template>
+
+  <script>Polymer({is:"vimeo-player",properties:{videoid:{type:String,value:"39189423"},player_id:{type:String,value:""},portrait:{type:Number,value:0},color:{type:String,value:"00adef"},autoplay:{type:Number,value:0},loop:{type:Number,value:0},title:{type:String,value:""},byline:{type:String,value:""},api:{type:String,value:""},width:{type:String,value:""},height:{type:String,value:""},frameborder:{type:Number,value:0},responsive:{type:Number,value:0},caption:{type:String,value:""},_vimeoUrl:{type:String,computed:"_computedVimeoUrl(videoid, portrait, color, title, byline, autoplay, loop, api, player_id)"},_vimeoAPIUrl:{type:String,computed:"_computedVimeoAPIUrl(videoid)"}},_computedVimeoUrl:function(){console.log("calculate URL");var e=Array.prototype.slice.call(arguments),t=["portrait","color","title","byline","autoplay","loop","api","player_id"];return url="//player.vimeo.com/video/",url+=e.shift(),url+="?",e.map(function(e,i){url+=t[i]+"="+e+"&"}),url},_computedVimeoAPIUrl:function(e){return"http://vimeo.com/api/v2/video/"+e+".json"},ready:function(){console.log("ready"),this.height||this.width||(this.responsive=1),this.responsive&&(this.$.wrapper.className="embed-container")},handleResponse:function(e,t,i){console.log("handle response"),t=t.response,!t||t.length<1||!t[0]||this.fire("vimeo-player-response",{data:t[0]})}});</script>
+</dom-module>
+</body></html>
