@@ -1,0 +1,27 @@
+<html><head><link rel="import" href="../polymer/polymer.html">
+
+
+<link rel="import" href="parallax-group.html">
+<link rel="import" href="parallax-layer.html">
+
+</head><body><dom-module id="parallax-container">
+
+  <style>
+    :host {
+      display: block;
+      -webkit-perspective: 300px;
+      perspective: 300px;
+      height: 100vh;
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
+  </style>
+
+  <template>
+    <content></content>
+  </template>
+
+</dom-module>
+
+<script>Polymer({is:"parallax-container",properties:{perspective:{type:Number,notify:!0,value:300},foregroundScale:{type:Number,notify:!0,value:5},scale:{type:Number,notify:!0,value:300},scrollTopValue:{type:Number,notify:!0,readOnly:!0,value:0}},listeners:{"perspective-changed":"_perspectiveChanged","foregroundScale-changed":"_perspectiveChanged","scale-changed":"_perspectiveChanged"},ready:function(){this._perspectiveChanged(),this.addEventListener("scroll",this._scroll)},_scroll:function(){this.scrollLeft=0,this._setScrollTopValue(this.scrollTop)},_perspectiveChanged:function(){this.style.perspective=this.perspective+"px",this.style["-webkit-perspective"]=this.perspective+"px";for(var e=this.querySelectorAll("parallax-layer"),t=0;t<e.length;t++)e[t].layer&&e[t]._layerChanged()}});</script>
+</body></html>

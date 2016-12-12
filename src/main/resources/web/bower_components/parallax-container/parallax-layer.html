@@ -1,0 +1,26 @@
+<html><head><link rel="import" href="../polymer/polymer.html">
+
+
+</head><body><dom-module id="parallax-layer">
+
+  <style>
+    :host {
+      display: block;
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      -webkit-transform: translateZ(0) scale(1);
+      transform: translateZ(0) scale(1);
+    }
+  </style>
+
+  <template>
+    <content></content>
+  </template>
+
+</dom-module>
+
+<script>Polymer({is:"parallax-layer",properties:{layer:{type:Number,notify:!0,value:0}},listeners:{"layer-changed":"_layerChanged"},ready:function(){this._layerChanged()},_layerChanged:function(){for(var e=this;e&&e.tagName&&"parallax-container"!==e.tagName.toLowerCase()&&e.parentNode;)e=e.parentNode;var a=e.scale,r=e.perspective;layer=this.layer>0?1-Math.exp(-this.layer/e.foregroundScale):this.layer,this.style.transform="translateZ("+layer*a+"px) scale("+(1+layer*-a/r)+")",this.style["-webkit-transform"]=this.style.transform}});</script>
+</body></html>
