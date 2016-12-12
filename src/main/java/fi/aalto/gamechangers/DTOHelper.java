@@ -179,8 +179,7 @@ public class DTOHelper {
         	if (elem.hasText()) {
         		// If there is a text already, prepend a whitespace.
         		if (sb.length() > 0) {
-        			sb.append("
- ");
+        			sb.append("   ");
         		}
     			sb.append(elem.text());
         	}
