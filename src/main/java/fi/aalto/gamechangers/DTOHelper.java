@@ -41,18 +41,18 @@ import fi.aalto.gamechangers.GamechangersService.ProposalBean;
 import fi.aalto.gamechangers.GamechangersService.Work;
 
 public class DTOHelper {
-	
+
 	static WorkspacesService wsService;
-	
+
 	static TimeService timeService;
-	
+
 	private static <T> T selfOrDefault(T instance, T defaultValue) {
 		return (instance != null) ? instance : defaultValue;
 	}
-	
+
 	public static Event toEventOrNull(Topic eventTopic, Topic excludedTopic) throws JSONException {
 		ChildTopics childs = eventTopic.getChildTopics();
-		
+
 		String name = childs.getStringOrNull("dm4.events.title");
 		if (!selfOrDefault(childs.getBooleanOrNull(NS("event.hidden")), false)
 				&& name != null) {
@@ -68,21 +68,21 @@ public class DTOHelper {
 			dto.put("notes", stripHtml(html));
 			dto.put("url", childs.getStringOrNull("dm4.webbrowser.url"));
 			dto.put("imageUrls", toListOfUrls(html));
-			
+
 			dto.put("latestPublicComments", toLatestPublicComments(eventTopic));
 			dto.put("associatedItems", toAssociatedItems(eventTopic, excludedTopic));
-			
+
 			dto.put("vimeoVideoId", toVimeoVideoId(eventTopic));
-	
+
 			return dto;
 		} else {
 			return null;
 		}
 	}
-	
+
 	public static Institution toInstitution(Topic instTopic) throws JSONException {
 		ChildTopics childs = instTopic.getChildTopics();
-		
+
 		String html = childs.getStringOrNull("dm4.contacts.notes");
 		InstitutionImpl dto = new InstitutionImpl();
 		dto.put("_type", "institution");
@@ -95,14 +95,14 @@ public class DTOHelper {
 		dto.put("from", toMillisSinceEpochOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.events.from")));
 		dto.put("to", toMillisSinceEpochOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.events.to")));
 		dto.put("imageUrls", toListOfUrls(html));
-		
+
 		return dto;
 	}
 
-	
+
 	public static Group toGroup(Topic groupTopic) throws JSONException {
 		ChildTopics childs = groupTopic.getChildTopics();
-		
+
 		String html = childs.getStringOrNull("dm4.notes.text");
 		GroupImpl dto = new GroupImpl();
 		dto.put("_type", "group");
@@ -115,10 +115,10 @@ public class DTOHelper {
 
 		return dto;
 	}
-	
+
 	public static Brand toBrand(Topic brandTopic) throws JSONException {
 		ChildTopics childs = brandTopic.getChildTopics();
-		
+
 		String html = childs.getStringOrNull("dm4.notes.text");
 		BrandImpl dto = new BrandImpl();
 		dto.put("_type", "brand");
@@ -139,10 +139,10 @@ public class DTOHelper {
 	public static Comment toComment(Topic commentTopic) throws JSONException {
 		return toCommentImpl(commentTopic, true);
 	}
-	
+
 	private static CommentImpl toCommentImpl(Topic commentTopic, boolean alwaysCreate) throws JSONException {
 		ChildTopics childs = commentTopic.getChildTopics();
-		
+
 		Topic commentedTopic = getCommentedTopicOrNull(commentTopic);
 
 		if (commentedTopic != null && (alwaysCreate || selfOrDefault(childs.getBooleanOrNull(NS("comment.public")), false))) {
@@ -155,16 +155,16 @@ public class DTOHelper {
 			dto.put("commentedItemId", commentedTopic.getId());
 			addCreationTimestamp(dto, commentTopic);
 			dto.put("imageUrls", toListOfUrls(html));
-			
+
 			return dto;
 		} else {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * Strips the text out of h1, h2, h3 and p text and concatenates that as a text.
-	 * 
+	 *
 	 * @param html
 	 * @return
 	 */
@@ -174,12 +174,13 @@ public class DTOHelper {
 
 		StringBuilder sb = new StringBuilder();
         Document doc = Jsoup.parse(html);
-        
+
         for(Element elem : doc.select("h1, h2, h3, p")) {
         	if (elem.hasText()) {
         		// If there is a text already, prepend a whitespace.
         		if (sb.length() > 0) {
-        			sb.append("&#13;&#10;");
+        			sb.append("
+ ");
         		}
     			sb.append(elem.text());
         	}
@@ -187,30 +188,30 @@ public class DTOHelper {
 
 		return sb.toString();
 	}
-	
+
 	/**
 	 * Finds a web_resource topic associated with the given event, parses the web resource's URL and
 	 * return the id part of a vimeo URL, e.g. "https://vimeo.com/90647039" is turned into 90647039.
-	 *  
+	 *
 	 * @param eventTopic
 	 * @return
 	 * @throws JSONException
 	 */
 	private static Long toVimeoVideoId(Topic eventTopic) throws JSONException {
 		Long result = null;
-		
+
 		RelatedTopic webResourceTopic = eventTopic.getRelatedTopic(
 				"dm4.core.association", "dm4.core.default", "dm4.core.default", "dm4.webbrowser.web_resource");
-		
+
 		if (webResourceTopic == null) {
 			return null;
 		}
-		
+
 		String url = webResourceTopic.getChildTopics().getStringOrNull("dm4.webbrowser.url");
 		if (url == null) {
 			return null;
 		}
-		
+
 		URL videoUrl;
 		try {
 			videoUrl = new URL(url);
@@ -225,10 +226,10 @@ public class DTOHelper {
 
 		return result;
 	}
-	
+
 	private static List<CommentImpl> toLatestPublicComments(Topic eventTopic) throws JSONException {
 		ArrayList<CommentImpl> result = new ArrayList<CommentImpl>();
-		
+
 		for (RelatedTopic topic : getDefaultRelatedTopics(eventTopic, NS("comment"))) {
 			CommentImpl dto = toCommentImpl(topic, false);
 			if (dto != null) {
@@ -243,8 +244,8 @@ public class DTOHelper {
 			public int compare(CommentImpl _this, CommentImpl _that) {
 				try {
 					long thisModTime = timeService.getModificationTime(_this.getLong("id"));
-					long thatModTime = timeService.getModificationTime(_that.getLong("id")); 
-					
+					long thatModTime = timeService.getModificationTime(_that.getLong("id"));
+
 					if (thisModTime < thatModTime) {
 						return 1;
 					} else if (thisModTime > thatModTime) {
@@ -258,106 +259,106 @@ public class DTOHelper {
 				}
 
 			}
-			
+
 		});
-		
+
 		// Allow only 10 comments to be left.
 		int size;
 		while ( (size = result.size()) > 10) {
 			result.remove(size - 1);
 		}
-		
+
 		return result;
 	}
-	
+
 	private static List<JSONEnabled> toAssociatedItems(Topic origin, Topic excludedTopic) throws JSONException {
 		ArrayList<JSONEnabled> result = new ArrayList<JSONEnabled>();
-		
+
 		result.addAll(toGroups(getDefaultRelatedTopics(origin, NS("group"))));
 		result.addAll(toBrands(getDefaultRelatedTopics(origin, NS("brand"))));
 		result.addAll(toWorks(getDefaultRelatedTopics(origin, NS("work"))));
 		result.addAll(toInstitutions(getDefaultRelatedTopics(origin, "dm4.contacts.institution")));
 		result.addAll(toPersons(getDefaultRelatedTopics(origin, "dm4.contacts.person")));
 		result.addAll(toEvents(getDefaultRelatedTopics(origin, "dm4.events.event", excludedTopic), origin));
-		
+
 		return result;
 	}
-	
+
 	private static List<Group> toGroups(List<RelatedTopic> topics) throws JSONException {
 		ArrayList<Group> result = new ArrayList<Group>();
-		
+
 		for (RelatedTopic topic : topics) {
 			Group dto = toGroup(topic);
 			if (dto != null) {
 				result.add(dto);
 			}
 		}
-		
+
 		return result;
 	}
 
 	private static List<Brand> toBrands(List<RelatedTopic> topics) throws JSONException {
 		ArrayList<Brand> result = new ArrayList<Brand>();
-		
+
 		for (RelatedTopic topic : topics) {
 			Brand dto = toBrand(topic);
 			if (dto != null) {
 				result.add(dto);
 			}
 		}
-		
+
 		return result;
 	}
 
 	private static List<Institution> toInstitutions(List<RelatedTopic> topics) throws JSONException {
 		ArrayList<Institution> result = new ArrayList<Institution>();
-		
+
 		for (RelatedTopic topic : topics) {
 			Institution dto = toInstitution(topic);
 			if (dto != null) {
 				result.add(dto);
 			}
 		}
-		
+
 		return result;
 	}
-	
+
 	private static List<Person> toPersons(List<RelatedTopic> topics) throws JSONException {
 		ArrayList<Person> result = new ArrayList<Person>();
-		
+
 		for (RelatedTopic topic : topics) {
 			Person dto = toPersonOrNull(topic);
 			if (dto != null) {
 				result.add(dto);
 			}
 		}
-		
+
 		return result;
 	}
-	
+
 	private static List<Work> toWorks(List<RelatedTopic> topics) throws JSONException {
 		ArrayList<Work> result = new ArrayList<Work>();
-		
+
 		for (RelatedTopic topic : topics) {
 			Work dto = toWork(topic);
 			if (dto != null) {
 				result.add(dto);
 			}
 		}
-		
+
 		return result;
 	}
-	
+
 	private static List<Event> toEvents(List<RelatedTopic> topics, Topic excludedTopic) throws JSONException {
 		ArrayList<Event> result = new ArrayList<Event>();
-		
+
 		for (RelatedTopic topic : topics) {
 			Event dto = toEventOrNull(topic, excludedTopic);
 			if (dto != null) {
 				result.add(dto);
 			}
 		}
-		
+
 		return result;
 	}
 
@@ -368,30 +369,30 @@ public class DTOHelper {
 	private static List<RelatedTopic> getDefaultRelatedTopics(Topic origin, String typeUri, Topic excludedTopic) {
 		List<RelatedTopic> result = origin.getRelatedTopics(
 				"dm4.core.association", "dm4.core.default", "dm4.core.default", typeUri);
-		
+
 		if (excludedTopic != null) {
 			for (int i = 0; i < result.size(); i++) {
 				if (excludedTopic.getId() == result.get(i).getId()) {
 					result.remove(i);
-					
+
 					break;
 				}
 			}
 		}
-		
+
 		return result;
 	}
-	
-	/** Returns a list of comment Ids for a given topic. 
-	 * 
+
+	/** Returns a list of comment Ids for a given topic.
+	 *
 	 * <p>The list can be empty.</p>
-	 * 
+	 *
 	 * @param commentedTopic
 	 * @return
 	 */
 	private static List<Long> getCommentIdsForTopic(Topic commentedTopic) {
 		List<Long> commentIds = new ArrayList<Long>();
-		
+
 		for (String typeUri : ValidationHelper.getCommentedTopicTypeUris()) {
 			List<RelatedTopic> topics = commentedTopic.getRelatedTopics(
 					"dm4.core.association", "dm4.core.default", "dm4.core.default", NS("comment"));
@@ -399,15 +400,15 @@ public class DTOHelper {
 				commentIds.add(topic.getId());
 			}
 		}
-		
+
 		return commentIds;
 	}
-	
+
 	/**
 	 * Finds the first topic that is associated with the given comment topic out of the list of commentable types and returns it.
-	 * 
+	 *
 	 * <p>If no such object can be found the result is null.</p>
-	 * 
+	 *
 	 * @param commentTopic
 	 * @return
 	 */
@@ -419,38 +420,38 @@ public class DTOHelper {
 				return topics.get(0);
 			}
 		}
-		
+
 		return null;
 
 	}
-	
+
 	public static Topic toCommentTopic(CoreService dm4, ModelFactory mf, CommentBean comment, Topic topicCommentOn) throws JSONException {
 		// TODO: Check input
-		
+
 		ChildTopicsModel childs = mf.newChildTopicsModel();
 		childs.put("dm4.contacts.person_name", toPersonNameTopicModel(dm4, mf, comment.name));
 		childs.put("dm4.contacts.email_address", comment.email);
 		childs.put("dm4.notes.text", comment.notes);
-		
+
 		Topic topic = dm4.createTopic(mf.newTopicModel(NS("comment"), childs));
 
 		// Sets the relation to the item that is being commented on
 		Association assoc = dm4.createAssociation(mf.newAssociationModel("dm4.core.association",
     			mf.newTopicRoleModel(topicCommentOn.getId(), "dm4.core.default"),
 			mf.newTopicRoleModel(topic.getId(), "dm4.core.default")));
-		
+
 		assignToCommentsWorkspace(assoc);
-		
+
 		return topic;
 	}
-	
+
 	private static TopicModel toPersonNameTopicModel(CoreService dm4, ModelFactory mf, String nameString) {
 		nameString = nameString.trim();
-		
+
 		String firstName;
 		String lastName;
 		int spaceIndex = -1;
-		
+
 		// If a space is available, it'll be in the middle (because of trim())
 		if ((spaceIndex = nameString.indexOf(' ')) > -1) {
 			firstName = nameString.substring(0, spaceIndex);
@@ -462,20 +463,20 @@ public class DTOHelper {
 		}
 
 		ChildTopicsModel childs = mf.newChildTopicsModel();
-				
+
 		childs.put("dm4.contacts.first_name", firstName);
 		childs.put("dm4.contacts.last_name", lastName);
-				
+
 		return mf.newTopicModel("dm4.contacts.person_name", childs);
 	}
-	
+
 	public static Person toPersonOrNull(Topic personTopic) throws JSONException {
 		ChildTopics childs = personTopic.getChildTopics();
-		
+
 		String name = childs.getStringOrNull("dm4.contacts.person_name");
 		String notes = childs.getStringOrNull("dm4.contacts.notes");
 		PersonImpl dto = null;
-		
+
 		if (name != null || notes != null) {
 			dto = new PersonImpl();
 			dto.put("_type", "person");
@@ -490,24 +491,24 @@ public class DTOHelper {
 
 		return dto;
 	}
-	
+
 	public static Topic toProposalTopic(CoreService dm4, ModelFactory mf, ProposalBean proposal) throws JSONException {
 		// TODO: Check input
-		
+
 		ChildTopicsModel childs = mf.newChildTopicsModel();
 		childs.put("dm4.contacts.person_name", toPersonNameTopicModel(dm4, mf, proposal.name));
 		childs.put("dm4.contacts.email_address", proposal.email);
 		childs.put("dm4.notes.text", proposal.notes);
 		childs.putRef("dm4.datetime.date#dm4.events.from", toDateTopicModel(dm4, mf, proposal.from).getId());
 		childs.putRef("dm4.datetime.date#dm4.events.to", toDateTopicModel(dm4, mf, proposal.to).getId());
-		
+
 		return dm4.createTopic(mf.newTopicModel(NS("proposal"), childs));
 	}
-	
+
 	public static Proposal toProposal(Topic proposalTopic) throws JSONException {
 		ChildTopics childs = proposalTopic.getChildTopics();
 		String html;
-		
+
 		ProposalImpl dto = new ProposalImpl();
 		dto.put("_type", "proposal");
 		dto.put("id", proposalTopic.getId());
@@ -519,10 +520,10 @@ public class DTOHelper {
 
 		return dto;
 	}
-	
+
 	public static Work toWork(Topic workTopic) throws JSONException {
 		ChildTopics childs = workTopic.getChildTopics();
-		
+
 		String html;
 		WorkImpl dto = new WorkImpl();
 		dto.put("_type", "work");
@@ -536,7 +537,7 @@ public class DTOHelper {
 
 		return dto;
 	}
-	
+
 	private static List<String> toStringListOrNull(List<RelatedTopic> topics) {
 		if (topics != null && topics.size() > 0) {
 			List<String> list = new ArrayList<String>();
@@ -552,19 +553,19 @@ public class DTOHelper {
 
 	public static TopicModel toDateTopicModel(CoreService dm4, ModelFactory mf, long millis) throws JSONException {
 		Calendar cal = Calendar.getInstance();
-		
+
 		cal.setTimeInMillis(millis);
 
 		ChildTopicsModel childs = mf.newChildTopicsModel();
-		
+
 		putRefOrCreate(dm4, mf, childs, "dm4.datetime.year", cal.get(Calendar.YEAR));
 		putRefOrCreate(dm4, mf, childs, "dm4.datetime.month", cal.get(Calendar.MONTH));
 		putRefOrCreate(dm4, mf, childs, "dm4.datetime.day", cal.get(Calendar.DAY_OF_MONTH));
-		
+
 		Topic t = dm4.createTopic(mf.newTopicModel("dm4.datetime.date", childs));
 
 		assignToCommentsWorkspace(t);
-		
+
 		return t.getModel();
 	}
 
@@ -574,26 +575,26 @@ public class DTOHelper {
 		for (Topic t : results) {
 			if (t.getSimpleValue().equals(sv)) {
 				childs.putRef(typeUri, t.getId());
-				
+
 				return;
 			}
 		}
-		
+
 		TopicModel tm = mf.newTopicModel(typeUri);
 		tm.setSimpleValue(sv);
 		Topic t = dm4.createTopic(tm);
-		
+
 		assignToCommentsWorkspace(t);
-		
+
 		childs.putRef(typeUri, t.getId());
 	}
-	
+
 	private static void assignToCommentsWorkspace(DeepaMehtaObject obj) {
 		// Assigns the new value to the 'data' workspace
 		long wsId = wsService.getWorkspace(NS("workspace.comments")).getId();
 		wsService.assignToWorkspace(obj, wsId);
 	}
-	
+
 	private static Long toMillisSinceEpochOrNull(Topic datetimeTopic) throws JSONException {
 		if (datetimeTopic == null) {
 			return null;
@@ -602,7 +603,7 @@ public class DTOHelper {
 
 		Topic dateTopic;
 		Topic timeTopic;
-		
+
 		int year = -1, month = 1, day = 1;
 		int hour = 0, minute = 0;
 
@@ -616,7 +617,7 @@ public class DTOHelper {
 			dateTopic = datetimeTopic;
 			timeTopic = null;
 		}
-		
+
 		if (dateTopic != null && (childs = dateTopic.getChildTopics()) != null) {
 			year = getInt(childs, "dm4.datetime.year", -1);
 			month = getInt(childs, "dm4.datetime.month", 1);
@@ -627,7 +628,7 @@ public class DTOHelper {
 			hour = getInt(childs, "dm4.datetime.hour", 0);
 			minute = getInt(childs, "dm4.datetime.minute", 0);
 		}
-		
+
 		// At least the year needs to have been specified
 		if (year != -1) {
 			Calendar cal = Calendar.getInstance();
@@ -635,37 +636,37 @@ public class DTOHelper {
 			cal.set(Calendar.YEAR, year);
 			cal.set(Calendar.MONTH, month);
 			cal.set(Calendar.DAY_OF_MONTH, day);
-			
+
 			cal.set(Calendar.HOUR, hour);
 			cal.set(Calendar.MINUTE, minute);
 			cal.set(Calendar.SECOND, 0);
 			cal.set(Calendar.MILLISECOND, 0);
-					
+
 			return cal.getTimeInMillis();
 		} else {
 			return null;
 		}
 	}
-	
+
 	private static int getInt(ChildTopics childs, String assocDefUri, int defaultValue) {
 		Integer value = childs.getIntOrNull(assocDefUri);
-		
+
 		return (value != null) ? value.intValue() : defaultValue;
 	}
-	
+
 	private static JSONObject toAddressOrNull(Topic addressTopic) throws JSONException {
 		if (addressTopic == null) {
 			return null;
 		}
-		
+
 		ChildTopics childs = addressTopic.getChildTopics();
-		
+
 		JSONObject addr = new JSONObject();
 		addr.put("street", childs.getStringOrNull("dm4.contacts.street"));
 		addr.put("postal_code", childs.getStringOrNull("dm4.contacts.postal_code"));
 		addr.put("city", childs.getStringOrNull("dm4.contacts.city"));
 		addr.put("country", childs.getStringOrNull("dm4.contacts.country"));
-		
+
 		return addr;
 	}
 
@@ -673,18 +674,18 @@ public class DTOHelper {
 		ArrayList<String> result = new ArrayList<String>();
 		if (html != null) {
 	        Document doc = Jsoup.parse(html);
-	        
+
 	        for(Element img : doc.select("img[src]")) {
 	        	result.add(img.attr("abs:src"));
 	        }
 		}
         return result;
     }
-	
+
 	private static void addCreationTimestamp(JSONEnabledImpl dto, Topic topic) throws JSONException {
 		dto.put("created", timeService.getCreationTime(topic.getId()));
 	}
-	
+
 	private static class EventImpl extends JSONEnabledImpl implements Event {
 	}
 
