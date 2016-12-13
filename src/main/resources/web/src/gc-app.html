@@ -2125,24 +2125,29 @@ delete this[t])},_configureProperties:function(e,t){for(var n in e){var r=e[n];i
 
       .event {
           min-width: 340px;
+          overflow: hidden;
       }
 
       .event-header {
         width: 100%;
         height: 50px;
         font-size: 16px;
-        font-weight: bold;
+        white-space: nowrap;
         color: #fff;
       }
+
+      .buttontext {
+        width:280px;
+        overflow: hidden;
+        white-space: nowrap;
+        display: block;
+        text-overflow: ellipsis;
+      }​
 
       paper-button.event-header {
         width: 100%;
         height: 100%;
         margin: 0px;
-
-  background: green;
-  color: yellow;
-
       }
 
       .event-image {
@@ -2335,11 +2340,11 @@ delete this[t])},_configureProperties:function(e,t){for(var n in e){var r=e[n];i
     
     <div class="container flex-horizontal">
       <div style="position: relative; left: 0; top: 0">
-        <img src="/images/futureDates.png" style="position: relative; top: 0; left: 0; margin: 50px 70px 30px 26px">
-        <img src="/images/alpha.png" style="position: absolute; top: 0px; left: 0px">
+        <img src="/pictures/futureDates.png" style="position: relative; top: 0; left: 0; margin: 50px 70px 30px 26px">
+        <img src="/pictures/alpha.png" style="position: absolute; top: 0px; left: 0px">
       </div>
       <div class="flexchild">
-        <img src="/images/title.png" style="position: relative; top: 20px; left: 0; margin: 60px 0px 60px 0px">
+        <img src="/pictures/title.png" style="position: relative; top: 20px; left: 0; margin: 60px 0px 60px 0px">
         <p class="info">CLOSED ALPHA - VERSION</p>
         <div style="height: 1px; background-color: #F8E81C"></div>
 
@@ -2394,7 +2399,7 @@ delete this[t])},_configureProperties:function(e,t){for(var n in e){var r=e[n];i
 
               </div>
               <div class="leftArrow">
-                <img src="/images/arrowLeft.png" style="position: relative; top: 0; left: 0; margin: 12px">
+                <img src="/pictures/arrowLeft.png" style="position: relative; top: 0; left: 0; margin: 12px">
               </div>
             </div>
           </div>
@@ -2405,9 +2410,9 @@ delete this[t])},_configureProperties:function(e,t){for(var n in e){var r=e[n];i
           <paper-card>
             <div class="event">
               <div class="event-header" style="background-color: {{eventColour(item.type)}}">
-                <paper-button on-tap="handleEventCollapse">
+                <paper-button on-tap="handleEventCollapse" style="max-width: 330px">
                   <iron-icon icon="{{item.type}}" style="margin-right: 8px"></iron-icon>
-                  {{item.name}}
+                  <span class="buttontext">{{item.name}}</span>
                 </paper-button>
               </div>
               <iron-collapse id$="collapse{{item.id}}" style="width:100%">
@@ -2458,7 +2463,7 @@ delete this[t])},_configureProperties:function(e,t){for(var n in e){var r=e[n];i
           <div class="associationColumn">
             <div class="associations" id$="associations{{item.id}}" style="display: none">
               <div class="rightArrow">
-                <img src="/images/arrowRight.png" style="position: relative; top: 0; left: 0; margin: 12px">
+                <img src="/pictures/arrowRight.png" style="position: relative; top: 0; left: 0; margin: 12px">
               </div>
               <div class="flexchild">
                 <template is="dom-repeat" items="{{item.associatedItems}}" as="association">

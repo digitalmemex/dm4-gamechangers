@@ -81,24 +81,29 @@
 
       .event {
           min-width: 340px;
+          overflow: hidden;
       }
 
       .event-header {
         width: 100%;
         height: 50px;
         font-size: 16px;
-        font-weight: bold;
+        white-space: nowrap;
         color: #fff;
       }
+
+      .buttontext {
+        width:280px;
+        overflow: hidden;
+        white-space: nowrap;
+        display: block;
+        text-overflow: ellipsis;
+      }​
 
       paper-button.event-header {
         width: 100%;
         height: 100%;
         margin: 0px;
-
-  background: green;
-  color: yellow;
-
       }
 
       .event-image {
