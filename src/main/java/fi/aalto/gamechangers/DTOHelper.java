@@ -51,14 +51,14 @@ public class DTOHelper {
 		return (instance != null) ? instance : defaultValue;
 	}
 
-	public static Event toEventOrNull(Topic eventTopic) throws JSONException {
-		return toEventOrNull(eventTopic, new HashSet<Long>());
+	public static Event toEventOrNull(String languageCode, Topic eventTopic) throws JSONException {
+		return toEventOrNull(languageCode, eventTopic, new HashSet<Long>());
 	}
 	
-	private static Event toEventOrNull(Topic eventTopic, Set<Long> alreadyVisitedTopics) throws JSONException {
+	private static Event toEventOrNull(String languageCode, Topic eventTopic, Set<Long> alreadyVisitedTopics) throws JSONException {
 		ChildTopics childs = eventTopic.getChildTopics();
 
-		String name = childs.getStringOrNull("dm4.events.title");
+		String name = getTranslatedStringOrNull(childs, languageCode, "dm4.events.title");
 		if (!selfOrDefault(childs.getBooleanOrNull(NS("event.hidden")), false)
 				&& name != null) {
 			String html = childs.getStringOrNull("dm4.events.notes");
@@ -74,7 +74,7 @@ public class DTOHelper {
 			dto.put("url", childs.getStringOrNull("dm4.webbrowser.url"));
 			dto.put("images", toImageList(html));
 			dto.put("latestPublicComments", toLatestPublicComments(eventTopic));
-			dto.put("associatedItems", toAssociatedItems(eventTopic, alreadyVisitedTopics));
+			dto.put("associatedItems", toAssociatedItems(languageCode, eventTopic, alreadyVisitedTopics));
 
 			dto.put("vimeoVideoId", toVimeoVideoId(eventTopic));
 
@@ -84,14 +84,14 @@ public class DTOHelper {
 		}
 	}
 
-	public static Institution toInstitution(Topic instTopic) throws JSONException {
+	public static Institution toInstitution(String languageCode, Topic instTopic) throws JSONException {
 		ChildTopics childs = instTopic.getChildTopics();
 
 		String html = childs.getStringOrNull("dm4.contacts.notes");
 		InstitutionImpl dto = new InstitutionImpl();
 		dto.put("_type", "institution");
 		dto.put("id", instTopic.getId());
-		dto.put("name", childs.getStringOrNull("dm4.contacts.institution_name"));
+		dto.put("name", getTranslatedStringOrNull(childs, languageCode, "dm4.contacts.institution_name"));
 		dto.put("type", childs.getStringOrNull(NS("institution.type")));
 //		dto.put("address", toAddressOrNull(childs.getTopicOrNull("dm4.contacts.address")));
 		dto.put("urls", toStringListOrNull(childs.getTopicsOrNull("dm4.webbrowser.url")));
@@ -104,14 +104,14 @@ public class DTOHelper {
 	}
 
 
-	public static Group toGroup(Topic groupTopic) throws JSONException {
+	public static Group toGroup(String languageCode, Topic groupTopic) throws JSONException {
 		ChildTopics childs = groupTopic.getChildTopics();
 
 		String html = childs.getStringOrNull("dm4.notes.text");
 		GroupImpl dto = new GroupImpl();
 		dto.put("_type", "group");
 		dto.put("id", groupTopic.getId());
-		dto.put("name", childs.getStringOrNull(NS("group.name")));
+		dto.put("name", getTranslatedStringOrNull(childs, languageCode, NS("group.name")));
 		dto.put("notes", stripHtml(html));
 		dto.put("from", toMillisSinceEpochOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.events.from")));
 		dto.put("to", toMillisSinceEpochOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.events.to")));
@@ -120,14 +120,14 @@ public class DTOHelper {
 		return dto;
 	}
 
-	public static Brand toBrand(Topic brandTopic) throws JSONException {
+	public static Brand toBrand(String languageCode, Topic brandTopic) throws JSONException {
 		ChildTopics childs = brandTopic.getChildTopics();
 
 		String html = childs.getStringOrNull("dm4.notes.text");
 		BrandImpl dto = new BrandImpl();
 		dto.put("_type", "brand");
 		dto.put("id", brandTopic.getId());
-		dto.put("name", childs.getStringOrNull(NS("brand.name")));
+		dto.put("name", getTranslatedStringOrNull(childs, languageCode, NS("brand.name")));
 		dto.put("notes", stripHtml(html));
 		dto.put("from", toMillisSinceEpochOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.events.from")));
 		dto.put("to", toMillisSinceEpochOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.events.to")));
@@ -274,26 +274,26 @@ public class DTOHelper {
 		return result;
 	}
 
-	private static List<JSONEnabled> toAssociatedItems(Topic origin, Set<Long> alreadyVisitedTopics) throws JSONException {
+	private static List<JSONEnabled> toAssociatedItems(String languageCode, Topic origin, Set<Long> alreadyVisitedTopics) throws JSONException {
 		ArrayList<JSONEnabled> result = new ArrayList<JSONEnabled>();
 
-		result.addAll(toGroups(getDefaultRelatedTopics(origin, NS("group"))));
-		result.addAll(toBrands(getDefaultRelatedTopics(origin, NS("brand"))));
-		result.addAll(toWorks(getDefaultRelatedTopics(origin, NS("work"))));
-		result.addAll(toInstitutions(getDefaultRelatedTopics(origin, "dm4.contacts.institution")));
-		result.addAll(toPersons(getDefaultRelatedTopics(origin, "dm4.contacts.person")));
+		result.addAll(toGroups(languageCode, getDefaultRelatedTopics(origin, NS("group"))));
+		result.addAll(toBrands(languageCode, getDefaultRelatedTopics(origin, NS("brand"))));
+		result.addAll(toWorks(languageCode, getDefaultRelatedTopics(origin, NS("work"))));
+		result.addAll(toInstitutions(languageCode, getDefaultRelatedTopics(origin, "dm4.contacts.institution")));
+		result.addAll(toPersons(languageCode, getDefaultRelatedTopics(origin, "dm4.contacts.person")));
 		
 		alreadyVisitedTopics.add(origin.getId());
-		result.addAll(toEvents(getDefaultRelatedTopics(origin, "dm4.events.event", alreadyVisitedTopics), alreadyVisitedTopics));
+		result.addAll(toEvents(languageCode, getDefaultRelatedTopics(origin, "dm4.events.event", alreadyVisitedTopics), alreadyVisitedTopics));
 
 		return result;
 	}
 
-	private static List<Group> toGroups(List<RelatedTopic> topics) throws JSONException {
+	private static List<Group> toGroups(String languageCode, List<RelatedTopic> topics) throws JSONException {
 		ArrayList<Group> result = new ArrayList<Group>();
 
 		for (RelatedTopic topic : topics) {
-			Group dto = toGroup(topic);
+			Group dto = toGroup(languageCode, topic);
 			if (dto != null) {
 				result.add(dto);
 			}
@@ -302,11 +302,11 @@ public class DTOHelper {
 		return result;
 	}
 
-	private static List<Brand> toBrands(List<RelatedTopic> topics) throws JSONException {
+	private static List<Brand> toBrands(String languageCode, List<RelatedTopic> topics) throws JSONException {
 		ArrayList<Brand> result = new ArrayList<Brand>();
 
 		for (RelatedTopic topic : topics) {
-			Brand dto = toBrand(topic);
+			Brand dto = toBrand(languageCode, topic);
 			if (dto != null) {
 				result.add(dto);
 			}
@@ -315,11 +315,11 @@ public class DTOHelper {
 		return result;
 	}
 
-	private static List<Institution> toInstitutions(List<RelatedTopic> topics) throws JSONException {
+	private static List<Institution> toInstitutions(String languageCode, List<RelatedTopic> topics) throws JSONException {
 		ArrayList<Institution> result = new ArrayList<Institution>();
 
 		for (RelatedTopic topic : topics) {
-			Institution dto = toInstitution(topic);
+			Institution dto = toInstitution(languageCode, topic);
 			if (dto != null) {
 				result.add(dto);
 			}
@@ -328,11 +328,11 @@ public class DTOHelper {
 		return result;
 	}
 
-	private static List<Person> toPersons(List<RelatedTopic> topics) throws JSONException {
+	private static List<Person> toPersons(String languageCode, List<RelatedTopic> topics) throws JSONException {
 		ArrayList<Person> result = new ArrayList<Person>();
 
 		for (RelatedTopic topic : topics) {
-			Person dto = toPersonOrNull(topic);
+			Person dto = toPersonOrNull(languageCode, topic);
 			if (dto != null) {
 				result.add(dto);
 			}
@@ -341,11 +341,11 @@ public class DTOHelper {
 		return result;
 	}
 
-	private static List<Work> toWorks(List<RelatedTopic> topics) throws JSONException {
+	private static List<Work> toWorks(String languageCode, List<RelatedTopic> topics) throws JSONException {
 		ArrayList<Work> result = new ArrayList<Work>();
 
 		for (RelatedTopic topic : topics) {
-			Work dto = toWork(topic);
+			Work dto = toWork(languageCode, topic);
 			if (dto != null) {
 				result.add(dto);
 			}
@@ -354,11 +354,11 @@ public class DTOHelper {
 		return result;
 	}
 
-	private static List<Event> toEvents(List<RelatedTopic> topics, Set<Long> alreadyVisitedTopics) throws JSONException {
+	private static List<Event> toEvents(String languageCode, List<RelatedTopic> topics, Set<Long> alreadyVisitedTopics) throws JSONException {
 		ArrayList<Event> result = new ArrayList<Event>();
 
 		for (RelatedTopic topic : topics) {
-			Event dto = toEventOrNull(topic, alreadyVisitedTopics);
+			Event dto = toEventOrNull(languageCode, topic, alreadyVisitedTopics);
 			if (dto != null) {
 				result.add(dto);
 			}
@@ -479,10 +479,10 @@ public class DTOHelper {
 		return mf.newTopicModel("dm4.contacts.person_name", childs);
 	}
 
-	public static Person toPersonOrNull(Topic personTopic) throws JSONException {
+	public static Person toPersonOrNull(String languageCode, Topic personTopic) throws JSONException {
 		ChildTopics childs = personTopic.getChildTopics();
 
-		String name = childs.getStringOrNull("dm4.contacts.person_name");
+		String name = getTranslatedStringOrNull(childs, languageCode, "dm4.contacts.person_name");
 		String notes = childs.getStringOrNull("dm4.contacts.notes");
 		PersonImpl dto = null;
 
@@ -495,7 +495,7 @@ public class DTOHelper {
 	//		dto.put("urls", toStringListOrNull(childs.getTopicsOrNull("dm4.webbrowser.url")));
 			dto.put("birth", toMillisSinceEpochOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.contacts.date_of_birth")));
 			dto.put("death", toMillisSinceEpochOrNull(childs.getTopicOrNull("dm4.datetime.date#" + NS("date_of_death"))));
-			dto.put("imageUrls", toImageList(notes));
+			dto.put("images", toImageList(notes));
 		}
 
 		return dto;
@@ -525,12 +525,12 @@ public class DTOHelper {
 		dto.put("notes", html = childs.getStringOrNull("dm4.notes.text"));
 		dto.put("from", toMillisSinceEpochOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.events.from")));
 		dto.put("to", toMillisSinceEpochOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.events.to")));
-		dto.put("imageUrls", toImageList(html));
+		dto.put("images", toImageList(html));
 
 		return dto;
 	}
 
-	public static Work toWork(Topic workTopic) throws JSONException {
+	public static Work toWork(String languageCode, Topic workTopic) throws JSONException {
 		ChildTopics childs = workTopic.getChildTopics();
 
 		String html;
@@ -538,11 +538,11 @@ public class DTOHelper {
 		dto.put("_type", "work");
 		dto.put("id", workTopic.getId());
 		dto.put("type", childs.getStringOrNull(NS("work.type")));
-		dto.put("name", childs.getStringOrNull(NS("work.label")));
+		dto.put("name", getTranslatedStringOrNull(childs, languageCode, NS("work.label")));
 		dto.put("notes", html = childs.getStringOrNull("dm4.notes.text"));
 		dto.put("from", toMillisSinceEpochOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.events.from")));
 		dto.put("to", toMillisSinceEpochOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.events.to")));
-		dto.put("imageUrls", toImageList(html));
+		dto.put("images", toImageList(html));
 
 		return dto;
 	}
@@ -706,6 +706,29 @@ public class DTOHelper {
 		}
         return result;
     }
+	
+	private static String getTranslatedStringOrNull(ChildTopics childs, String languageCode, String typeUri) {
+		if (languageCode == null || languageCode.equals("en")) {
+			return childs.getStringOrNull(typeUri);
+		}
+		
+		Topic topic = childs.getTopicOrNull(typeUri);
+		if (topic == null) {
+			return null;
+		}
+		
+		// Try to look up translation
+		List<RelatedTopic> translatedTexts = topic.getRelatedTopics(NS("translation"), "dm4.core.default", "dm4.core.default", NS("translatedtext"));
+		for (RelatedTopic possibleTranslationTopic : translatedTexts) {
+			Association association = possibleTranslationTopic.getRelatingAssociation();
+			if (languageCode.equals(association.getSimpleValue().toString())) {
+				return possibleTranslationTopic.getSimpleValue().toString();
+			}
+		}
+		
+		// Deliver default
+		return topic.getSimpleValue().toString();
+	}
 
 	private static void addCreationTimestamp(JSONEnabledImpl dto, Topic topic) throws JSONException {
 		dto.put("created", timeService.getCreationTime(topic.getId()));

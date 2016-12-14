@@ -13,25 +13,49 @@ public interface GamechangersService {
 
 	List<Brand> getBrands();
 
+	Brand getBrand(String languageCode, long id);
+
+	List<Brand> getBrands(String languageCode);
+	
 	Event getEvent(long id);	
 
 	List<Event> getEvents();
 	
+	Event getEvent(String languageCode, long id);	
+
+	List<Event> getEvents(String languageCode);
+
 	Group getGroup(long id);
 	
 	List<Group> getGroups();
+
+	Group getGroup(String languageCode, long id);
+	
+	List<Group> getGroups(String languageCode);
 
 	Institution getInstitution(long id);
 	
 	List<Institution> getInstitutions();
 
-	Work getWork(long id);
+	Institution getInstitution(String languageCode, long id);
 	
+	List<Institution> getInstitutions(String languageCode);
+
+	Work getWork(long id);
+		
 	List<Work> getWorks();
+
+	Work getWork(String languageCode, long id);
+
+	List<Work> getWorks(String languageCode);
 	
 	Person getPerson(long id);
 	
 	List<Person> getPersons();
+
+	Person getPerson(String languageCode, long id);
+	
+	List<Person> getPersons(String languageCode);
 	
 	Comment getComment(long id);
 
@@ -92,6 +116,5 @@ public interface GamechangersService {
 	}
 	
 	interface Proposal extends JSONEnabled {}
-
 	
 }

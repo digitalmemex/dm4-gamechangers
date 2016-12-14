@@ -70,11 +70,18 @@ public class GamechangersPlugin extends PluginActivator implements GamechangersS
 	@Path("/v1/brands")
 	@Override
 	public List<Brand> getBrands() {
+		return getBrands(null);
+	}
+	
+	@GET
+	@Path("/v2/{languageCode}/brands")
+	@Override
+	public List<Brand> getBrands(@PathParam("languageCode") String languageCode) {
 		List<Brand> results = new ArrayList<Brand>();
 		
 		for (Topic topic : dm4.getTopicsByType(NS("brand"))) {
 			try {
-				results.add(toBrand(topic));
+				results.add(toBrand(languageCode, topic));
 			} catch (JSONException jsone) {
 				// TODO: Log what object was dropped
 			}
@@ -87,11 +94,18 @@ public class GamechangersPlugin extends PluginActivator implements GamechangersS
 	@Path("/v1/brand/{id}")
 	@Override
 	public Brand getBrand(@PathParam("id") long topicId) {
+		return getBrand(null, topicId);
+	}
+	
+	@GET
+	@Path("/v2/{languageCode}/brand/{id}")
+	@Override
+	public Brand getBrand(@PathParam("languageCode") String languageCode, @PathParam("id") long topicId) {
 		Topic topic = dm4.getTopic(topicId);
 		try {
 		
 			if (topic != null) {
-				return toBrand(topic);
+				return toBrand(languageCode, topic);
 			}
 			
 		} catch (JSONException jsone) {
@@ -198,11 +212,18 @@ public class GamechangersPlugin extends PluginActivator implements GamechangersS
 	@Path("/v1/events")
 	@Override
 	public List<Event> getEvents() {
+		return getEvents(null);
+	}
+	
+	@GET
+	@Path("/v2/{languageCode}/events")
+	@Override
+	public List<Event> getEvents(@PathParam("languageCode") String languageCode) {
 		List<Event> results = new ArrayList<Event>();
 		
 		for (Topic topic : dm4.getTopicsByType("dm4.events.event")) {
 			try {
-				Event event = toEventOrNull(topic);
+				Event event = toEventOrNull(languageCode, topic);
 				if(event != null) {
 					results.add(event);
 				}
@@ -218,11 +239,18 @@ public class GamechangersPlugin extends PluginActivator implements GamechangersS
 	@Path("/v1/event/{id}")
 	@Override
 	public Event getEvent(@PathParam("id") long topicId) {
+		return getEvent(null, topicId);
+	}
+	
+	@GET
+	@Path("/v2/{languageCode}/event/{id}")
+	@Override
+	public Event getEvent(@PathParam("languageCode") String languageCode, @PathParam("id") long topicId) {
 		Topic topic = dm4.getTopic(topicId);
 		try {
 		
 			if (topic != null) {
-				return toEventOrNull(topic);
+				return toEventOrNull(languageCode, topic);
 			}
 			
 		} catch (JSONException jsone) {
@@ -236,11 +264,18 @@ public class GamechangersPlugin extends PluginActivator implements GamechangersS
 	@Path("/v1/groups")
 	@Override
 	public List<Group> getGroups() {
+		return getGroups(null);
+	}
+	
+	@GET
+	@Path("/v2/{languageCode}/groups")
+	@Override
+	public List<Group> getGroups(@PathParam("languageCode") String languageCode) {
 		List<Group> results = new ArrayList<Group>();
 		
 		for (Topic topic : dm4.getTopicsByType(NS("group"))) {
 			try {
-				results.add(toGroup(topic));
+				results.add(toGroup(languageCode, topic));
 			} catch (JSONException jsone) {
 				// TODO: Log what object was dropped
 			}
@@ -253,11 +288,18 @@ public class GamechangersPlugin extends PluginActivator implements GamechangersS
 	@Path("/v1/group/{id}")
 	@Override
 	public Group getGroup(@PathParam("id") long topicId) {
+		return getGroup(null, topicId);
+	}
+	
+	@GET
+	@Path("/v2/{languageCode}/group/{id}")
+	@Override
+	public Group getGroup(@PathParam("languageCode") String languageCode, @PathParam("id") long topicId) {
 		Topic topic = dm4.getTopic(topicId);
 		try {
 		
 			if (topic != null) {
-				return toGroup(topic);
+				return toGroup(languageCode, topic);
 			}
 			
 		} catch (JSONException jsone) {
@@ -271,11 +313,18 @@ public class GamechangersPlugin extends PluginActivator implements GamechangersS
 	@Path("/v1/persons")
 	@Override
 	public List<Person> getPersons() {
+		return getPersons(null);
+	}
+	
+	@GET
+	@Path("/v2/{languageCode}/persons")
+	@Override
+	public List<Person> getPersons(@PathParam("languageCode") String languageCode) {
 		List<Person> results = new ArrayList<Person>();
 		
 		for (Topic topic : dm4.getTopicsByType("dm4.contacts.person")) {
 			try {
-				Person person = toPersonOrNull(topic);
+				Person person = toPersonOrNull(languageCode, topic);
 				if(person != null) {
 					results.add(person);
 				}
@@ -291,11 +340,18 @@ public class GamechangersPlugin extends PluginActivator implements GamechangersS
 	@Path("/v1/person/{id}")
 	@Override
 	public Person getPerson(@PathParam("id") long topicId) {
+		return getPerson(null, topicId);
+	}
+	
+	@GET
+	@Path("/v2/{languageCode}/person/{id}")
+	@Override
+	public Person getPerson(@PathParam("languageCode") String languageCode, @PathParam("id") long topicId) {
 		Topic topic = dm4.getTopic(topicId);
 		try {
 		
 			if (topic != null) {
-				return toPersonOrNull(topic);
+				return toPersonOrNull(languageCode, topic);
 			}
 			
 		} catch (JSONException jsone) {
@@ -369,11 +425,18 @@ public class GamechangersPlugin extends PluginActivator implements GamechangersS
 	@Path("/v1/institutions")
 	@Override
 	public List<Institution> getInstitutions() {
+		return getInstitutions(null);
+	}
+	
+	@GET
+	@Path("/v2/{languageCode}/institutions")
+	@Override
+	public List<Institution> getInstitutions(@PathParam("languageCode") String languageCode) {
 		List<Institution> results = new ArrayList<Institution>();
 		
 		for (Topic topic : dm4.getTopicsByType("dm4.contacts.institution")) {
 			try {
-				results.add(toInstitution(topic));
+				results.add(toInstitution(languageCode, topic));
 			} catch (JSONException jsone) {
 				// TODO: Log what object was dropped
 			}
@@ -386,11 +449,18 @@ public class GamechangersPlugin extends PluginActivator implements GamechangersS
 	@Path("/v1/institution/{id}")
 	@Override
 	public Institution getInstitution(@PathParam("id") long topicId) {
+		return getInstitution(null, topicId);
+	}
+	
+	@GET
+	@Path("/v2/{languageCode}/institution/{id}")
+	@Override
+	public Institution getInstitution(@PathParam("languageCode") String languageCode, @PathParam("id") long topicId) {
 		Topic topic = dm4.getTopic(topicId);
 		try {
 		
 			if (topic != null) {
-				return toInstitution(topic);
+				return toInstitution(languageCode, topic);
 			}
 			
 		} catch (JSONException jsone) {
@@ -404,11 +474,18 @@ public class GamechangersPlugin extends PluginActivator implements GamechangersS
 	@Path("/v1/works")
 	@Override
 	public List<Work> getWorks() {
+		return getWorks(null);
+	}
+	
+	@GET
+	@Path("/v2/{languageCode}/works")
+	@Override
+	public List<Work> getWorks(@PathParam("languageCode") String languageCode) {
 		List<Work> results = new ArrayList<Work>();
 		
 		for (Topic topic : dm4.getTopicsByType(NS("work"))) {
 			try {
-				results.add(toWork(topic));
+				results.add(toWork(languageCode, topic));
 			} catch (JSONException jsone) {
 				// TODO: Log what object was dropped
 			}
@@ -416,16 +493,23 @@ public class GamechangersPlugin extends PluginActivator implements GamechangersS
 		
 		return results;
 	}
-	
+	 	
 	@GET
 	@Path("/v1/work/{id}")
 	@Override
 	public Work getWork(@PathParam("id") long topicId) {
+		return getWork(null, topicId);
+	}
+
+	@GET
+	@Path("/v2/{languageCode}/work/{id}")
+	@Override
+	public Work getWork(@PathParam("languageCode") String languageCode, @PathParam("id") long topicId) {
 		Topic topic = dm4.getTopic(topicId);
 		try {
 		
 			if (topic != null) {
-				return toWork(topic);
+				return toWork(languageCode, topic);
 			}
 			
 		} catch (JSONException jsone) {
@@ -434,5 +518,5 @@ public class GamechangersPlugin extends PluginActivator implements GamechangersS
 
 		return null;
 	}
-
+	
 }
