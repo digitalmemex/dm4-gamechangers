@@ -67,7 +67,7 @@ public class DTOHelper {
 			dto.put("to", toMillisSinceEpochOrNull(childs.getTopicOrNull("dm4.datetime#dm4.events.to")));
 			dto.put("notes", stripHtml(html));
 			dto.put("url", childs.getStringOrNull("dm4.webbrowser.url"));
-			dto.put("imageUrls", toListOfUrls(html));
+			dto.put("images", toImageList(html));
 			
 			dto.put("latestPublicComments", toLatestPublicComments(eventTopic));
 			dto.put("associatedItems", toAssociatedItems(eventTopic, excludedTopic));
@@ -94,7 +94,7 @@ public class DTOHelper {
 		dto.put("notes", stripHtml(html));
 		dto.put("from", toMillisSinceEpochOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.events.from")));
 		dto.put("to", toMillisSinceEpochOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.events.to")));
-		dto.put("imageUrls", toListOfUrls(html));
+		dto.put("imageUrls", toImageList(html));
 		
 		return dto;
 	}
@@ -111,7 +111,7 @@ public class DTOHelper {
 		dto.put("notes", stripHtml(html));
 		dto.put("from", toMillisSinceEpochOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.events.from")));
 		dto.put("to", toMillisSinceEpochOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.events.to")));
-		dto.put("imageUrls", toListOfUrls(html));
+		dto.put("images", toImageList(html));
 
 		return dto;
 	}
@@ -127,7 +127,7 @@ public class DTOHelper {
 		dto.put("notes", stripHtml(html));
 		dto.put("from", toMillisSinceEpochOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.events.from")));
 		dto.put("to", toMillisSinceEpochOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.events.to")));
-		dto.put("imageUrls", toListOfUrls(html));
+		dto.put("images", toImageList(html));
 
 		return dto;
 	}
@@ -154,7 +154,7 @@ public class DTOHelper {
 			dto.put("notes", stripHtml(html));
 			dto.put("commentedItemId", commentedTopic.getId());
 			addCreationTimestamp(dto, commentTopic);
-			dto.put("imageUrls", toListOfUrls(html));
+			dto.put("images", toImageList(html));
 			
 			return dto;
 		} else {
@@ -485,7 +485,7 @@ public class DTOHelper {
 	//		dto.put("urls", toStringListOrNull(childs.getTopicsOrNull("dm4.webbrowser.url")));
 			dto.put("birth", toMillisSinceEpochOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.contacts.date_of_birth")));
 			dto.put("death", toMillisSinceEpochOrNull(childs.getTopicOrNull("dm4.datetime.date#" + NS("date_of_death"))));
-			dto.put("imageUrls", toListOfUrls(notes));
+			dto.put("imageUrls", toImageList(notes));
 		}
 
 		return dto;
@@ -515,7 +515,7 @@ public class DTOHelper {
 		dto.put("notes", html = childs.getStringOrNull("dm4.notes.text"));
 		dto.put("from", toMillisSinceEpochOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.events.from")));
 		dto.put("to", toMillisSinceEpochOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.events.to")));
-		dto.put("imageUrls", toListOfUrls(html));
+		dto.put("imageUrls", toImageList(html));
 
 		return dto;
 	}
@@ -532,7 +532,7 @@ public class DTOHelper {
 		dto.put("notes", html = childs.getStringOrNull("dm4.notes.text"));
 		dto.put("from", toMillisSinceEpochOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.events.from")));
 		dto.put("to", toMillisSinceEpochOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.events.to")));
-		dto.put("imageUrls", toListOfUrls(html));
+		dto.put("imageUrls", toImageList(html));
 
 		return dto;
 	}
@@ -669,14 +669,30 @@ public class DTOHelper {
 		return addr;
 	}
 
-	private static List<String> toListOfUrls(String html) {
-		ArrayList<String> result = new ArrayList<String>();
+	private static List<JSONObject> toImageList(String html) throws JSONException {
+		ArrayList<JSONObject> result = new ArrayList<JSONObject>();
 		if (html != null) {
 	        Document doc = Jsoup.parse(html);
 	        
-	        for(Element img : doc.select("img[src]")) {
-	        	result.add(img.attr("abs:src"));
+	        for(Element img : doc.select("p > img[src]")) {
+		        JSONObject json = new JSONObject();
+	        	json.put("url", img.attr("abs:src"));
+    	        result.add(json);
 	        }
+	        
+	        for(Element figure : doc.select("figure")) {
+	        	Element img = figure.getElementsByTag("img").first();
+	        	Element figcaption = figure.getElementsByTag("figcaption").first();
+	        	
+	        	if (img != null && figcaption != null) {
+	    	        JSONObject json = new JSONObject();
+	        		json.put("url", img.attr("src"));
+	        		json.put("caption", figcaption.text());
+	    	        result.add(json);
+	        	}
+	        	
+	        }
+	        
 		}
         return result;
     }
