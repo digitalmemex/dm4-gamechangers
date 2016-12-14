@@ -6,9 +6,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -50,7 +51,11 @@ public class DTOHelper {
 		return (instance != null) ? instance : defaultValue;
 	}
 
-	public static Event toEventOrNull(Topic eventTopic, Topic excludedTopic) throws JSONException {
+	public static Event toEventOrNull(Topic eventTopic) throws JSONException {
+		return toEventOrNull(eventTopic, new HashSet<Long>());
+	}
+	
+	private static Event toEventOrNull(Topic eventTopic, Set<Long> alreadyVisitedTopics) throws JSONException {
 		ChildTopics childs = eventTopic.getChildTopics();
 
 		String name = childs.getStringOrNull("dm4.events.title");
@@ -69,7 +74,7 @@ public class DTOHelper {
 			dto.put("url", childs.getStringOrNull("dm4.webbrowser.url"));
 			dto.put("images", toImageList(html));
 			dto.put("latestPublicComments", toLatestPublicComments(eventTopic));
-			dto.put("associatedItems", toAssociatedItems(eventTopic, excludedTopic));
+			dto.put("associatedItems", toAssociatedItems(eventTopic, alreadyVisitedTopics));
 
 			dto.put("vimeoVideoId", toVimeoVideoId(eventTopic));
 
@@ -269,7 +274,7 @@ public class DTOHelper {
 		return result;
 	}
 
-	private static List<JSONEnabled> toAssociatedItems(Topic origin, Topic excludedTopic) throws JSONException {
+	private static List<JSONEnabled> toAssociatedItems(Topic origin, Set<Long> alreadyVisitedTopics) throws JSONException {
 		ArrayList<JSONEnabled> result = new ArrayList<JSONEnabled>();
 
 		result.addAll(toGroups(getDefaultRelatedTopics(origin, NS("group"))));
@@ -277,7 +282,9 @@ public class DTOHelper {
 		result.addAll(toWorks(getDefaultRelatedTopics(origin, NS("work"))));
 		result.addAll(toInstitutions(getDefaultRelatedTopics(origin, "dm4.contacts.institution")));
 		result.addAll(toPersons(getDefaultRelatedTopics(origin, "dm4.contacts.person")));
-		result.addAll(toEvents(getDefaultRelatedTopics(origin, "dm4.events.event", excludedTopic), origin));
+		
+		alreadyVisitedTopics.add(origin.getId());
+		result.addAll(toEvents(getDefaultRelatedTopics(origin, "dm4.events.event", alreadyVisitedTopics), alreadyVisitedTopics));
 
 		return result;
 	}
@@ -347,11 +354,11 @@ public class DTOHelper {
 		return result;
 	}
 
-	private static List<Event> toEvents(List<RelatedTopic> topics, Topic excludedTopic) throws JSONException {
+	private static List<Event> toEvents(List<RelatedTopic> topics, Set<Long> alreadyVisitedTopics) throws JSONException {
 		ArrayList<Event> result = new ArrayList<Event>();
 
 		for (RelatedTopic topic : topics) {
-			Event dto = toEventOrNull(topic, excludedTopic);
+			Event dto = toEventOrNull(topic, alreadyVisitedTopics);
 			if (dto != null) {
 				result.add(dto);
 			}
@@ -361,23 +368,27 @@ public class DTOHelper {
 	}
 
 	private static List<RelatedTopic> getDefaultRelatedTopics(Topic origin, String typeUri) {
-		return getDefaultRelatedTopics(origin, typeUri, null);
+		return origin.getRelatedTopics("dm4.core.association", "dm4.core.default", "dm4.core.default", typeUri);
 	}
 
-	private static List<RelatedTopic> getDefaultRelatedTopics(Topic origin, String typeUri, Topic excludedTopic) {
-		List<RelatedTopic> result = origin.getRelatedTopics(
-				"dm4.core.association", "dm4.core.default", "dm4.core.default", typeUri);
-
-		if (excludedTopic != null) {
+	private static List<RelatedTopic> getDefaultRelatedTopics(Topic origin, String typeUri, Set<Long> alreadyVisitedTopics) {
+		List<RelatedTopic> result = getDefaultRelatedTopics(origin, typeUri);
+		
+		// Remove all topics we've already seen
+		for (long topicId : alreadyVisitedTopics) {
 			for (int i = 0; i < result.size(); i++) {
-				if (excludedTopic.getId() == result.get(i).getId()) {
+				if (topicId == result.get(i).getId()) {
 					result.remove(i);
-
 					break;
 				}
 			}
 		}
-
+		
+		// Mark all the topics just selected as seen.
+		for (Topic topic : result) {
+			alreadyVisitedTopics.add(topic.getId());
+		}
+		
 		return result;
 	}
 
