@@ -2417,9 +2417,9 @@ delete this[t])},_configureProperties:function(e,t){for(var n in e){var r=e[n];i
               </div>
               <iron-collapse id$="collapse{{item.id}}" style="width:100%">
                   
-                  <template is="dom-if" if="{{!arrayEmpty(item.imageUrls)}}">
+                  <template is="dom-if" if="{{!arrayEmpty(item.images)}}">
                     <div class="event-image">
-                      <iron-image style="width: 100%; height: 240px" sizing="cover" src="{{item.imageUrls.0}}"></iron-image>
+                      <iron-image style="width: 100%; height: 240px" sizing="cover" src="{{item.images.0.url}}"></iron-image>
                       
                     </div>
                   </template>
@@ -2477,9 +2477,9 @@ delete this[t])},_configureProperties:function(e,t){for(var n in e){var r=e[n];i
                       </div>
                       <iron-collapse id$="associationCollapse{{association.id}}" style="width:100%">
 
-                          <template is="dom-if" if="{{!arrayEmpty(association.imageUrls)}}">
+                          <template is="dom-if" if="{{!arrayEmpty(association.images)}}">
                             <div class="association-image">
-                              <iron-image style="width: 100%; height: 240px" sizing="cover" src="{{item.imageUrls.0}}"></iron-image>
+                              <iron-image style="width: 100%; height: 240px" sizing="cover" src="{{item.images.0.url}}"></iron-image>
 
                             </div>
                           </template>
@@ -2505,7 +2505,7 @@ delete this[t])},_configureProperties:function(e,t){for(var n in e){var r=e[n];i
 
   </template>
 
-  <script>Polymer({is:"gc-app",properties:{domain:String},arrayEmpty:function(e){return 0==e.length},justText:function(e){var n=e.replace(/<img[^>]*>/g,"");return n},getEventsURL:function(){return this.domain="https://gamechangers.aalto.fi",this.domain+"/gamechangers/v1/events"},getCommentURL:function(){return this.domain+"/gamechangers/v1/comment"},handleResponse:function(e){console.log(e.detail.response),this.events=e.detail.response},sortEvents:function(e,n){return parseFloat(n.from)-parseFloat(e.from)},handleEventCollapse:function(e,n,t){var a=e.model.item.id,o="#collapse"+a,s="#comment"+a,i="#associations"+a;this.$$(o).opened?(this.$$(s).style.display="none",this.$$(i).style.display="none"):(this.$$(s).style.display="flex",this.$$(i).style.display="flex"),this.$$(o).toggle()},handleAssociationCollapse:function(e,n,t){console.log("association id"+e.model.association.id);var a=e.model.association.id,o="#associationCollapse"+a;this.$$(o).toggle()},handleEventComment:function(e,n,t){var a=e.model.item.id;console.log("open comment dialog for event : "+a);var o="#commentDialog"+a;this.$$(o).open()},submitForm:function(e){console.log("submit form function called"),Polymer.dom(e).localTarget.parentElement.submit()},eventColour:function(e){var n="#fff";switch(e){case"inauguration":n="#5677FC";break;case"establishing":n="#5677FC";break;case"appointment":case"appointing":n="#5677FC";break;case"awarding":n="#5677FC";break;case"name change":n="#5677FC";break;case"relocation":n="#5677FC";break;case"gathering":n="#7ED321";break;case"signing":n="#7ED321";break;case"founding":n="#FF9800";break;case"publishing":n="#EC407A";break;case"global event":n="#9B9B9B";break;default:n="#5677FC"}return n},eventYear:function(e){var n=new Date(e);return n.getFullYear()},yearIsFirstInDecade:function(e){var n=new Date(e),t=n.getFullYear(),a=t.toString(),o=a.substr(a.length-1);return"0"==o}});</script>
+  <script>Polymer({is:"gc-app",properties:{domain:String},arrayEmpty:function(e){return 0==e.length},justText:function(e){var n=e.replace(/<img[^>]*>/g,"");return n},getEventsURL:function(){return this.domain="https://aalto.digitalmemex.org",this.domain+"/gamechangers/v1/events"},getCommentURL:function(){return this.domain+"/gamechangers/v1/comment"},handleResponse:function(e){console.log(e.detail.response),this.events=e.detail.response},sortEvents:function(e,n){return parseFloat(n.from)-parseFloat(e.from)},handleEventCollapse:function(e,n,t){var a=e.model.item.id,o="#collapse"+a,i="#comment"+a,s="#associations"+a;this.$$(o).opened?(this.$$(i).style.display="none",this.$$(s).style.display="none"):(this.$$(i).style.display="flex",this.$$(s).style.display="flex"),this.$$(o).toggle()},handleAssociationCollapse:function(e,n,t){console.log("association id"+e.model.association.id);var a=e.model.association.id,o="#associationCollapse"+a;this.$$(o).toggle()},handleEventComment:function(e,n,t){var a=e.model.item.id;console.log("open comment dialog for event : "+a);var o="#commentDialog"+a;this.$$(o).open()},submitForm:function(e){console.log("submit form function called"),Polymer.dom(e).localTarget.parentElement.submit()},eventColour:function(e){var n="#fff";switch(e){case"inauguration":n="#5677FC";break;case"establishing":n="#5677FC";break;case"appointment":case"appointing":n="#5677FC";break;case"awarding":n="#5677FC";break;case"name change":n="#5677FC";break;case"relocation":n="#5677FC";break;case"gathering":n="#7ED321";break;case"signing":n="#7ED321";break;case"founding":n="#FF9800";break;case"publishing":n="#EC407A";break;case"global event":n="#9B9B9B";break;default:n="#5677FC"}return n},eventYear:function(e){var n=new Date(e);return n.getFullYear()},yearIsFirstInDecade:function(e){var n=new Date(e),t=n.getFullYear(),a=t.toString(),o=a.substr(a.length-1);return"0"==o}});</script>
 
 </dom-module>
 </body></html>
