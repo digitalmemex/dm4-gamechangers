@@ -70,6 +70,8 @@ public interface GamechangersService {
 	Proposal createProposal(ProposalBean proposal);
 	
 	List<Proposal> getProposals();
+
+	String getTopMovie();
 	
 	interface Event extends JSONEnabled {}
 	
@@ -116,5 +118,5 @@ public interface GamechangersService {
 	}
 	
 	interface Proposal extends JSONEnabled {}
-	
+
 }

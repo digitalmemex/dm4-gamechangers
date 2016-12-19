@@ -1,0 +1,66 @@
+[
+    {
+        "assoc_types": [
+            {
+                "value": "From",
+                "uri": "fi.aalto.gamechangers.era.from",
+                "data_type_uri": "dm4.core.text"
+            },
+            {
+                "value": "To",
+                "uri": "fi.aalto.gamechangers.era.to",
+                "data_type_uri": "dm4.core.text"
+            }
+        ]
+    },
+    {
+        "topic_types": [
+# Era child types
+            {
+                "value":            "Name",
+                "uri":              "fi.aalto.gamechangers.era.name",
+                "data_type_uri":    "dm4.core.text",
+                "index_mode_uris": ["dm4.core.fulltext"]
+            },
+# Era
+            {
+                "value":            "Era",
+                "uri":              "fi.aalto.gamechangers.era",
+                "data_type_uri":    "dm4.core.composite",
+                "index_mode_uris": ["dm4.core.fulltext"],
+                "assoc_defs": [
+                    {
+                        "child_type_uri":         "fi.aalto.gamechangers.era.name",
+                        "child_cardinality_uri":  "dm4.core.one",
+                        "assoc_type_uri":         "dm4.core.composition_def"
+                    },
+                    {
+                        "child_type_uri":         "dm4.notes.text",
+                        "child_cardinality_uri":  "dm4.core.one",
+                        "assoc_type_uri":         "dm4.core.composition_def"
+                    },
+                    {
+                        "child_type_uri":         "dm4.datetime.year",
+                        "child_cardinality_uri":  "dm4.core.one",
+                        "assoc_type_uri":         "dm4.core.composition_def",
+                        "custom_assoc_type_uri":  "fi.aalto.gamechangers.era.from"
+                    },
+                    {
+                        "child_type_uri":         "dm4.datetime.year",
+                        "child_cardinality_uri":  "dm4.core.one",
+                        "assoc_type_uri":         "dm4.core.composition_def",
+                        "custom_assoc_type_uri":  "fi.aalto.gamechangers.era.to"
+                    }
+                ],
+	            "view_config_topics": [
+                    {
+                        "type_uri": "dm4.webclient.view_config",
+                        "childs": {
+                            "dm4.webclient.show_in_create_menu": true
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+]
