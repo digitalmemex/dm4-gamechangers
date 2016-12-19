@@ -7,6 +7,8 @@ EVENTS
 
 GET /v1/events
 GET /v1/event/:id
+GET /v2/:languageCode/events
+GET /v2/:languageCode/event/:id
 
 Example:
 {
@@ -27,6 +29,9 @@ Example:
  vimeoVideoId: 342340999
 }
 
+translated property:
+ * name
+
 Possible values for type are:
  * establishing
  * relocation
@@ -43,6 +48,8 @@ INSTITUTIONS
 
 GET /v1/institutions
 GET /v1/institution/:id
+GET /v2/:languageCode/institutions
+GET /v2/:languageCode/institution/:id
 
 Example:
 {
@@ -57,6 +64,9 @@ Example:
  imageUrls":["http:\/\/www.zephram.de\/blog\/wp-content\/uploads\/2010\/04\/rosa-elefant.jpg"],
 }
 
+translated property:
+ * name
+
 Possible values for type:
  * Company
  * School
@@ -67,6 +77,8 @@ GROUPS
 
 GET /v1/groups
 GET /v1/group/:id
+GET /v2/:languageCode/groups
+GET /v2/:languageCode/group/:id
 
 Example:
 {
@@ -79,11 +91,16 @@ Example:
   imageUrls":["http:\/\/www.zephram.de\/blog\/wp-content\/uploads\/2010\/04\/rosa-elefant.jpg"],
 }
 
+translated property:
+ * name
+
 BRANDS
 ------
 
 GET /v1/brands
 GET /v1/brand/:id
+GET /v2/:languageCode/brands
+GET /v2/:languageCode/brand/:id
 
 Example:
 
@@ -96,6 +113,9 @@ Example:
   to: 5454543543,
   imageUrls":["http:\/\/www.zephram.de\/blog\/wp-content\/uploads\/2010\/04\/rosa-elefant.jpg"],
 }
+
+translated property:
+ * name
 
 COMMENTS
 --------
@@ -158,6 +178,8 @@ PERSONS
 
 GET /v1/persons
 GET /v1/person/:id
+GET /v2/:languageCode/persons
+GET /v2/:languageCode/person/:id
 
 Example:
 {
@@ -170,11 +192,16 @@ Example:
  imageUrls":["http:\/\/www.zephram.de\/blog\/wp-content\/uploads\/2010\/04\/rosa-elefant.jpg"],
 }
 
+translated property:
+ * name
+
 WORKS
 -----
 
 GET /v1/works
 GET /v1/work/:id
+GET /v2/:languageCode/work
+GET /v2/:languageCode/works/:id
 
 Example:
 {
@@ -187,6 +214,9 @@ Example:
   to: 356546676546,
   imageUrls":["http:\/\/www.zephram.de\/blog\/wp-content\/uploads\/2010\/04\/rosa-elefant.jpg"],
 }
+
+translated property:
+ * name
 
 Possible values for type are:
  * Discovery
