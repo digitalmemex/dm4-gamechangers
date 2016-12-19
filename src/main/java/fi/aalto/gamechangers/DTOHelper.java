@@ -502,6 +502,9 @@ public class DTOHelper {
 			dto.put("birth", toMillisSinceEpochOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.contacts.date_of_birth")));
 			dto.put("death", toMillisSinceEpochOrNull(childs.getTopicOrNull("dm4.datetime.date#" + NS("date_of_death"))));
 			dto.put("images", toImageList(notes));
+
+			dto.put("vimeoVideoId", toVimeoVideoId(personTopic));
+
 		}
 
 		return dto;
@@ -532,8 +535,6 @@ public class DTOHelper {
 		dto.put("from", toMillisSinceEpochOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.events.from")));
 		dto.put("to", toMillisSinceEpochOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.events.to")));
 		dto.put("images", toImageList(html));
-
-		dto.put("vimeoVideoId", toVimeoVideoId(proposalTopic));
 
 		return dto;
 	}
