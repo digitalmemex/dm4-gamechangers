@@ -21,7 +21,16 @@ Example:
  to: "654912000000",
  notes: "<p>text text text</p>",
  url: "http://some/url",
- imageUrls":["http:\/\/www.zephram.de\/blog\/wp-content\/uploads\/2010\/04\/rosa-elefant.jpg"],
+ images":[
+  {
+    url: "http:\/\/www.zephram.de\/blog\/wp-content\/uploads\/2010\/04\/rosa-elefant.jpg",
+    caption: "Pink Elephant"
+  },
+  {
+    url: "http:\/\/www.zephram.de\/blog\/wp-content\/uploads\/2010\/04\/rosa-elefant.jpg",
+    /* without caption */
+  }
+ ],
  latestPublicComments: [ /* comments (most recently modified first) */ ],
  associatedItems: [
  	{ /* either a brand, group, institution, person, work or event */ }
@@ -61,7 +70,16 @@ Example:
  notes: "<p>text text text</p>",
  from: <timestamp>,
  to: <timestamp>,
- imageUrls":["http:\/\/www.zephram.de\/blog\/wp-content\/uploads\/2010\/04\/rosa-elefant.jpg"],
+ images":[
+  {
+    url: "http:\/\/www.zephram.de\/blog\/wp-content\/uploads\/2010\/04\/rosa-elefant.jpg",
+    caption: "Pink Elephant"
+  },
+  {
+    url: "http:\/\/www.zephram.de\/blog\/wp-content\/uploads\/2010\/04\/rosa-elefant.jpg",
+    /* without caption */
+  }
+ ]
 }
 
 translated property:
@@ -88,7 +106,16 @@ Example:
   notes: "<p>edsfkjdshk</p>",
   from: 4320948320948,
   to: 482343809324,
-  imageUrls":["http:\/\/www.zephram.de\/blog\/wp-content\/uploads\/2010\/04\/rosa-elefant.jpg"],
+  images":[
+  {
+    url: "http:\/\/www.zephram.de\/blog\/wp-content\/uploads\/2010\/04\/rosa-elefant.jpg",
+    caption: "Pink Elephant"
+  },
+  {
+    url: "http:\/\/www.zephram.de\/blog\/wp-content\/uploads\/2010\/04\/rosa-elefant.jpg",
+    /* without caption */
+  }
+  ]
 }
 
 translated property:
@@ -111,7 +138,16 @@ Example:
   notes: "<p>dfjdslkfjdsfld</p>,
   from: 34243243324,
   to: 5454543543,
-  imageUrls":["http:\/\/www.zephram.de\/blog\/wp-content\/uploads\/2010\/04\/rosa-elefant.jpg"],
+  images":[
+  {
+    url: "http:\/\/www.zephram.de\/blog\/wp-content\/uploads\/2010\/04\/rosa-elefant.jpg",
+    caption: "Pink Elephant"
+  },
+  {
+    url: "http:\/\/www.zephram.de\/blog\/wp-content\/uploads\/2010\/04\/rosa-elefant.jpg",
+    /* without caption */
+  }
+  ]
 }
 
 translated property:
@@ -131,7 +167,17 @@ Example:
   notes: "<p>Tjewrewjrlkr</p>",
   commentedItemId: 6656,
   created: 1479206062062,
-  imageUrls":["http:\/\/www.zephram.de\/blog\/wp-content\/uploads\/2010\/04\/rosa-elefant.jpg"],
+  images":[
+  {
+    url: "http:\/\/www.zephram.de\/blog\/wp-content\/uploads\/2010\/04\/rosa-elefant.jpg",
+    caption: "Pink Elephant"
+  },
+  {
+    url: "http:\/\/www.zephram.de\/blog\/wp-content\/uploads\/2010\/04\/rosa-elefant.jpg",
+    /* without caption */
+  }
+  ]
+
 }
 
 Note: Comments have a boolean property called "public" in DM. Only when this value is true the instance is returned by the REST interface.
@@ -160,7 +206,16 @@ Example:
   notes: "<p>I think that ...</p>",
   from: 454354354343543,
   to: 34324324,
-  imageUrls":["http:\/\/www.zephram.de\/blog\/wp-content\/uploads\/2010\/04\/rosa-elefant.jpg"],
+   images":[
+  {
+    url: "http:\/\/www.zephram.de\/blog\/wp-content\/uploads\/2010\/04\/rosa-elefant.jpg",
+    caption: "Pink Elephant"
+  },
+  {
+    url: "http:\/\/www.zephram.de\/blog\/wp-content\/uploads\/2010\/04\/rosa-elefant.jpg",
+    /* without caption */
+  }
+ ]
 }
 
 PUT /v1/proposal (body: JSON)
@@ -189,7 +244,16 @@ Example:
  notes: "Mr Leopold Bloom ate with relish the inner organs of beasts and fowls.",
  birth: -3281904000000,
  death: -757382400000,
- imageUrls":["http:\/\/www.zephram.de\/blog\/wp-content\/uploads\/2010\/04\/rosa-elefant.jpg"],
+  images":[
+  {
+    url: "http:\/\/www.zephram.de\/blog\/wp-content\/uploads\/2010\/04\/rosa-elefant.jpg",
+    caption: "Pink Elephant"
+  },
+  {
+    url: "http:\/\/www.zephram.de\/blog\/wp-content\/uploads\/2010\/04\/rosa-elefant.jpg",
+    /* without caption */
+  }
+ ]
 }
 
 translated property:
@@ -212,7 +276,17 @@ Example:
   notes: "<p>jflkdsjflkfj</p>",
   from: 432432432,
   to: 356546676546,
-  imageUrls":["http:\/\/www.zephram.de\/blog\/wp-content\/uploads\/2010\/04\/rosa-elefant.jpg"],
+  images":[
+  {
+    url: "http:\/\/www.zephram.de\/blog\/wp-content\/uploads\/2010\/04\/rosa-elefant.jpg",
+    caption: "Pink Elephant"
+  },
+  {
+    url: "http:\/\/www.zephram.de\/blog\/wp-content\/uploads\/2010\/04\/rosa-elefant.jpg",
+    /* without caption */
+  }
+ ]
+
 }
 
 translated property:
