@@ -8,7 +8,7 @@ Top Movie:
 GET /v1/topmovie
 
 Example:
-	https://vimeo.com/90647039"
+	90647039
 
 EVENTS
 ------
