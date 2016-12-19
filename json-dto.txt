@@ -79,7 +79,8 @@ Example:
     url: "http:\/\/www.zephram.de\/blog\/wp-content\/uploads\/2010\/04\/rosa-elefant.jpg",
     /* without caption */
   }
- ]
+ ],
+ vimeoVideoId: 342340999
 }
 
 translated property:
@@ -115,7 +116,8 @@ Example:
     url: "http:\/\/www.zephram.de\/blog\/wp-content\/uploads\/2010\/04\/rosa-elefant.jpg",
     /* without caption */
   }
-  ]
+ ],
+ vimeoVideoId: 342340999
 }
 
 translated property:
@@ -147,7 +149,8 @@ Example:
     url: "http:\/\/www.zephram.de\/blog\/wp-content\/uploads\/2010\/04\/rosa-elefant.jpg",
     /* without caption */
   }
-  ]
+ ],
+ vimeoVideoId: 342340999
 }
 
 translated property:
@@ -176,8 +179,6 @@ Example:
     url: "http:\/\/www.zephram.de\/blog\/wp-content\/uploads\/2010\/04\/rosa-elefant.jpg",
     /* without caption */
   }
-  ]
-
 }
 
 Note: Comments have a boolean property called "public" in DM. Only when this value is true the instance is returned by the REST interface.
@@ -253,7 +254,8 @@ Example:
     url: "http:\/\/www.zephram.de\/blog\/wp-content\/uploads\/2010\/04\/rosa-elefant.jpg",
     /* without caption */
   }
- ]
+ ],
+ vimeoVideoId: 342340999
 }
 
 translated property:
@@ -285,8 +287,8 @@ Example:
     url: "http:\/\/www.zephram.de\/blog\/wp-content\/uploads\/2010\/04\/rosa-elefant.jpg",
     /* without caption */
   }
- ]
-
+ ],
+ vimeoVideoId: 342340999
 }
 
 translated property:

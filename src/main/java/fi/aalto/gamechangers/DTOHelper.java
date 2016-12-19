@@ -100,6 +100,8 @@ public class DTOHelper {
 		dto.put("to", toMillisSinceEpochOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.events.to")));
 		dto.put("images", toImageList(html));
 
+		dto.put("vimeoVideoId", toVimeoVideoId(instTopic));
+
 		return dto;
 	}
 
@@ -117,6 +119,8 @@ public class DTOHelper {
 		dto.put("to", toMillisSinceEpochOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.events.to")));
 		dto.put("images", toImageList(html));
 
+		dto.put("vimeoVideoId", toVimeoVideoId(groupTopic));
+
 		return dto;
 	}
 
@@ -132,6 +136,8 @@ public class DTOHelper {
 		dto.put("from", toMillisSinceEpochOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.events.from")));
 		dto.put("to", toMillisSinceEpochOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.events.to")));
 		dto.put("images", toImageList(html));
+
+		dto.put("vimeoVideoId", toVimeoVideoId(brandTopic));
 
 		return dto;
 	}
@@ -159,7 +165,7 @@ public class DTOHelper {
 			dto.put("commentedItemId", commentedTopic.getId());
 			addCreationTimestamp(dto, commentTopic);
 			dto.put("images", toImageList(html));
-			
+
 			return dto;
 		} else {
 			return null;
@@ -527,6 +533,8 @@ public class DTOHelper {
 		dto.put("to", toMillisSinceEpochOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.events.to")));
 		dto.put("images", toImageList(html));
 
+		dto.put("vimeoVideoId", toVimeoVideoId(proposalTopic));
+
 		return dto;
 	}
 
@@ -543,6 +551,7 @@ public class DTOHelper {
 		dto.put("from", toMillisSinceEpochOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.events.from")));
 		dto.put("to", toMillisSinceEpochOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.events.to")));
 		dto.put("images", toImageList(html));
+		dto.put("vimeoVideoId", toVimeoVideoId(workTopic));
 
 		return dto;
 	}
