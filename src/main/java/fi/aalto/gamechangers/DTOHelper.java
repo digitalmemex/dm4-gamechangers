@@ -197,6 +197,16 @@ public class DTOHelper {
 
 		return sb.toString();
 	}
+	
+	static Long toFeaturedVideoId(Topic featuredVideoTopic) {
+		if (featuredVideoTopic == null) {
+			return null;
+		} else {
+			String url = featuredVideoTopic.getChildTopics().getStringOrNull("dm4.webbrowser.url");
+
+			return parseVimeoVideoId(url);
+		}
+	}
 
 	/**
 	 * Finds a web_resource topic associated with the given event, parses the web resource's URL and
@@ -207,8 +217,6 @@ public class DTOHelper {
 	 * @throws JSONException
 	 */
 	private static Long toVimeoVideoId(Topic eventTopic) throws JSONException {
-		Long result = null;
-
 		RelatedTopic webResourceTopic = eventTopic.getRelatedTopic(
 				"dm4.core.association", "dm4.core.default", "dm4.core.default", "dm4.webbrowser.web_resource");
 
@@ -217,13 +225,20 @@ public class DTOHelper {
 		}
 
 		String url = webResourceTopic.getChildTopics().getStringOrNull("dm4.webbrowser.url");
-		if (url == null) {
+
+		return parseVimeoVideoId(url);
+	}
+	
+	private static Long parseVimeoVideoId(String urlString) {
+		Long result;
+		
+		if (urlString == null) {
 			return null;
 		}
 
 		URL videoUrl;
 		try {
-			videoUrl = new URL(url);
+			videoUrl = new URL(urlString);
 			result = Long.parseLong(videoUrl.getPath().substring(1));
 		} catch (MalformedURLException e) {
 			return null;
@@ -232,7 +247,7 @@ public class DTOHelper {
 		} catch (StringIndexOutOfBoundsException e) {
 			return null;
 		}
-
+		
 		return result;
 	}
 

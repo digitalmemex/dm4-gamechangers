@@ -71,7 +71,7 @@ public interface GamechangersService {
 	
 	List<Proposal> getProposals();
 
-	long getTopMovie();
+	long getFeaturedVideo();
 	
 	interface Event extends JSONEnabled {}
 	

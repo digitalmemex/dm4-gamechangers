@@ -67,10 +67,10 @@ public class GamechangersPlugin extends PluginActivator implements GamechangersS
 	}
 	
 	@GET
-	@Path("/v1/topmovie")
+	@Path("/v1/featured_video")
 	@Override
-	public long getTopMovie() {
-		return 90647039;
+	public long getFeaturedVideo() {
+		return DTOHelper.toFeaturedVideoId(dm4.getTopicByUri(NS("featured_video")));
 	}
 	
 	@GET
