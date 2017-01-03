@@ -578,24 +578,43 @@ public class DTOHelper {
 	public static List<Era> toEraList(String languageCode, List<Topic> eraTopics) throws JSONException {
 		ArrayList<Era> result = new ArrayList<Era>();
 		
-		// TODO:
-		// - fetch all events with their right languagecode
-		// - transform eras
-		// - select events per era
 		List<EventImpl> allEvents = toEvents(languageCode, dm4.getTopicsByType("dm4.events.event"), new HashSet<Long>());
 		
 		for (Topic eraTopic : eraTopics) {
 			ChildTopics childs = eraTopic.getChildTopics();
+			
+			int fromYear, toYear;
 			
 			EraImpl dto = new EraImpl();
 			dto.put("_type", "era");
 			dto.put("id", eraTopic.getId());
 			dto.put("name", getTranslatedStringOrNull(childs, languageCode, NS("era.name")));
 			dto.put("notes", childs.getStringOrNull("dm4.notes.text"));
-			dto.put("from", childs.getInt("dm4.datetime.year#" + NS("era.from")));
-			dto.put("to", childs.getInt("dm4.datetime.year#" + NS("era.to")));
+			dto.put("from", fromYear = childs.getInt("dm4.datetime.year#" + NS("era.from")));
+			dto.put("to", toYear = childs.getInt("dm4.datetime.year#" + NS("era.to")));
+			dto.put("events", selectEvents(allEvents, fromYear, toYear));
 			
 			result.add(dto);
+		}
+		
+		return result;
+	}
+	
+	private static List<EventImpl> selectEvents(List<EventImpl> allEvents, int fromYear, int toYear) {
+		Calendar cal = Calendar.getInstance();
+		
+		ArrayList<EventImpl> result = new ArrayList<EventImpl>();
+		
+		for (EventImpl event : allEvents) {
+			try {
+				cal.setTimeInMillis(event.getLong("from"));
+				int eventYear = cal.get(Calendar.YEAR);
+				if (eventYear >= fromYear && eventYear <= toYear) {
+					result.add(event);
+				}
+			} catch (JSONException jsone) {
+				// Skips the event
+			}
 		}
 		
 		return result;
