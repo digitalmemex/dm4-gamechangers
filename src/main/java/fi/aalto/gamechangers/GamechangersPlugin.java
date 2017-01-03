@@ -11,6 +11,7 @@ import static fi.aalto.gamechangers.DTOHelper.toPersonOrNull;
 import static fi.aalto.gamechangers.DTOHelper.toProposal;
 import static fi.aalto.gamechangers.DTOHelper.toProposalTopic;
 import static fi.aalto.gamechangers.DTOHelper.toWork;
+import static fi.aalto.gamechangers.GamechangersPlugin.NS;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,9 +30,12 @@ import de.deepamehta.accesscontrol.AccessControlService;
 import de.deepamehta.contacts.ContactsService;
 import de.deepamehta.core.RelatedTopic;
 import de.deepamehta.core.Topic;
+import de.deepamehta.core.model.AssociationModel;
 import de.deepamehta.core.osgi.PluginActivator;
 import de.deepamehta.core.service.Inject;
 import de.deepamehta.core.service.Transactional;
+import de.deepamehta.core.service.event.PreCreateAssociationListener;
+import de.deepamehta.core.util.DeepaMehtaUtils;
 import de.deepamehta.events.EventsService;
 import de.deepamehta.time.TimeService;
 import de.deepamehta.workspaces.WorkspacesService;
@@ -39,7 +43,7 @@ import de.deepamehta.workspaces.WorkspacesService;
 @Path("/gamechangers")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class GamechangersPlugin extends PluginActivator implements GamechangersService {
+public class GamechangersPlugin extends PluginActivator implements GamechangersService, PreCreateAssociationListener {
 
 	public static String NS(String suffix) {
 		return "fi.aalto.gamechangers." + suffix;
@@ -538,5 +542,28 @@ public class GamechangersPlugin extends PluginActivator implements GamechangersS
 		}
 		return null;
 	}
+	
+    @Override
+    public void preCreateAssociation(AssociationModel assoc) {
+    	// Translation autotypings:
+    	autotypeTranslations(
+    			assoc,
+    			"dm4.events.title",
+    			"dm4.contacts.institution_name",
+    			"dm4.contacts.person_name",
+    			NS("group.name"),
+    			NS("brand.name"),
+    			NS("work.label"),
+    			NS("era.name")
+		);
+    }
+    
+    private void autotypeTranslations(AssociationModel assoc, String... typeUris) {
+    	for (String typeUri : typeUris) {
+	        DeepaMehtaUtils.associationAutoTyping(assoc, typeUri, NS("translatedtext"),
+	                NS("translation"), "dm4.core.default", "dm4.core.default", dm4);
+    	}
+    	
+    }
 
 }
