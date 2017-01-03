@@ -310,3 +310,24 @@ Possible values for type are:
  * Manifesto
  * Product
  * Architecture
+
+ERAS
+-----
+
+GET /v2/:languageCode/eras
+
+Example:
+[
+ {
+   "_type":"era",
+   "id":5505,
+   "name":"Test era",
+   "notes":"<p>This era<\/p>",
+   "from":1800,
+   "to":2020,
+   "events":[ /* event items (including associated items */ ]
+ }
+]
+
+translated property:
+  * name 
