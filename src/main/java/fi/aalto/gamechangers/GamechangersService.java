@@ -71,7 +71,11 @@ public interface GamechangersService {
 	
 	List<Proposal> getProposals();
 
+	List<Era> getEras(String languageCode);
+
 	long getFeaturedVideo();
+
+	interface Era extends JSONEnabled {}
 	
 	interface Event extends JSONEnabled {}
 	

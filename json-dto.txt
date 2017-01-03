@@ -5,7 +5,7 @@ base URL: host/gamechangers
 Top Movie:
 ----------
 
-GET /v1/topmovie
+GET /v1/featured_video
 
 Example:
 	90647039

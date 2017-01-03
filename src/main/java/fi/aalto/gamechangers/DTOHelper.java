@@ -33,6 +33,7 @@ import de.deepamehta.workspaces.WorkspacesService;
 import fi.aalto.gamechangers.GamechangersService.Brand;
 import fi.aalto.gamechangers.GamechangersService.Comment;
 import fi.aalto.gamechangers.GamechangersService.CommentBean;
+import fi.aalto.gamechangers.GamechangersService.Era;
 import fi.aalto.gamechangers.GamechangersService.Event;
 import fi.aalto.gamechangers.GamechangersService.Group;
 import fi.aalto.gamechangers.GamechangersService.Institution;
@@ -46,6 +47,8 @@ public class DTOHelper {
 	static WorkspacesService wsService;
 
 	static TimeService timeService;
+	
+	static CoreService dm4;
 
 	private static <T> T selfOrDefault(T instance, T defaultValue) {
 		return (instance != null) ? instance : defaultValue;
@@ -55,7 +58,7 @@ public class DTOHelper {
 		return toEventOrNull(languageCode, eventTopic, new HashSet<Long>());
 	}
 	
-	private static Event toEventOrNull(String languageCode, Topic eventTopic, Set<Long> alreadyVisitedTopics) throws JSONException {
+	private static EventImpl toEventOrNull(String languageCode, Topic eventTopic, Set<Long> alreadyVisitedTopics) throws JSONException {
 		ChildTopics childs = eventTopic.getChildTopics();
 
 		String name = getTranslatedStringOrNull(childs, languageCode, "dm4.events.title");
@@ -375,11 +378,11 @@ public class DTOHelper {
 		return result;
 	}
 
-	private static List<Event> toEvents(String languageCode, List<RelatedTopic> topics, Set<Long> alreadyVisitedTopics) throws JSONException {
-		ArrayList<Event> result = new ArrayList<Event>();
+	private static List<EventImpl> toEvents(String languageCode, List<? extends Topic> topics, Set<Long> alreadyVisitedTopics) throws JSONException {
+		ArrayList<EventImpl> result = new ArrayList<EventImpl>();
 
-		for (RelatedTopic topic : topics) {
-			Event dto = toEventOrNull(languageCode, topic, alreadyVisitedTopics);
+		for (Topic topic : topics) {
+			EventImpl dto = toEventOrNull(languageCode, topic, alreadyVisitedTopics);
 			if (dto != null) {
 				result.add(dto);
 			}
@@ -571,6 +574,32 @@ public class DTOHelper {
 
 		return dto;
 	}
+	
+	public static List<Era> toEraList(String languageCode, List<Topic> eraTopics) throws JSONException {
+		ArrayList<Era> result = new ArrayList<Era>();
+		
+		// TODO:
+		// - fetch all events with their right languagecode
+		// - transform eras
+		// - select events per era
+		List<EventImpl> allEvents = toEvents(languageCode, dm4.getTopicsByType("dm4.events.event"), new HashSet<Long>());
+		
+		for (Topic eraTopic : eraTopics) {
+			ChildTopics childs = eraTopic.getChildTopics();
+			
+			EraImpl dto = new EraImpl();
+			dto.put("_type", "era");
+			dto.put("id", eraTopic.getId());
+			dto.put("name", getTranslatedStringOrNull(childs, languageCode, NS("era.name")));
+			dto.put("notes", childs.getStringOrNull("dm4.notes.text"));
+			dto.put("from", childs.getInt("dm4.datetime.year#" + NS("era.from")));
+			dto.put("to", childs.getInt("dm4.datetime.year#" + NS("era.to")));
+			
+			result.add(dto);
+		}
+		
+		return result;
+	}
 
 	private static List<String> toStringListOrNull(List<RelatedTopic> topics) {
 		if (topics != null && topics.size() > 0) {
@@ -759,6 +788,9 @@ public class DTOHelper {
 		dto.put("created", timeService.getCreationTime(topic.getId()));
 	}
 
+	private static class EraImpl extends JSONEnabledImpl implements Era {
+	}
+	
 	private static class EventImpl extends JSONEnabledImpl implements Event {
 	}
 

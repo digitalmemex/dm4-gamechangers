@@ -64,6 +64,7 @@ public class GamechangersPlugin extends PluginActivator implements GamechangersS
 	public void init() {
 		DTOHelper.wsService = wsService;
 		DTOHelper.timeService = timeService;
+		DTOHelper.dm4 = dm4;
 	}
 	
 	@GET
@@ -525,5 +526,17 @@ public class GamechangersPlugin extends PluginActivator implements GamechangersS
 
 		return null;
 	}
-	
+
+	@GET
+	@Path("/v2/{languageCode}/eras")
+	@Override
+	public List<Era> getEras(@PathParam("languageCode") String languageCode) {
+		try {
+			return DTOHelper.toEraList(languageCode, dm4.getTopicsByType(NS("era")));
+		} catch (JSONException jsone) {
+			// TODO: Log what object was dropped
+		}
+		return null;
+	}
+
 }
