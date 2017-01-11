@@ -64,7 +64,7 @@ public class DTOHelper {
 		String name = getTranslatedStringOrNull(childs, languageCode, "dm4.events.title");
 		if (!selfOrDefault(childs.getBooleanOrNull(NS("event.hidden")), false)
 				&& name != null) {
-			String html = getTranslatedStringOrNull(childs, languageCode, "dm4.events.notes");
+			String html = getTranslatedHtmlOrNull(childs, languageCode, "dm4.events.notes");
 			EventImpl dto = new EventImpl();
 			dto.put("_type", "event");
 			dto.put("id", eventTopic.getId());
@@ -89,7 +89,7 @@ public class DTOHelper {
 
 	public static Institution toInstitution(String languageCode, Topic instTopic) throws JSONException {
 		ChildTopics childs = instTopic.getChildTopics();
-		String html = getTranslatedStringOrNull(childs, languageCode, "dm4.contacts.notes");
+		String html = getTranslatedHtmlOrNull(childs, languageCode, "dm4.contacts.notes");
 		InstitutionImpl dto = new InstitutionImpl();
 		dto.put("_type", "institution");
 		dto.put("id", instTopic.getId());
@@ -111,7 +111,7 @@ public class DTOHelper {
 	public static Group toGroup(String languageCode, Topic groupTopic) throws JSONException {
 		ChildTopics childs = groupTopic.getChildTopics();
 
-		String html = getTranslatedStringOrNull(childs, languageCode, "dm4.notes.text");
+		String html = getTranslatedHtmlOrNull(childs, languageCode, "dm4.notes.text");
 		GroupImpl dto = new GroupImpl();
 		dto.put("_type", "group");
 		dto.put("id", groupTopic.getId());
@@ -129,7 +129,7 @@ public class DTOHelper {
 	public static Brand toBrand(String languageCode, Topic brandTopic) throws JSONException {
 		ChildTopics childs = brandTopic.getChildTopics();
 
-		String html = getTranslatedStringOrNull(childs, languageCode, "dm4.notes.text");
+		String html = getTranslatedHtmlOrNull(childs, languageCode, "dm4.notes.text");
 		BrandImpl dto = new BrandImpl();
 		dto.put("_type", "brand");
 		dto.put("id", brandTopic.getId());
@@ -506,7 +506,7 @@ public class DTOHelper {
 		ChildTopics childs = personTopic.getChildTopics();
 
 		String name = getTranslatedStringOrNull(childs, languageCode, "dm4.contacts.person_name");
-		String html = getTranslatedStringOrNull(childs, languageCode, "dm4.contacts.notes");
+		String html = getTranslatedHtmlOrNull(childs, languageCode, "dm4.contacts.notes");
 		PersonImpl dto = null;
 
 		if (name != null || html != null) {
@@ -565,7 +565,7 @@ public class DTOHelper {
 		dto.put("id", workTopic.getId());
 		dto.put("type", childs.getStringOrNull(NS("work.type")));
 		dto.put("name", getTranslatedStringOrNull(childs, languageCode, NS("work.label")));
-		dto.put("notes", html = getTranslatedStringOrNull(childs, languageCode, "dm4.notes.text"));
+		dto.put("notes", html = getTranslatedHtmlOrNull(childs, languageCode, "dm4.notes.text"));
 		dto.put("from", toMillisSinceEpochOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.events.from")));
 		dto.put("to", toMillisSinceEpochOrNull(childs.getTopicOrNull("dm4.datetime.date#dm4.events.to")));
 		dto.put("images", toImageList(html));
@@ -589,7 +589,7 @@ public class DTOHelper {
 			dto.put("_type", "era");
 			dto.put("id", eraTopic.getId());
 			dto.put("name", getTranslatedStringOrNull(childs, languageCode, NS("era.name")));
-			dto.put("notes", html = getTranslatedStringOrNull(childs, languageCode, "dm4.notes.text"));
+			dto.put("notes", html = getTranslatedHtmlOrNull(childs, languageCode, "dm4.notes.text"));
 			dto.put("from", fromYear = childs.getInt("dm4.datetime.year#" + NS("era.from")));
 			dto.put("to", toYear = childs.getInt("dm4.datetime.year#" + NS("era.to")));
 			dto.put("events", selectEvents(allEvents, fromYear, toYear));
