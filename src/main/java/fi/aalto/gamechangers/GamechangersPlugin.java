@@ -556,11 +556,26 @@ public class GamechangersPlugin extends PluginActivator implements GamechangersS
     			NS("work.label"),
     			NS("era.name")
 		);
+    	
+    	autotypeHtmlTranslations(
+    			assoc,
+    			"dm4.events.notes",
+    			"dm4.contacts.notes",
+    			"dm4.notes.text"
+		);
     }
     
     private void autotypeTranslations(AssociationModel assoc, String... typeUris) {
     	for (String typeUri : typeUris) {
 	        DeepaMehtaUtils.associationAutoTyping(assoc, typeUri, NS("translatedtext"),
+	                NS("translation"), "dm4.core.default", "dm4.core.default", dm4);
+    	}
+    	
+    }
+    
+    private void autotypeHtmlTranslations(AssociationModel assoc, String... typeUris) {
+    	for (String typeUri : typeUris) {
+	        DeepaMehtaUtils.associationAutoTyping(assoc, typeUri, NS("translatednote"),
 	                NS("translation"), "dm4.core.default", "dm4.core.default", dm4);
     	}
     	
