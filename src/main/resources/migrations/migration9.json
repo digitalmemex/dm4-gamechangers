@@ -3,7 +3,7 @@
         "topic_types": [
 # Translated Note
             {
-                "value":            "Translated Text",
+                "value":            "Translated Notes",
                 "uri":              "fi.aalto.gamechangers.translatednote",
                 "data_type_uri":    "dm4.core.html",
                 "index_mode_uris": ["dm4.core.fulltext"],
