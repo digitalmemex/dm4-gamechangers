@@ -12,7 +12,7 @@
     <parent>
         <groupId>de.deepamehta</groupId>
         <artifactId>deepamehta-plugin</artifactId>
-        <version>4.8.3</version>
+        <version>4.8.4</version>
     </parent>
 
     <scm>
@@ -37,27 +37,27 @@
         <dependency>
             <groupId>de.deepamehta</groupId>
             <artifactId>deepamehta-contacts</artifactId>
-            <version>4.8.3</version>
+            <version>4.8.4</version>
         </dependency>
         <dependency>
             <groupId>de.deepamehta</groupId>
             <artifactId>deepamehta-events</artifactId>
-            <version>4.8.3</version>
+            <version>4.8.4</version>
         </dependency>
         <dependency>
             <groupId>de.deepamehta</groupId>
             <artifactId>deepamehta-workspaces</artifactId>
-            <version>4.8.3</version>
+            <version>4.8.4</version>
         </dependency>
         <dependency>
             <groupId>de.deepamehta</groupId>
             <artifactId>deepamehta-accesscontrol</artifactId>
-            <version>4.8.3</version>
+            <version>4.8.4</version>
         </dependency>
         <dependency>
             <groupId>de.deepamehta</groupId>
             <artifactId>deepamehta-time</artifactId>
-            <version>4.8.3</version>
+            <version>4.8.4</version>
         </dependency>
 		<dependency>
 		    <groupId>commons-validator</groupId>
