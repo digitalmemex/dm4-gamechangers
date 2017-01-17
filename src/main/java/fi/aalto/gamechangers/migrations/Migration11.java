@@ -2,37 +2,30 @@ package fi.aalto.gamechangers.migrations;
 
 import static fi.aalto.gamechangers.GamechangersPlugin.NS;
 
-import de.deepamehta.core.Topic;
-import de.deepamehta.core.service.Inject;
+import java.util.Arrays;
+
+import de.deepamehta.core.TopicType;
+import de.deepamehta.core.model.TopicTypeModel;
 import de.deepamehta.core.service.Migration;
-import de.deepamehta.workspaces.WorkspacesService;
+
 
 /**
  */
-public class Migration10 extends Migration {
+public class Migration11 extends Migration {
 
-	@Inject
-	private WorkspacesService wsService;
-
-	/** Modifies:
-	 * 
-	 */
 	@Override
 	public void run() {
-		// Workspace associations
-		long dataWsId = wsService.getWorkspace(NS("workspace.types")).getId();
+		TopicType tt = dm4.getTopicType(NS("comment"));
+		TopicTypeModel ttm = (TopicTypeModel) tt.getModel();
+		ttm.setLabelConfig(Arrays.asList("dm4.contacts.person_name", "dm4.contacts.email_address"));
+		dm4.updateTopicType(ttm);
 		
-		groupAssignToWorkspace(dataWsId,
-				NS("translatednote")
-		);
-
+		/* TODO: Some bug prevents changes to the proposals
+		tt = dm4.getTopicType(NS("proposal"));
+		ttm = (TopicTypeModel) tt.getModel();
+		ttm.setLabelConfig(Arrays.asList("dm4.contacts.person_name", "dm4.contacts.email_address"));
+		dm4.updateTopicType(ttm);
+		*/
 	}
 	
-	private void groupAssignToWorkspace(long wsId, String... topicTypeUris) {
-		for (String uri : topicTypeUris) {
-			Topic topic = dm4.getTopicByUri(uri);
-			wsService.assignToWorkspace(topic, wsId);
-		}
-	}
-
 }
