@@ -10,7 +10,7 @@ import de.deepamehta.core.service.Migration;
 
 /**
  */
-public class Migration11 extends Migration {
+public class Migration9_notused extends Migration {
 
 	@Override
 	public void run() {
