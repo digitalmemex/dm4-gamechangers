@@ -191,7 +191,7 @@ public class DTOHelper {
         	if (elem.hasText()) {
         		// If there is a text already, prepend a whitespace.
         		if (sb.length() > 0) {
-        			sb.append("   ");
+        			sb.append(" ");
         		}
     			sb.append(elem.text());
         	}
@@ -217,7 +217,7 @@ public class DTOHelper {
 
         for(Element elem : doc.select("h1, h2, h3, p")) {
         	if (elem.hasText()) {
-        		String text = elem.text().trim();
+        		String text = elem.text().trim().replaceAll("\u00a0","");
         		if (!ourLanguageTagSeen) {
         			ourLanguageTagSeen = text.equals(ourLanguageTag);
         			continue;
@@ -234,11 +234,16 @@ public class DTOHelper {
         			
         			// Handle text that applies to our language tag
         			
-            		// If there is a text already, prepend a whitespace.
-            		if (sb.length() > 0) {
-            			sb.append("   ");
+            		// Only append if there is actual content.
+            		if (text.length() > 0) {
+            			
+                		// If there is a text already, prepend a whitespace.
+                		if (sb.length() > 0) {
+                			sb.append(" ");
+                		}
+                		
+            			sb.append(text);
             		}
-        			sb.append(elem.text());
         		}
         	}
         }

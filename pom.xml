@@ -30,7 +30,7 @@
     </distributionManagement>
 
     <properties>
-	<dm4.deploy.dir>../aalto-deepamehta-4.8.5/bundle-deploy</dm4.deploy.dir>
+	<dm4.deploy.dir>../aalto-deepamehta/bundle-deploy</dm4.deploy.dir>
     </properties>
 
     <dependencies>
