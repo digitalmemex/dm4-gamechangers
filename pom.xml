@@ -12,7 +12,7 @@
     <parent>
         <groupId>de.deepamehta</groupId>
         <artifactId>deepamehta-plugin</artifactId>
-        <version>4.8.4</version>
+        <version>4.8.5</version>
     </parent>
 
     <scm>
@@ -30,19 +30,19 @@
     </distributionManagement>
 
     <properties>
-	<dm4.deploy.dir>../aalto-deepamehta/bundle-deploy</dm4.deploy.dir>
+	<dm4.deploy.dir>../aalto-deepamehta-4.8.5/bundle-deploy</dm4.deploy.dir>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>de.deepamehta</groupId>
             <artifactId>deepamehta-contacts</artifactId>
-            <version>4.8.4</version>
+            <version>4.8.5</version>
         </dependency>
         <dependency>
             <groupId>de.deepamehta</groupId>
             <artifactId>deepamehta-events</artifactId>
-            <version>4.8.4</version>
+            <version>4.8.5</version>
         </dependency>
         <dependency>
             <groupId>de.deepamehta</groupId>
@@ -52,12 +52,12 @@
         <dependency>
             <groupId>de.deepamehta</groupId>
             <artifactId>deepamehta-accesscontrol</artifactId>
-            <version>4.8.4</version>
+            <version>4.8.5</version>
         </dependency>
         <dependency>
             <groupId>de.deepamehta</groupId>
             <artifactId>deepamehta-time</artifactId>
-            <version>4.8.4</version>
+            <version>4.8.5</version>
         </dependency>
 		<dependency>
 		    <groupId>commons-validator</groupId>
