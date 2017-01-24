@@ -205,7 +205,7 @@ PROPOSALS
 ---------
 
 GET /v1/proposals
-GET /v1/proposal
+GET /v1/proposal/:id
 
 Example:
 {
