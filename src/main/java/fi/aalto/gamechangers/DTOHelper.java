@@ -356,8 +356,10 @@ public class DTOHelper {
 		result.addAll(toWorks(languageCode, getDefaultRelatedTopics(origin, NS("work"))));
 		result.addAll(toInstitutions(languageCode, getDefaultRelatedTopics(origin, "dm4.contacts.institution")));
 		result.addAll(toPersons(languageCode, getDefaultRelatedTopics(origin, "dm4.contacts.person")));
-		
-		alreadyVisitedTopics.add(origin.getId());
+
+		// We don't filter out the origin topic here (even though we could) because we specifically want
+		// it to show up again in the associated items.
+		//alreadyVisitedTopics.add(origin.getId());
 		result.addAll(toEvents(languageCode, getDefaultRelatedTopics(origin, "dm4.events.event", alreadyVisitedTopics), alreadyVisitedTopics));
 
 		return result;
