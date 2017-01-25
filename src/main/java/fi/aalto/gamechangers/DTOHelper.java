@@ -639,20 +639,26 @@ public class DTOHelper {
 		for (Topic eraTopic : eraTopics) {
 			ChildTopics childs = eraTopic.getChildTopics();
 			
-			int fromYear, toYear;
 			String html;
 			
-			EraImpl dto = new EraImpl();
-			dto.put("_type", "era");
-			dto.put("id", eraTopic.getId());
-			dto.put("name", getTranslatedStringOrNull(childs, languageCode, NS("era.name")));
-			dto.put("notes", html = childs.getStringOrNull("dm4.notes.text"));
-			dto.put("from", fromYear = childs.getIntOrNull("dm4.datetime.year#" + NS("era.from")));
-			dto.put("to", toYear = childs.getIntOrNull("dm4.datetime.year#" + NS("era.to")));
-			dto.put("events", selectEvents(allEvents, fromYear, toYear));
-			dto.put("images", toImageList(html));
+			Integer fromYear = childs.getIntOrNull("dm4.datetime.year#" + NS("era.from"));
+			Integer toYear = childs.getIntOrNull("dm4.datetime.year#" + NS("era.to"));
 			
-			result.add(dto);
+			if (fromYear != null && toYear != null) {
+				EraImpl dto = new EraImpl();
+				dto.put("_type", "era");
+				dto.put("id", eraTopic.getId());
+				dto.put("name", getTranslatedStringOrNull(childs, languageCode, NS("era.name")));
+				dto.put("notes", html = childs.getStringOrNull("dm4.notes.text"));
+				dto.put("from", fromYear);
+				dto.put("to", toYear);
+				dto.put("events", selectEvents(allEvents, fromYear, toYear));
+				dto.put("images", toImageList(html));
+			
+				result.add(dto);
+			} else {
+				// Era was skipped.
+			}
 		}
 		
 		return result;
