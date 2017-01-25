@@ -432,9 +432,13 @@ public class DTOHelper {
 
 	private static List<EventImpl> toEvents(String languageCode, List<? extends Topic> topics, Set<Long> alreadyVisitedTopics) throws JSONException {
 		ArrayList<EventImpl> result = new ArrayList<EventImpl>();
-
+		
 		for (Topic topic : topics) {
-			EventImpl dto = toEventOrNull(languageCode, topic, alreadyVisitedTopics);
+			// When called without the visited set given, then create a distinct set for every event. This
+			// means that each event becomes an origin.
+			Set<Long> visited = (alreadyVisitedTopics == null ? new HashSet<Long>() : alreadyVisitedTopics);
+			
+			EventImpl dto = toEventOrNull(languageCode, topic, visited);
 			if (dto != null) {
 				result.add(dto);
 			}
@@ -630,7 +634,7 @@ public class DTOHelper {
 	public static List<Era> toEraList(String languageCode, List<Topic> eraTopics) throws JSONException {
 		ArrayList<Era> result = new ArrayList<Era>();
 		
-		List<EventImpl> allEvents = toEvents(languageCode, dm4.getTopicsByType("dm4.events.event"), new HashSet<Long>());
+		List<EventImpl> allEvents = toEvents(languageCode, dm4.getTopicsByType("dm4.events.event"), null);
 		
 		for (Topic eraTopic : eraTopics) {
 			ChildTopics childs = eraTopic.getChildTopics();
