@@ -647,8 +647,8 @@ public class DTOHelper {
 			dto.put("id", eraTopic.getId());
 			dto.put("name", getTranslatedStringOrNull(childs, languageCode, NS("era.name")));
 			dto.put("notes", html = childs.getStringOrNull("dm4.notes.text"));
-			dto.put("from", fromYear = childs.getInt("dm4.datetime.year#" + NS("era.from")));
-			dto.put("to", toYear = childs.getInt("dm4.datetime.year#" + NS("era.to")));
+			dto.put("from", fromYear = childs.getIntOrNull("dm4.datetime.year#" + NS("era.from")));
+			dto.put("to", toYear = childs.getIntOrNull("dm4.datetime.year#" + NS("era.to")));
 			dto.put("events", selectEvents(allEvents, fromYear, toYear));
 			dto.put("images", toImageList(html));
 			
