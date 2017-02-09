@@ -766,7 +766,8 @@ public class DTOHelper {
 
 		if (dateTopic != null && (childs = dateTopic.getChildTopics()) != null) {
 			year = getInt(childs, "dm4.datetime.year", -1);
-			month = getInt(childs, "dm4.datetime.month", 1);
+			// Note: In Java Calendar January is 0, in DM it is 1.
+			month = getInt(childs, "dm4.datetime.month", 1) - 1;
 			day = getInt(childs, "dm4.datetime.day", 1);
 		}
 
