@@ -64,6 +64,9 @@ public class DTOHelper {
 		String name = getTranslatedStringOrNull(childs, languageCode, "dm4.events.title");
 		if (!selfOrDefault(childs.getBooleanOrNull(NS("event.hidden")), false)
 				&& name != null) {
+			// Already mark this topic as visited
+			alreadyVisitedTopics.add(eventTopic.getId());
+			
 			String html = childs.getStringOrNull("dm4.events.notes");
 			EventImpl dto = new EventImpl();
 			dto.put("_type", "event");
