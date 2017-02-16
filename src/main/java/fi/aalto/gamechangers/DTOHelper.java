@@ -55,10 +55,10 @@ public class DTOHelper {
 	}
 
 	public static Event toEventOrNull(String languageCode, Topic eventTopic) throws JSONException {
-		return toEventOrNull(languageCode, eventTopic, new HashSet<Long>());
+		return toEventOrNull(languageCode, eventTopic, new HashSet<Long>(), 1);
 	}
 	
-	private static EventImpl toEventOrNull(String languageCode, Topic eventTopic, Set<Long> alreadyVisitedTopics) throws JSONException {
+	private static EventImpl toEventOrNull(String languageCode, Topic eventTopic, Set<Long> alreadyVisitedTopics, int depth) throws JSONException {
 		ChildTopics childs = eventTopic.getChildTopics();
 
 		String name = getTranslatedStringOrNull(childs, languageCode, "dm4.events.title");
@@ -80,8 +80,10 @@ public class DTOHelper {
 			dto.put("url", childs.getStringOrNull("dm4.webbrowser.url"));
 			dto.put("images", toImageList(html));
 			dto.put("latestPublicComments", toLatestPublicComments(eventTopic));
-			dto.put("associatedItems", toAssociatedItems(languageCode, eventTopic, alreadyVisitedTopics));
-
+			if (depth > 0) {
+				dto.put("associatedItems", toAssociatedItems(languageCode, eventTopic, alreadyVisitedTopics, depth - 1));
+			}
+			
 			dto.put("vimeoVideoId", toVimeoVideoId(eventTopic));
 
 			return dto;
@@ -351,7 +353,7 @@ public class DTOHelper {
 		return result;
 	}
 
-	private static List<JSONEnabled> toAssociatedItems(String languageCode, Topic origin, Set<Long> alreadyVisitedTopics) throws JSONException {
+	private static List<JSONEnabled> toAssociatedItems(String languageCode, Topic origin, Set<Long> alreadyVisitedTopics, int depth) throws JSONException {
 		ArrayList<JSONEnabled> result = new ArrayList<JSONEnabled>();
 
 		result.addAll(toGroups(languageCode, getDefaultRelatedTopics(origin, NS("group"))));
@@ -363,7 +365,7 @@ public class DTOHelper {
 		// We don't filter out the origin topic here (even though we could) because we specifically want
 		// it to show up again in the associated items.
 		//alreadyVisitedTopics.add(origin.getId());
-		result.addAll(toEvents(languageCode, getDefaultRelatedTopics(origin, "dm4.events.event", alreadyVisitedTopics), alreadyVisitedTopics));
+		result.addAll(toEvents(languageCode, getDefaultRelatedTopics(origin, "dm4.events.event", alreadyVisitedTopics), alreadyVisitedTopics, depth));
 
 		return result;
 	}
@@ -433,7 +435,7 @@ public class DTOHelper {
 		return result;
 	}
 
-	private static List<EventImpl> toEvents(String languageCode, List<? extends Topic> topics, Set<Long> alreadyVisitedTopics) throws JSONException {
+	private static List<EventImpl> toEvents(String languageCode, List<? extends Topic> topics, Set<Long> alreadyVisitedTopics, int depth) throws JSONException {
 		ArrayList<EventImpl> result = new ArrayList<EventImpl>();
 		
 		for (Topic topic : topics) {
@@ -441,7 +443,7 @@ public class DTOHelper {
 			// means that each event becomes an origin.
 			Set<Long> visited = (alreadyVisitedTopics == null ? new HashSet<Long>() : alreadyVisitedTopics);
 			
-			EventImpl dto = toEventOrNull(languageCode, topic, visited);
+			EventImpl dto = toEventOrNull(languageCode, topic, visited, depth);
 			if (dto != null) {
 				result.add(dto);
 			}
@@ -637,7 +639,7 @@ public class DTOHelper {
 	public static List<Era> toEraList(String languageCode, List<Topic> eraTopics) throws JSONException {
 		ArrayList<Era> result = new ArrayList<Era>();
 		
-		List<EventImpl> allEvents = toEvents(languageCode, dm4.getTopicsByType("dm4.events.event"), null);
+		List<EventImpl> allEvents = toEvents(languageCode, dm4.getTopicsByType("dm4.events.event"), null, 1);
 		
 		for (Topic eraTopic : eraTopics) {
 			ChildTopics childs = eraTopic.getChildTopics();
