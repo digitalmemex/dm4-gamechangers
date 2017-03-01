@@ -29,6 +29,16 @@ public class Migration8 extends Migration {
 				NS("era.name"),
 				NS("era")
 		);
+		
+		// Featured Video (video of the month)
+		Topic featuredVideoTopic = dm4.createTopic(mf.newTopicModel(NS("featured_video"), "dm4.webbrowser.web_resource",
+				mf.newChildTopicsModel()
+					.put("dm4.webbrowser.url", "https://vimeo.com/200825030")
+					.put("dm4.webbrowser.web_resource_description", "Featured Video")
+				)
+		);
+		
+		wsService.assignToWorkspace(featuredVideoTopic, wsService.getWorkspace(NS("workspace.data")).getId());
 
 	}
 
