@@ -30,15 +30,6 @@ public class Migration8 extends Migration {
 				NS("era")
 		);
 
-		// Fixed video of the month topic
-		Topic featuredVideoTopic = dm4.createTopic(mf.newTopicModel(NS("featured_video"), "dm4.webbrowser.web_resource",
-				mf.newChildTopicsModel()
-					.put("dm4.webbrowser.url", "https://vimeo.com/90647039")
-					.put("dm4.webbrowser.web_resource_description", "Featured Video")
-				)
-		);
-		
-		wsService.assignToWorkspace(featuredVideoTopic, wsService.getWorkspace(NS("workspace.data")).getId());
 	}
 
 	private void groupAssignToWorkspace(long wsId, String... topicTypeUris) {

@@ -26,6 +26,8 @@ import javax.ws.rs.core.MediaType;
 
 import org.codehaus.jettison.json.JSONException;
 
+import com.sun.jersey.api.NotFoundException;
+
 import de.deepamehta.accesscontrol.AccessControlService;
 import de.deepamehta.contacts.ContactsService;
 import de.deepamehta.core.RelatedTopic;
@@ -68,6 +70,7 @@ public class GamechangersPlugin extends PluginActivator implements GamechangersS
 	public void init() {
 		DTOHelper.wsService = wsService;
 		DTOHelper.timeService = timeService;
+		DTOHelper.mf = mf;
 		DTOHelper.dm4 = dm4;
 	}
 	
@@ -75,7 +78,12 @@ public class GamechangersPlugin extends PluginActivator implements GamechangersS
 	@Path("/v1/featured_video")
 	@Override
 	public long getFeaturedVideo() {
-		return DTOHelper.toFeaturedVideoId(dm4.getTopicByUri(NS("featured_video")));
+		Long result = DTOHelper.toFeaturedVideoId(dm4.getTopicByUri(NS("featured_video")));
+		if (result == null) {
+			throw new NotFoundException("Featured Video Id unavailable");
+		}
+		
+		return result;
 	}
 	
 	@GET

@@ -49,6 +49,8 @@ public class DTOHelper {
 	static TimeService timeService;
 	
 	static CoreService dm4;
+	
+	static ModelFactory mf;
 
 	private static <T> T selfOrDefault(T instance, T defaultValue) {
 		return (instance != null) ? instance : defaultValue;
@@ -258,12 +260,20 @@ public class DTOHelper {
 	
 	static Long toFeaturedVideoId(Topic featuredVideoTopic) {
 		if (featuredVideoTopic == null) {
-			return null;
-		} else {
-			String url = featuredVideoTopic.getChildTopics().getStringOrNull("dm4.webbrowser.url");
-
-			return parseVimeoVideoId(url);
+			// When the topic is missing, recreate it automatically.
+			featuredVideoTopic = dm4.createTopic(mf.newTopicModel(NS("featured_video"), "dm4.webbrowser.web_resource",
+					mf.newChildTopicsModel()
+						.put("dm4.webbrowser.url", "https://vimeo.com/200825030")
+						.put("dm4.webbrowser.web_resource_description", "Featured Video")
+					)
+			);
+			
+			wsService.assignToWorkspace(featuredVideoTopic, wsService.getWorkspace(NS("workspace.data")).getId());
 		}
+		
+		String url = featuredVideoTopic.getChildTopics().getStringOrNull("dm4.webbrowser.url");
+
+		return parseVimeoVideoId(url);
 	}
 
 	/**
