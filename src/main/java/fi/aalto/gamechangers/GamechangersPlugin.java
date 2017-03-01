@@ -75,6 +75,7 @@ public class GamechangersPlugin extends PluginActivator implements GamechangersS
 	}
 	
 	@GET
+	@Transactional
 	@Path("/v1/featured_video")
 	@Override
 	public long getFeaturedVideo() {
