@@ -31,9 +31,11 @@ public class Migration9 extends Migration {
 		
 		// Eras should have from and to in their label
 		tt = dm4.getTopicType(NS("era"));
-		tt.getAssocDef("dm4.datetime.date#dm4.events.from").getChildTopics()
+		tt.getAssocDef(NS("era.name")).getChildTopics()
 			.set("dm4.core.include_in_label", true);
-		tt.getAssocDef("dm4.datetime.date#dm4.events.to").getChildTopics()
+		tt.getAssocDef("dm4.datetime.year#dm4.events.from").getChildTopics()
+			.set("dm4.core.include_in_label", true);
+		tt.getAssocDef("dm4.datetime.year#dm4.events.to").getChildTopics()
 			.set("dm4.core.include_in_label", true);
 		
 	}
