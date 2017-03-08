@@ -46,7 +46,7 @@ public class Migration4 extends Migration {
 		String personTypeUri = "dm4.contacts.person";
 		dm4.getTopicType(personTypeUri)
 		.addAssocDefBefore(
-			mf.newAssociationDefinitionModel("dm4.core.composition_def", NS("date_of_death"),
+			mf.newAssociationDefinitionModel("dm4.core.composition_def", NS("date_of_death"), false,
 				personTypeUri, "dm4.datetime.date", "dm4.core.many", "dm4.core.one"),
 			"dm4.contacts.phone_number#dm4.contacts.phone_entry");
 
@@ -99,10 +99,10 @@ public class Migration4 extends Migration {
 	private DeepaMehtaType addFromAndToDate(String topicTypeUri) {
 		return dm4.getTopicType(topicTypeUri)
 			.addAssocDef(
-				mf.newAssociationDefinitionModel("dm4.core.aggregation_def", "dm4.events.from",
+				mf.newAssociationDefinitionModel("dm4.core.aggregation_def", "dm4.events.from", false,
 					topicTypeUri, "dm4.datetime.date", "dm4.core.many", "dm4.core.one"))
 			.addAssocDef(
-				mf.newAssociationDefinitionModel("dm4.core.aggregation_def", "dm4.events.to",
+				mf.newAssociationDefinitionModel("dm4.core.aggregation_def", "dm4.events.to", false,
 					topicTypeUri, "dm4.datetime.date", "dm4.core.many", "dm4.core.one"));
 	}
 }
