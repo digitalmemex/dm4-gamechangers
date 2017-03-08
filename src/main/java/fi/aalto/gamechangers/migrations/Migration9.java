@@ -33,9 +33,9 @@ public class Migration9 extends Migration {
 		tt = dm4.getTopicType(NS("era"));
 		tt.getAssocDef(NS("era.name")).getChildTopics()
 			.set("dm4.core.include_in_label", true);
-		tt.getAssocDef("dm4.datetime.year#dm4.events.from").getChildTopics()
+		tt.getAssocDef("dm4.datetime.year#" + NS("era.from")).getChildTopics()
 			.set("dm4.core.include_in_label", true);
-		tt.getAssocDef("dm4.datetime.year#dm4.events.to").getChildTopics()
+		tt.getAssocDef("dm4.datetime.year#" + NS("era.to")).getChildTopics()
 			.set("dm4.core.include_in_label", true);
 		
 	}
