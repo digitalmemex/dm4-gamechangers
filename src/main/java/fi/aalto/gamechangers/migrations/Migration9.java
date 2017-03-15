@@ -2,8 +2,9 @@ package fi.aalto.gamechangers.migrations;
 
 import static fi.aalto.gamechangers.GamechangersPlugin.NS;
 
-import java.util.Arrays;
+import java.util.logging.Logger;
 
+import de.deepamehta.core.AssociationDefinition;
 import de.deepamehta.core.TopicType;
 import de.deepamehta.core.service.Migration;
 
@@ -11,6 +12,8 @@ import de.deepamehta.core.service.Migration;
 /**
  */
 public class Migration9 extends Migration {
+	
+	Logger logger = Logger.getLogger(Migration9.class.getName());
 
 	@Override
 	public void run() {
@@ -33,11 +36,31 @@ public class Migration9 extends Migration {
 		tt = dm4.getTopicType(NS("era"));
 		tt.getAssocDef(NS("era.name")).getChildTopics()
 			.set("dm4.core.include_in_label", true);
-		tt.getAssocDef("dm4.datetime.year#" + NS("era.from")).getChildTopics()
-			.set("dm4.core.include_in_label", true);
-		tt.getAssocDef("dm4.datetime.year#" + NS("era.to")).getChildTopics()
+		
+		// Fix era.from
+		AssociationDefinition at = getAndFix(tt, "dm4.datetime.year#" + NS("era.from"), "dm4.datetime.year#dm4.events.from");
+		at.getChildTopics()
 			.set("dm4.core.include_in_label", true);
 		
+		// Fix era.to
+		at = getAndFix(tt, "dm4.datetime.year#" + NS("era.to"), "dm4.datetime.year#dm4.events.to");
+		at.getChildTopics()
+			.set("dm4.core.include_in_label", true);
+		
+	}
+	
+	private AssociationDefinition getAndFix(TopicType tt, String expectedUri, String fallbackUri) {
+		try {
+			return tt.getAssocDef(expectedUri);
+		} catch (RuntimeException re) {
+			logger.warning("Accessing association definition with expected type URI failed: " + expectedUri);
+			AssociationDefinition ad = tt.getAssocDef(fallbackUri);
+			logger.info("Found association definition with type URI: " + fallbackUri);
+			ad.setTypeUri(expectedUri);
+			logger.info("Corrected type URI to " + expectedUri);
+			
+			return ad;
+		}
 	}
 	
 }
