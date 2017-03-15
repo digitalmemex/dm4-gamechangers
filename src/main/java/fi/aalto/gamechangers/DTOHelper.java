@@ -10,6 +10,7 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -43,6 +44,8 @@ import fi.aalto.gamechangers.GamechangersService.ProposalBean;
 import fi.aalto.gamechangers.GamechangersService.Work;
 
 public class DTOHelper {
+	
+	static Logger logger = Logger.getLogger(DTOHelper.class.getSimpleName());
 
 	static WorkspacesService wsService;
 
@@ -285,8 +288,8 @@ public class DTOHelper {
 	 * @throws JSONException
 	 */
 	private static Long toVimeoVideoId(Topic eventTopic) throws JSONException {
-		RelatedTopic webResourceTopic = eventTopic.getRelatedTopic(
-				"dm4.core.association", "dm4.core.default", "dm4.core.default", "dm4.webbrowser.web_resource");
+		RelatedTopic webResourceTopic = safeHead(eventTopic.getRelatedTopics(
+				"dm4.core.association", "dm4.core.default", "dm4.core.default", "dm4.webbrowser.web_resource"));
 
 		if (webResourceTopic == null) {
 			return null;
@@ -295,6 +298,17 @@ public class DTOHelper {
 		String url = webResourceTopic.getChildTopics().getStringOrNull("dm4.webbrowser.url");
 
 		return parseVimeoVideoId(url);
+	}
+	
+	private static RelatedTopic safeHead(List<RelatedTopic> topics) {
+		if (topics.size() > 1) {
+			logger.warning("Too many related topics where only one was expected!");
+			return topics.get(0);
+		} else if (topics.size() > 0) {
+			return topics.get(0);
+		} else {
+			return null;
+		}
 	}
 	
 	private static Long parseVimeoVideoId(String urlString) {
